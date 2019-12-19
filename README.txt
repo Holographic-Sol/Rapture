@@ -3,7 +3,7 @@ Backs up target directory extremely fast.
 Mode 1: (Default): Copy Missing - Only copies file names not found in backup directory.
 Mode 1: button has white and green arrows to show it is in Mode 1.
 
-Mode 2: Comprehensive - Is Mode One plus compares file timestamps and copy is source timestamp is newer than backup timestamp.
+Mode 2: Comprehensive - Is Mode One plus compares file timestamps and copy if source timestamp is newer than backup timestamp.
 Mode 2: button has white arrows to show it is in Mode 2.
 
 Mode 1 is useful if you dont edit the files. (like a music library, picture directory etc...)
