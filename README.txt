@@ -1,13 +1,13 @@
 Backs up target directory extremely fast.
 
-Mode 1 (Default): Copy Missing - Only copies file names not found in backup directory.
-Mode 1 button has white and green arrows to show it is in Mode 1.
+Mode 1: (Default): Copy Missing - Only copies file names not found in backup directory.
+Mode 1: button has white and green arrows to show it is in Mode 1.
 
 Mode 2: Comprehensive - Is Mode One plus compares file timestamps and copy is source timestamp is newer than backup timestamp.
-Mode 2 button has white arrows to show it is in Mode 2.
+Mode 2: button has white arrows to show it is in Mode 2.
 
-Mode one is useful if you dont edit the files. (like a music library, picture directory etc...)
-Mode two is useful if you edit files. (documents, or you edit your music and pictures too you can still use it...)
+Mode 1 is useful if you dont edit the files. (like a music library, picture directory etc...)
+Mode 2 is useful if you edit files. (documents, or you edit your music and pictures too you can still use it...)
 
 Configure in config.txt before use!
 
@@ -25,5 +25,4 @@ so instead of procrastinating i saved my future self time.
 
 Please excuse my GUI as I like to focus my creativity on making things functional before anything else :)
 
-.EXE Available @ https://drive.google.com/drive/folders/18JL2b0hEBX7YwW3RSfaJgUfhgTBj-vs0?usp=sharing
-1. Create a shortcut from the .exe and change the shortcut icon to the included .ico
+This will not delete 'depricated' files and folders from your chosen backup destination.
