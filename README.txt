@@ -24,3 +24,6 @@ I wrote this because I have a lot of files and when i back up id like it to be f
 so instead of procrastinating i saved my future self time.
 
 Please excuse my GUI as I like to focus my creativity on making things functional before anything else :)
+
+.EXE Available @ https://drive.google.com/drive/folders/18JL2b0hEBX7YwW3RSfaJgUfhgTBj-vs0?usp=sharing
+1. Create a shortcut from the .exe and change the shortcut icon to the included .ico
