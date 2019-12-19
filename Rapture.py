@@ -13,6 +13,7 @@ from PyQt5.QtCore import Qt, QThread, QSize
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel
 from PyQt5.QtGui import QIcon, QFont
 
+conf_funk_engaged = False
 priorityclasses = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.BELOW_NORMAL_PRIORITY_CLASS,
                    win32process.NORMAL_PRIORITY_CLASS,
@@ -63,7 +64,7 @@ img_active_var = ['./image/archive_icon_active.png',
 
 
 def get_conf_funk():
-    global path_var, path_bool_var, dest_path_var, dest_path_bool_var
+    global conf_funk_engaged, path_var, path_bool_var, dest_path_var, dest_path_bool_var
     path_var = []
     path_bool_var = []
     dest_path_var = []
@@ -701,12 +702,11 @@ class ThreadClass0(QThread):
         QThread.__init__(self)
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global conf_funk_engaged, btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
-        frm_path_item = []
         change_var = False
-        get_conf_funk()
+        get_conf_funk()  # potential simultanious calls to unthreaded funk. call when settings write. here is temp.
         print('ThreadClass0 Source:', path_var[0])
         print('ThreadClass0 Destination:', dest_path_var[0])
         if path_bool_var[0] == 'ARCHIVE_SOURCE_True' and dest_path_bool_var[0] == 'ARCHIVE_DESTINATION_True':
@@ -747,7 +747,6 @@ class ThreadClass0(QThread):
                 info_label_1_var[0].setText('amended.')
         else:
             info_label_1_var[0].setText('path error!')
-        frm_path_item = []
         timer_thread_var[0].start()
         btnx_main_var[0].setIcon(QIcon(img_var[0]))
 
@@ -763,10 +762,9 @@ class ThreadClass1(QThread):
         QThread.__init__(self)
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global conf_funk_engaged, btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
-        frm_path_item = []
         change_var = False
         get_conf_funk()
         print('ThreadClass1 Source:', path_var[1])
@@ -809,7 +807,6 @@ class ThreadClass1(QThread):
                 info_label_1_var[1].setText('amended.')
         else:
             info_label_1_var[1].setText('path error!')
-        frm_path_item = []
         timer_thread_var[1].start()
         btnx_main_var[1].setIcon(QIcon(img_var[1]))
 
@@ -828,7 +825,6 @@ class ThreadClass2(QThread):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
-        frm_path_item = []
         change_var = False
         get_conf_funk()
         print('ThreadClass2 Source:', path_var[2])
@@ -871,7 +867,6 @@ class ThreadClass2(QThread):
                 info_label_1_var[2].setText('amended.')
         else:
             info_label_1_var[2].setText('path error!')
-        frm_path_item = []
         timer_thread_var[2].start()
         btnx_main_var[2].setIcon(QIcon(img_var[2]))
 
@@ -890,7 +885,6 @@ class ThreadClass3(QThread):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
-        frm_path_item = []
         change_var = False
         get_conf_funk()
         print('ThreadClass3 Source:', path_var[3])
@@ -933,7 +927,6 @@ class ThreadClass3(QThread):
                 info_label_1_var[3].setText('amended.')
         else:
             info_label_1_var[3].setText('path error!')
-        frm_path_item = []
         timer_thread_var[3].start()
         btnx_main_var[3].setIcon(QIcon(img_var[3]))
 
@@ -952,7 +945,6 @@ class ThreadClass4(QThread):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
-        frm_path_item = []
         change_var = False
         get_conf_funk()
         print('ThreadClass4 Source:', path_var[4])
@@ -995,7 +987,6 @@ class ThreadClass4(QThread):
                 info_label_1_var[4].setText('amended.')
         else:
             info_label_1_var[4].setText('path error!')
-        frm_path_item = []
         timer_thread_var[4].start()
         btnx_main_var[4].setIcon(QIcon(img_var[4]))
 
@@ -1014,7 +1005,6 @@ class ThreadClass5(QThread):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
-        frm_path_item = []
         change_var = False
         get_conf_funk()
         print('ThreadClass5 Source:', path_var[5])
@@ -1057,7 +1047,6 @@ class ThreadClass5(QThread):
                 info_label_1_var[5].setText('amended.')
         else:
             info_label_1_var[5].setText('path error!')
-        frm_path_item = []
         timer_thread_var[5].start()
         btnx_main_var[5].setIcon(QIcon(img_var[5]))
 
