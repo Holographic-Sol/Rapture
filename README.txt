@@ -26,3 +26,4 @@ so instead of procrastinating i saved my future self time.
 Please excuse my GUI as I like to focus my creativity on making things functional before anything else :)
 
 This will not delete 'depricated' files and folders from your chosen backup destination.
+Please ensure destination directory exists by creating it. (configuration menu undeveloped)
