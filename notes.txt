@@ -1,0 +1,2 @@
+if primary_key.endswith('_DESTINATION') and not os.path.exists(secondary_key):
+    print('make path?')
