@@ -427,8 +427,12 @@ class TSClass0(QThread):  # clears info_label_1 text after x time.
         QThread.__init__(self)
 
     def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var
+        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
         print('-- plugged in ts0')
+        sync_ts_var[0].setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 255);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
         get_conf_funk()
         if path_bool_var[0] == 'ARCHIVE_SOURCE_True' and dest_path_bool_var[0] == 'ARCHIVE_DESTINATION_True':
             print('-- ts0 passed checks')
@@ -443,6 +447,10 @@ class TSClass0(QThread):  # clears info_label_1 text after x time.
                         print('sync:', fullpath)
                         os.utime(fullpath, (ts, ts))
                 i += 1
+        sync_ts_var[0].setStyleSheet(
+            """QPushButton{background-color: rgb(255, 255, 0);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
 
 
 class TSClass1(QThread):  # clears info_label_1 text after x time.
@@ -450,8 +458,12 @@ class TSClass1(QThread):  # clears info_label_1 text after x time.
         QThread.__init__(self)
 
     def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var
+        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
         print('-- plugged in ts1')
+        sync_ts_var[1].setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 255);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
         get_conf_funk()
         print('Source:', path_var[1])
         print('Destination:', dest_path_var[1])
@@ -468,6 +480,10 @@ class TSClass1(QThread):  # clears info_label_1 text after x time.
                         print('sync:', fullpath)
                         os.utime(fullpath, (ts, ts))
                 i += 1
+        sync_ts_var[1].setStyleSheet(
+            """QPushButton{background-color: rgb(255, 255, 0);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
 
 
 class TSClass2(QThread):  # clears info_label_1 text after x time.
@@ -475,8 +491,12 @@ class TSClass2(QThread):  # clears info_label_1 text after x time.
         QThread.__init__(self)
 
     def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var
+        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
         print('-- plugged in ts2')
+        sync_ts_var[2].setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 255);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
         get_conf_funk()
         print('Source:', path_var[2])
         print('Destination:', dest_path_var[2])
@@ -493,6 +513,10 @@ class TSClass2(QThread):  # clears info_label_1 text after x time.
                         print('sync:', fullpath)
                         os.utime(fullpath, (ts, ts))
                 i += 1
+        sync_ts_var[2].setStyleSheet(
+            """QPushButton{background-color: rgb(255, 255, 0);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
 
 
 class TSClass3(QThread):  # clears info_label_1 text after x time.
@@ -500,8 +524,12 @@ class TSClass3(QThread):  # clears info_label_1 text after x time.
         QThread.__init__(self)
 
     def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var
+        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
         print('-- plugged in ts3')
+        sync_ts_var[3].setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 255);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
         get_conf_funk()
         print('Source:', path_var[3])
         print('Destination:', dest_path_var[3])
@@ -518,6 +546,10 @@ class TSClass3(QThread):  # clears info_label_1 text after x time.
                         print('sync:', fullpath)
                         os.utime(fullpath, (ts, ts))
                 i += 1
+        sync_ts_var[3].setStyleSheet(
+            """QPushButton{background-color: rgb(255, 255, 0);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
 
 
 class TSClass4(QThread):  # clears info_label_1 text after x time.
@@ -525,8 +557,12 @@ class TSClass4(QThread):  # clears info_label_1 text after x time.
         QThread.__init__(self)
 
     def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var
+        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
         print('-- plugged in ts4')
+        sync_ts_var[4].setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 255);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
         get_conf_funk()
         print('Source:', path_var[4])
         print('Destination:', dest_path_var[4])
@@ -543,6 +579,10 @@ class TSClass4(QThread):  # clears info_label_1 text after x time.
                         print('sync:', fullpath)
                         os.utime(fullpath, (ts, ts))
                 i += 1
+        sync_ts_var[4].setStyleSheet(
+            """QPushButton{background-color: rgb(255, 255, 0);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
 
 
 class TSClass5(QThread):  # clears info_label_1 text after x time.
@@ -550,8 +590,12 @@ class TSClass5(QThread):  # clears info_label_1 text after x time.
         QThread.__init__(self)
 
     def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var
+        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
         print('-- plugged in ts5')
+        sync_ts_var[5].setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 255);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
         get_conf_funk()
         print('Source:', path_var[5])
         print('Destination:', dest_path_var[5])
@@ -568,6 +612,10 @@ class TSClass5(QThread):  # clears info_label_1 text after x time.
                         print('sync:', fullpath)
                         os.utime(fullpath, (ts, ts))
                 i += 1
+        sync_ts_var[5].setStyleSheet(
+            """QPushButton{background-color: rgb(255, 255, 0);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
 
 
 class TimerClass0(QThread):  # clears info_label_1 text after x time.
