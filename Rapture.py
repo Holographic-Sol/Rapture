@@ -588,6 +588,7 @@ class App(QMainWindow):
         after_str = config_src_var[source_selected]+' '+source_path_entered
         print('-- before_str:', before_str)
         print('-- after_str: ', after_str)
+        distutils.dir_util.mkpath(source_path_entered)
         if os.path.exists(source_path_entered):
             for line in fileinput.input('./config.txt', inplace=True):
                 print(line.rstrip().replace(before_str, after_str)),
@@ -602,6 +603,7 @@ class App(QMainWindow):
         after_str = config_dst_var[dest_selected] + ' ' + dest_path_entered
         print('-- before_str:', before_str)
         print('-- after_str: ', after_str)
+        distutils.dir_util.mkpath(dest_path_entered)
         if os.path.exists(dest_path_entered):
             for line in fileinput.input('./config.txt', inplace=True):
                 print(line.rstrip().replace(before_str, after_str)),
