@@ -17,6 +17,19 @@ Initial backup will of course take time but after that it can be insanely fast.
 I wrote this because I have a lot of files and when i back up id like it to be faster and
 so instead of procrastinating i saved my future self time.
 
-Please excuse my GUI as I like to focus my creativity on making things functional before anything else :)
-
 This will not delete 'depricated' files and folders from your chosen backup destination.
+
+I use it to backup from my secondary internal drive to my external backup ssd.
+Best Case Example:
+Secondary Internal Drive Tree:
+  Archives
+  Documents
+  Music
+  Pictures
+  Programs (Steam+Steam Library, other things i keep portably away from drive C:\\)
+  Video
+Backup drive reflects Secondary Internal Drive Tree.
+
+Backing up steam (for me 700GB+) with this should be much faster than pasting a new copy as this will only copy
+what has changed and or what is missing. I will wait to test and compare. I Can't test yet but will soon.
+  
