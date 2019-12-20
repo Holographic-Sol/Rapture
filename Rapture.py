@@ -2,7 +2,6 @@ import os
 import sys
 import time
 import shutil
-import filecmp
 import datetime
 import fileinput
 import distutils.dir_util
@@ -10,9 +9,9 @@ import win32api
 import win32process
 import win32con
 from win32api import GetSystemMetrics
-from PyQt5.QtCore import Qt, QThread, QSize
+from PyQt5.QtCore import Qt, QThread, QSize, QTimer
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon, QFont, QPixmap
 
 priorityclasses = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.BELOW_NORMAL_PRIORITY_CLASS,
@@ -23,11 +22,9 @@ priorityclasses = [win32process.IDLE_PRIORITY_CLASS,
 pid = win32api.GetCurrentProcessId()
 handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
 win32process.SetPriorityClass(handle, priorityclasses[4])
-
 settings_active = False
 thread_var = [(), (), (), (), (), ()]
 timer_thread_var = [(), (), (), (), (), ()]
-ts_thread_var = [(), (), (), (), (), ()]
 path_var = []
 dest_path_var = []
 path_bool_var = []
@@ -36,6 +33,8 @@ source_path_entered = ''
 dest_path_entered = ''
 source_selected = ()
 dest_selected = ()
+settings_active_int = 0
+pressed_int = ()
 compare_bool_var = [False, False, False, False, False, False]
 compare_clicked = ()
 config_src_var = ['ARCHIVE_SOURCE',
@@ -55,8 +54,7 @@ btnx_settings_var = []
 comp_cont_button_var = []
 stop_thr_button_var = []
 info_label_1_var = []
-sync_ts_var = []
-
+back_label_var = []
 img_mode_1 = './image/mode_1.png'
 img_mode_2 = './image/mode_2.png'
 img_settings = './image/settings.png'
@@ -65,13 +63,15 @@ img_var = ['./image/archive_icon.png',
            './image/music_icon.png',
            './image/picture_icon.png',
            './image/program_icon.png',
-           './image/video_icon.png']
+           './image/video_icon.png',
+           './image/sync_inactive.png']
 img_active_var = ['./image/archive_icon_active.png',
                   './image/document_icon_active.png',
                   './image/music_icon_active.png',
                   './image/picture_icon_active.png',
                   './image/program_icon_active.png',
-                  './image/video_icon_active.png']
+                  './image/video_icon_active.png',
+                  './image/sync_active.png']
 
 
 def get_conf_funk():
@@ -130,10 +130,10 @@ class App(QMainWindow):
     def __init__(self):
         super(App, self).__init__()
         self.setWindowIcon(QIcon('./icon.png'))
-        self.title = ' '
+        self.title = '[development] rapture extreme backup (sol)ution'
         get_conf_funk()
-        self.width = 588
-        self.height = 80
+        self.width = 605
+        self.height = 90
         scr_w = GetSystemMetrics(0)
         scr_h = GetSystemMetrics(1)
         self.left = (scr_w / 2) - (self.width / 2)  # centre
@@ -146,13 +146,57 @@ class App(QMainWindow):
 
     def initUI(self):
         global thread_var, btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, info_label_1_var
-        global img_var, img_active_var, img_mode_1, img_mode_2, img_settings, timer_thread_var, sync_ts_var, ts_thread_var
-        global path_var, dest_path_var
-        self.setWindowTitle(' ')
+        global img_var, img_active_var, img_mode_1, img_mode_2, img_settings, timer_thread_var
+        global path_var, dest_path_var, back_label_var, pressed_int
+        self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width, self.height)
+
+        self.back_label_main = QLabel(self)
+        self.back_label_main.move(0, 0)
+        self.back_label_main.resize(self.width, 90)
+        self.back_label_main.setStyleSheet(
+            """QLabel {background-color: rgb(13, 13, 13);
+           border:0px solid rgb(35, 35, 35);}"""
+        )
         i = 0
         while i < 6:
+            back_label = 'back_label' + str(i)
+            self.back_label = QLabel(self)
+            self.back_label.resize(95, 80)
+            pixmap = QPixmap('./image/black_label.png')
+            self.back_label.setPixmap(pixmap)
+            self.back_label.setStyleSheet(
+                """QLabel {background-color: rgb(0, 0, 0);
+               border:0px solid rgb(0, 0, 0);}"""
+            )
+            back_label_var.append(self.back_label)
+            i += 1
+
+        back_label_ankor_w0 = 5
+        back_label_ankor_w1 = 105
+        back_label_ankor_w2 = 205
+        back_label_ankor_w3 = 305
+        back_label_ankor_w4 = 405
+        back_label_ankor_w5 = 505
+
+        back_label_ankor_h0 = 5
+        back_label_ankor_h1 = 5
+        back_label_ankor_h2 = 5
+        back_label_ankor_h3 = 5
+        back_label_ankor_h4 = 5
+        back_label_ankor_h5 = 5
+
+        back_label_var[0].move(back_label_ankor_w0, back_label_ankor_h0)
+        back_label_var[1].move(back_label_ankor_w1, back_label_ankor_h1)
+        back_label_var[2].move(back_label_ankor_w2, back_label_ankor_h2)
+        back_label_var[3].move(back_label_ankor_w3, back_label_ankor_h3)
+        back_label_var[4].move(back_label_ankor_w4, back_label_ankor_h4)
+        back_label_var[5].move(back_label_ankor_w5, back_label_ankor_h5)
+
+        i = 0
+        while i < 6:
+
             btnx_name = 'btnx_main' + str(i)  # main function button.
             self.btnx_main = QPushButton(self)
             self.btnx_main.resize(54, 54)
@@ -163,6 +207,7 @@ class App(QMainWindow):
                    border:0px solid rgb(0, 0, 0);}"""
                 )
             btnx_main_var.append(self.btnx_main)
+
             sett_name = 'btnx_settings' + str(i)  # settings button.
             self.sett_name = QPushButton(self)
             self.sett_name.resize(10, 10)
@@ -173,6 +218,7 @@ class App(QMainWindow):
                border:0px solid rgb(0, 0, 0);}"""
             )
             btnx_settings_var.append(self.sett_name)
+
             comp_cont_button = 'comp_cont_button' + str(i)  # mode switch. default only copy missing file names.
             self.comp_cont_button = QPushButton(self)
             self.comp_cont_button.resize(10, 30)
@@ -183,6 +229,7 @@ class App(QMainWindow):
                border:0px solid rgb(0, 0, 0);}"""
             )
             comp_cont_button_var.append(self.comp_cont_button)
+
             stop_thr_button = 'stop_thr_button' + str(i)  # stop main thread.
             self.stop_thr_button = QPushButton(self)
             self.stop_thr_button.resize(10, 10)
@@ -191,40 +238,67 @@ class App(QMainWindow):
                border:2px solid rgb(35, 35, 35);}"""
             )
             stop_thr_button_var.append(self.stop_thr_button)
+
             info_label_1 = 'info_label_1' + str(i)  # some output data.
             self.info_label_1 = QLabel(self)
-            self.info_label_1.resize(71, 15)
+            self.info_label_1.resize(85, 15)
             newfont = QFont("Times", 7, QFont.Bold)
             self.info_label_1.setFont(newfont)
             self.info_label_1.setText("")
             self.info_label_1.setStyleSheet(
                 """QLabel {background-color: rgb(0, 0, 0);
                color: green;
-               border:2px solid rgb(35, 35, 35);}"""
+               border:0px solid rgb(35, 35, 35);}"""
             )
             info_label_1_var.append(self.info_label_1)
-
-            sync_ts = 'sync_ts' + str(i)  # main function button.
-            self.sync_ts = QPushButton(self)
-            self.sync_ts.resize(10, 10)
-            # self.sync_ts.setIcon(QIcon(img_var[i]))
-            # self.sync_ts.setIconSize(QSize(10, 10))
-            self.sync_ts.setStyleSheet(
-                """QPushButton{background-color: rgb(255, 255, 0);
-               border:0px solid rgb(0, 0, 0);}"""
-            )
-            sync_ts_var.append(self.sync_ts)
 
             print('created object:', self.btnx_main, '. naming object:', btnx_name)
             print('created object:', self.sett_name, '. naming object:', sett_name)
             print('created object:', self.comp_cont_button, '. naming object:', comp_cont_button)
             print('created object:', self.stop_thr_button, '. naming object:', stop_thr_button)
             print('created object:', self.info_label_1, '. naming object:', info_label_1)
-            print('created object:', self.sync_ts, '. naming object:', sync_ts)
             i += 1
 
+        self.hide_settings_button = QPushButton(self)
+        self.hide_settings_button.resize(self.width, 10)
+        self.hide_settings_button.move(0, 160)
+        self.hide_settings_button.setIcon(QIcon('./image/menu_up.png'))
+        self.hide_settings_button.clicked.connect(self.hide_settings_page_funk)
+        self.hide_settings_button.setIconSize(QSize(15, 15))
+        self.hide_settings_button.setStyleSheet(
+            """QPushButton{background-color: rgb(35, 35, 35);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
+        self.hide_settings_button.pressed.connect(self.pressed_int_pre_funk0)
+        self.hide_settings_button.pressed.connect(self.on_press_funk)
+        self.hide_settings_button.released.connect(self.on_release_funk)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.while_pressed_funk)
+
+        self.scr_left = QPushButton(self)
+        self.scr_left.resize(10, 35)
+        self.scr_left.move(0, 115)
+        self.scr_left.setIcon(QIcon('./image/menu_left.png'))
+        self.scr_left.setIconSize(QSize(15, 35))
+        self.scr_left.clicked.connect(self.scr_left_funk)
+        self.scr_left.setStyleSheet(
+            """QPushButton{background-color: rgb(35, 35, 35);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
+
+        self.scr_right = QPushButton(self)
+        self.scr_right.resize(10, 35)
+        self.scr_right.move((self.width - 10), 115)
+        self.scr_right.setIcon(QIcon('./image/menu_right.png'))
+        self.scr_right.setIconSize(QSize(15, 35))
+        self.scr_right.clicked.connect(self.scr_right_funk)
+        self.scr_right.setStyleSheet(
+            """QPushButton{background-color: rgb(35, 35, 35);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
+
         self.settings_source_label = QLabel(self)
-        self.settings_source_label.move(5, 115)
+        self.settings_source_label.move(30, 115)
         self.settings_source_label.resize(80, 15)
         newfont = QFont("Times", 7, QFont.Bold)
         self.settings_source_label.setFont(newfont)
@@ -234,9 +308,9 @@ class App(QMainWindow):
            color: green;
            border:0px solid rgb(35, 35, 35);}"""
         )
-        # self.settings_source_label.hide()
+
         self.settings_dest_label = QLabel(self)
-        self.settings_dest_label.move(5, 135)
+        self.settings_dest_label.move(30, 135)
         self.settings_dest_label.resize(80, 15)
         newfont = QFont("Times", 7, QFont.Bold)
         self.settings_dest_label.setFont(newfont)
@@ -246,10 +320,10 @@ class App(QMainWindow):
            color: green;
            border:0px solid rgb(35, 35, 35);}"""
         )
-        # self.settings_dest_label.hide()
+
         self.setting_title0 = QLabel(self)
         self.setting_title0.resize(100, 15)
-        self.setting_title0.move(5, 90)
+        self.setting_title0.move(10, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title0.setFont(newfont)
         self.setting_title0.setText("Archive Settings")
@@ -261,7 +335,7 @@ class App(QMainWindow):
         self.setting_title0.hide()
         self.setting_title1 = QLabel(self)
         self.setting_title1.resize(100, 15)
-        self.setting_title1.move(100, 90)
+        self.setting_title1.move(110, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title1.setFont(newfont)
         self.setting_title1.setText("Document Settings")
@@ -273,7 +347,7 @@ class App(QMainWindow):
         self.setting_title1.hide()
         self.setting_title2 = QLabel(self)
         self.setting_title2.resize(100, 15)
-        self.setting_title2.move(200, 90)
+        self.setting_title2.move(215, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title2.setFont(newfont)
         self.setting_title2.setText("Music Settings")
@@ -285,7 +359,7 @@ class App(QMainWindow):
         self.setting_title2.hide()
         self.setting_title3 = QLabel(self)
         self.setting_title3.resize(100, 15)
-        self.setting_title3.move(300, 90)
+        self.setting_title3.move(320, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title3.setFont(newfont)
         self.setting_title3.setText("Picture Settings")
@@ -297,7 +371,7 @@ class App(QMainWindow):
         self.setting_title3.hide()
         self.setting_title4 = QLabel(self)
         self.setting_title4.resize(100, 15)
-        self.setting_title4.move(400, 90)
+        self.setting_title4.move(425, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title4.setFont(newfont)
         self.setting_title4.setText("Program Settings")
@@ -309,7 +383,7 @@ class App(QMainWindow):
         self.setting_title4.hide()
         self.setting_title5 = QLabel(self)
         self.setting_title5.resize(100, 15)
-        self.setting_title5.move(500, 90)
+        self.setting_title5.move(530, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title5.setFont(newfont)
         self.setting_title5.setText("Video Settings")
@@ -320,9 +394,10 @@ class App(QMainWindow):
         )
         self.setting_title5.hide()
 
+        set_src_dst_w = 453
         self.settings_source0 = QLineEdit(self)
         self.settings_source0.move(100, 115)
-        self.settings_source0.resize(473, 15)
+        self.settings_source0.resize(set_src_dst_w, 15)
         self.settings_source0.setText(path_var[0])
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
         self.settings_source0.setStyleSheet(
@@ -336,7 +411,7 @@ class App(QMainWindow):
 
         self.settings_source1 = QLineEdit(self)
         self.settings_source1.move(100, 115)
-        self.settings_source1.resize(473, 15)
+        self.settings_source1.resize(set_src_dst_w, 15)
         self.settings_source1.setText(path_var[1])
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
         self.settings_source1.setStyleSheet(
@@ -347,9 +422,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_source1.hide()
+
         self.settings_source2 = QLineEdit(self)
         self.settings_source2.move(100, 115)
-        self.settings_source2.resize(473, 15)
+        self.settings_source2.resize(set_src_dst_w, 15)
         self.settings_source2.setText(path_var[2])
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
         self.settings_source2.setStyleSheet(
@@ -360,9 +436,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_source2.hide()
+
         self.settings_source3 = QLineEdit(self)
         self.settings_source3.move(100, 115)
-        self.settings_source3.resize(473, 15)
+        self.settings_source3.resize(set_src_dst_w, 15)
         self.settings_source3.setText(path_var[3])
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
         self.settings_source3.setStyleSheet(
@@ -373,9 +450,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_source3.hide()
+
         self.settings_source4 = QLineEdit(self)
         self.settings_source4.move(100, 115)
-        self.settings_source4.resize(473, 15)
+        self.settings_source4.resize(set_src_dst_w, 15)
         self.settings_source4.setText(path_var[4])
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
         self.settings_source4.setStyleSheet(
@@ -386,9 +464,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_source4.hide()
+
         self.settings_source5 = QLineEdit(self)
         self.settings_source5.move(100, 115)
-        self.settings_source5.resize(473, 15)
+        self.settings_source5.resize(set_src_dst_w, 15)
         self.settings_source5.setText(path_var[5])
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
         self.settings_source5.setStyleSheet(
@@ -402,7 +481,7 @@ class App(QMainWindow):
 
         self.settings_dest0 = QLineEdit(self)
         self.settings_dest0.move(100, 135)
-        self.settings_dest0.resize(473, 15)
+        self.settings_dest0.resize(set_src_dst_w, 15)
         self.settings_dest0.setText(dest_path_var[0])
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
         self.settings_dest0.setStyleSheet(
@@ -413,9 +492,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_dest0.hide()
+
         self.settings_dest1 = QLineEdit(self)
         self.settings_dest1.move(100, 135)
-        self.settings_dest1.resize(473, 15)
+        self.settings_dest1.resize(set_src_dst_w, 15)
         self.settings_dest1.setText(dest_path_var[1])
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
         self.settings_dest1.setStyleSheet(
@@ -426,9 +506,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_dest1.hide()
+
         self.settings_dest2 = QLineEdit(self)
         self.settings_dest2.move(100, 135)
-        self.settings_dest2.resize(473, 15)
+        self.settings_dest2.resize(set_src_dst_w, 15)
         self.settings_dest2.setText(dest_path_var[2])
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
         self.settings_dest2.setStyleSheet(
@@ -439,9 +520,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_dest2.hide()
+
         self.settings_dest3 = QLineEdit(self)
         self.settings_dest3.move(100, 135)
-        self.settings_dest3.resize(473, 15)
+        self.settings_dest3.resize(set_src_dst_w, 15)
         self.settings_dest3.setText(dest_path_var[3])
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
         self.settings_dest3.setStyleSheet(
@@ -452,9 +534,10 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_dest3.hide()
+
         self.settings_dest4 = QLineEdit(self)
         self.settings_dest4.move(100, 135)
-        self.settings_dest4.resize(473, 15)
+        self.settings_dest4.resize(set_src_dst_w, 15)
         self.settings_dest4.setText(dest_path_var[4])
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
         self.settings_dest4.setStyleSheet(
@@ -465,10 +548,11 @@ class App(QMainWindow):
             color: grey;}"""
         )
         self.settings_dest4.hide()
+
         self.settings_dest5 = QLineEdit(self)
         self.settings_dest5.move(100, 135)
-        self.settings_dest5.resize(473, 15)
-        # self.settings_dest5.setText(dest_path_var[5])
+        self.settings_dest5.resize(set_src_dst_w, 15)
+        self.settings_dest5.setText(dest_path_var[5])
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
         self.settings_dest5.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -479,47 +563,40 @@ class App(QMainWindow):
         )
         self.settings_dest5.hide()
 
-        btnx_main_var[0].move(5, 5)
-        btnx_main_var[1].move(100, 5)
-        btnx_main_var[2].move(200, 5)
-        btnx_main_var[3].move(300, 5)
-        btnx_main_var[4].move(400, 5)
-        btnx_main_var[5].move(500, 5)
+        btnx_main_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
+        btnx_main_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 5))
+        btnx_main_var[2].move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 5))
+        btnx_main_var[3].move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 5))
+        btnx_main_var[4].move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 5))
+        btnx_main_var[5].move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 5))
 
-        btnx_settings_var[0].move(64, 5)
-        btnx_settings_var[1].move(159, 5)
-        btnx_settings_var[2].move(259, 5)
-        btnx_settings_var[3].move(359, 5)
-        btnx_settings_var[4].move(459, 5)
-        btnx_settings_var[5].move(559, 5)
+        btnx_settings_var[0].move((back_label_ankor_w0 + 78), (back_label_ankor_h0 + 48))
+        btnx_settings_var[1].move((back_label_ankor_w1 + 78), (back_label_ankor_h1 + 48))
+        btnx_settings_var[2].move((back_label_ankor_w2 + 78), (back_label_ankor_h2 + 48))
+        btnx_settings_var[3].move((back_label_ankor_w3 + 78), (back_label_ankor_h3 + 48))
+        btnx_settings_var[4].move((back_label_ankor_w4 + 78), (back_label_ankor_h4 + 48))
+        btnx_settings_var[5].move((back_label_ankor_w5 + 78), (back_label_ankor_h5 + 48))
 
-        comp_cont_button_var[0].move(64, 17)
-        comp_cont_button_var[1].move(159, 17)
-        comp_cont_button_var[2].move(259, 17)
-        comp_cont_button_var[3].move(359, 17)
-        comp_cont_button_var[4].move(459, 17)
-        comp_cont_button_var[5].move(559, 17)
+        comp_cont_button_var[0].move((back_label_ankor_w0 + 78), (back_label_ankor_h0 + 17))
+        comp_cont_button_var[1].move((back_label_ankor_w1 + 78), (back_label_ankor_h1 + 17))
+        comp_cont_button_var[2].move((back_label_ankor_w2 + 78), (back_label_ankor_h2 + 17))
+        comp_cont_button_var[3].move((back_label_ankor_w3 + 78), (back_label_ankor_h3 + 17))
+        comp_cont_button_var[4].move((back_label_ankor_w4 + 78), (back_label_ankor_h4 + 17))
+        comp_cont_button_var[5].move((back_label_ankor_w5 + 78), (back_label_ankor_h5 + 17))
 
-        stop_thr_button_var[0].move(64, 48)
-        stop_thr_button_var[1].move(159, 48)
-        stop_thr_button_var[2].move(259, 48)
-        stop_thr_button_var[3].move(359, 48)
-        stop_thr_button_var[4].move(459, 48)
-        stop_thr_button_var[5].move(559, 48)
+        stop_thr_button_var[0].move((back_label_ankor_w0 + 78), (back_label_ankor_h0 + 5))
+        stop_thr_button_var[1].move((back_label_ankor_w1 + 78), (back_label_ankor_h1 + 5))
+        stop_thr_button_var[2].move((back_label_ankor_w2 + 78), (back_label_ankor_h2 + 5))
+        stop_thr_button_var[3].move((back_label_ankor_w3 + 78), (back_label_ankor_h3 + 5))
+        stop_thr_button_var[4].move((back_label_ankor_w4 + 78), (back_label_ankor_h4 + 5))
+        stop_thr_button_var[5].move((back_label_ankor_w5 + 78), (back_label_ankor_h5 + 5))
 
-        info_label_1_var[0].move(5, 61)
-        info_label_1_var[1].move(100, 61)
-        info_label_1_var[2].move(200, 61)
-        info_label_1_var[3].move(300, 61)
-        info_label_1_var[4].move(400, 61)
-        info_label_1_var[5].move(500, 61)
-
-        sync_ts_var[0].move(77, 5)
-        sync_ts_var[1].move(173, 5)
-        sync_ts_var[2].move(273, 5)
-        sync_ts_var[3].move(373, 5)
-        sync_ts_var[4].move(473, 5)
-        sync_ts_var[5].move(573, 5)
+        info_label_1_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 61))
+        info_label_1_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 61))
+        info_label_1_var[2].move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 61))
+        info_label_1_var[3].move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 61))
+        info_label_1_var[4].move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 61))
+        info_label_1_var[5].move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 61))
 
         comp_cont_button_var[0].clicked.connect(self.set_comp_bool_pre_funk0)
         comp_cont_button_var[1].clicked.connect(self.set_comp_bool_pre_funk1)
@@ -542,13 +619,6 @@ class App(QMainWindow):
         btnx_main_var[4].clicked.connect(self.thread_funk_4)
         btnx_main_var[5].clicked.connect(self.thread_funk_5)
 
-        sync_ts_var[0].clicked.connect(self.set_timestamp_funk0)
-        sync_ts_var[1].clicked.connect(self.set_timestamp_funk1)
-        sync_ts_var[2].clicked.connect(self.set_timestamp_funk2)
-        sync_ts_var[3].clicked.connect(self.set_timestamp_funk3)
-        sync_ts_var[4].clicked.connect(self.set_timestamp_funk4)
-        sync_ts_var[5].clicked.connect(self.set_timestamp_funk5)
-
         btnx_settings_var[0].clicked.connect(self.settings_funk0)
         btnx_settings_var[1].clicked.connect(self.settings_funk1)
         btnx_settings_var[2].clicked.connect(self.settings_funk2)
@@ -570,14 +640,75 @@ class App(QMainWindow):
         thread_var[4] = ThreadClass4()
         thread_var[5] = ThreadClass5()
 
-        ts_thread_var[0] = TSClass0()
-        ts_thread_var[1] = TSClass1()
-        ts_thread_var[2] = TSClass2()
-        ts_thread_var[3] = TSClass3()
-        ts_thread_var[4] = TSClass4()
-        ts_thread_var[5] = TSClass5()
-
         self.show()
+
+    def pressed_int_pre_funk0(self):  # 3 timer thread functions use pressed_int as key for which function to run
+        global pressed_int
+        pressed_int = 0
+
+    def on_release_funk(self):
+        print('-- pressed_int:', pressed_int, 'released')
+        self.timer.stop()
+        if pressed_int is 0:
+            self.hide_settings_button.setStyleSheet(
+                """QPushButton{background-color: rgb(35, 35, 35);
+               border:0px solid rgb(35, 35, 35);}"""
+            )
+
+    def on_press_funk(self):
+        self.timer.start(500)
+
+    def while_pressed_funk(self):
+        print('-- pressed_int:', pressed_int, 'pressed')
+        if pressed_int is 0:
+            self.hide_settings_button.setStyleSheet(
+                """QPushButton{background-color: rgb(35, 35, 35);
+               border:0px solid rgb(12, 12, 12);}"""
+            )
+
+    def scr_left_funk(self):
+        global settings_active_int
+        print('-- scr_left_funk')
+        if settings_active_int is 0:
+            settings_active_int = 5
+            self.settings_funk5()
+        elif settings_active_int is 1:
+            settings_active_int = 0
+            self.settings_funk0()
+        elif settings_active_int is 2:
+            settings_active_int = 1
+            self.settings_funk1()
+        elif settings_active_int is 3:
+            settings_active_int = 2
+            self.settings_funk2()
+        elif settings_active_int is 4:
+            settings_active_int = 3
+            self.settings_funk3()
+        elif settings_active_int is 5:
+            settings_active_int = 4
+            self.settings_funk4()
+
+    def scr_right_funk(self):
+        global settings_active_int
+        print('-- scr_right_funk')
+        if settings_active_int is 0:
+            settings_active_int = 1
+            self.settings_funk1()
+        elif settings_active_int is 1:
+            settings_active_int = 2
+            self.settings_funk2()
+        elif settings_active_int is 2:
+            settings_active_int = 3
+            self.settings_funk3()
+        elif settings_active_int is 3:
+            settings_active_int = 4
+            self.settings_funk4()
+        elif settings_active_int is 4:
+            settings_active_int = 5
+            self.settings_funk5()
+        elif settings_active_int is 5:
+            settings_active_int = 0
+            self.settings_funk0()
 
     def settings_source_funk(self):
         global source_path_entered, source_selected, config_src_var, path_var
@@ -702,108 +833,131 @@ class App(QMainWindow):
         self.settings_dest3.hide()
         self.settings_dest4.hide()
         self.settings_dest5.hide()
+        back_label_var[0].resize(95, 80)
+        pixmap = QPixmap('./image/black_label.png')
+        back_label_var[0].setPixmap(pixmap)
+
+        back_label_var[1].resize(95, 80)
+        pixmap = QPixmap('./image/black_label.png')
+        back_label_var[1].setPixmap(pixmap)
+
+        back_label_var[2].resize(95, 80)
+        pixmap = QPixmap('./image/black_label.png')
+        back_label_var[2].setPixmap(pixmap)
+
+        back_label_var[3].resize(95, 80)
+        pixmap = QPixmap('./image/black_label.png')
+        back_label_var[3].setPixmap(pixmap)
+
+        back_label_var[4].resize(95, 80)
+        pixmap = QPixmap('./image/black_label.png')
+        back_label_var[4].setPixmap(pixmap)
+
+        back_label_var[5].resize(95, 80)
+        pixmap = QPixmap('./image/black_label.png')
+        back_label_var[5].setPixmap(pixmap)
+
+    def hide_settings_page_funk(self):
+        print('-- plugged in: hide_settings_funk')
+        self.hide_settings_funk()
+        self.setFixedSize(self.width, 90)
 
     def settings_funk0(self):
         print('-- plugged in: settings_funk0')
-        global settings_active
+        global settings_active, settings_active_int
+        settings_active_int = 0
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(588, 160)
+            self.setFixedSize(self.width, 170)
+
+            back_label_var[0].resize(95, 85)
+            pixmap = QPixmap('./image/grey_label.png')
+            back_label_var[0].setPixmap(pixmap)
+
             self.setting_title0.show()
             self.settings_source0.show()
             self.settings_dest0.show()
-            settings_active = True
-        elif settings_active is True:
-            self.setFixedSize(588, 80)
-            settings_active = False
 
     def settings_funk1(self):
         print('-- plugged in: settings_funk1')
-        global settings_active
+        global settings_active, settings_active_int
+        settings_active_int = 1
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(588, 160)
+            self.setFixedSize(self.width, 170)
+
+            back_label_var[1].resize(95, 85)
+            pixmap = QPixmap('./image/grey_label.png')
+            back_label_var[1].setPixmap(pixmap)
+
             self.setting_title1.show()
             self.settings_source1.show()
             self.settings_dest1.show()
-            settings_active = True
-        elif settings_active is True:
-            self.setFixedSize(588, 80)
-            settings_active = False
 
     def settings_funk2(self):
         print('-- plugged in: settings_funk2')
-        global settings_active
+        global settings_active, settings_active_int
+        settings_active_int = 2
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(588, 160)
+            self.setFixedSize(self.width, 170)
+
+            back_label_var[2].resize(95, 85)
+            pixmap = QPixmap('./image/grey_label.png')
+            back_label_var[2].setPixmap(pixmap)
+
             self.setting_title2.show()
             self.settings_source2.show()
             self.settings_dest2.show()
-            settings_active = True
-        elif settings_active is True:
-            self.setFixedSize(588, 80)
-            settings_active = False
 
     def settings_funk3(self):
         print('-- plugged in: settings_funk3')
-        global settings_active
+        global settings_active, settings_active_int
+        settings_active_int = 3
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(588, 160)
+            self.setFixedSize(self.width, 170)
+
+            back_label_var[3].resize(95, 85)
+            pixmap = QPixmap('./image/grey_label.png')
+            back_label_var[3].setPixmap(pixmap)
+
             self.setting_title3.show()
             self.settings_source3.show()
             self.settings_dest3.show()
-            settings_active = True
-        elif settings_active is True:
-            self.setFixedSize(588, 80)
-            settings_active = False
 
     def settings_funk4(self):
         print('-- plugged in: settings_funk4')
-        global settings_active
+        global settings_active, settings_active_int
+        settings_active_int = 4
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(588, 160)
+            self.setFixedSize(self.width, 170)
+
+            back_label_var[4].resize(95, 85)
+            pixmap = QPixmap('./image/grey_label.png')
+            back_label_var[4].setPixmap(pixmap)
+
             self.setting_title4.show()
             self.settings_source4.show()
             self.settings_dest4.show()
-            settings_active = True
-        elif settings_active is True:
-            self.setFixedSize(588, 80)
-            settings_active = False
 
     def settings_funk5(self):
         print('-- plugged in: settings_funk5')
-        global settings_active
+        global settings_active, settings_active_int
+        settings_active_int = 5
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(588, 160)
+            self.setFixedSize(self.width, 170)
+
+            back_label_var[5].resize(95, 85)
+            pixmap = QPixmap('./image/grey_label.png')
+            back_label_var[5].setPixmap(pixmap)
+
             self.setting_title5.show()
             self.settings_source5.show()
             self.settings_dest5.show()
-            settings_active = True
-        elif settings_active is True:
-            self.setFixedSize(588, 80)
-            settings_active = False
-
-    def set_timestamp_funk0(self):
-        ts_thread_var[0].start()
-
-    def set_timestamp_funk1(self):
-        ts_thread_var[1].start()
-
-    def set_timestamp_funk2(self):
-        ts_thread_var[2].start()
-
-    def set_timestamp_funk3(self):
-        ts_thread_var[3].start()
-
-    def set_timestamp_funk4(self):
-        ts_thread_var[4].start()
-
-    def set_timestamp_funk5(self):
-        ts_thread_var[5].start()
+            self.settings_dest5.show()
 
     def thread_funk_0(self):
         thread_var[0].start()
@@ -909,202 +1063,6 @@ class App(QMainWindow):
         print('stopping thread 6')
         timer_thread_var[5].start()
         thread_var[5].stop_thr()
-
-
-class TSClass0(QThread):  # clears info_label_1 text after x time.
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
-        print('-- plugged in ts0')
-        sync_ts_var[0].setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 255);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-        get_conf_funk()
-        if path_bool_var[0] == 'ARCHIVE_SOURCE_True' and dest_path_bool_var[0] == 'ARCHIVE_DESTINATION_True':
-            print('-- ts0 passed checks')
-            ts = datetime.datetime.now().timestamp()
-            sync_path = [path_var[0], dest_path_var[0]]
-            print('Directory timestamp synchronization for:', path_var[0], '&', dest_path_var[0], 'with Timestamp:', ts)
-            i = 0
-            for sync_paths in sync_path:
-                for dirName, subdirList, fileList in os.walk(sync_path[i]):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        print('sync:', fullpath)
-                        os.utime(fullpath, (ts, ts))
-                i += 1
-        sync_ts_var[0].setStyleSheet(
-            """QPushButton{background-color: rgb(255, 255, 0);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-
-
-class TSClass1(QThread):  # clears info_label_1 text after x time.
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
-        print('-- plugged in ts1')
-        sync_ts_var[1].setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 255);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-        get_conf_funk()
-        print('Source:', path_var[1])
-        print('Destination:', dest_path_var[1])
-        if path_bool_var[1] == 'DOCUMENT_SOURCE_True' and dest_path_bool_var[1] == 'DOCUMENT_DESTINATION_True':
-            print('-- ts1 passed checks')
-            ts = datetime.datetime.now().timestamp()
-            sync_path = [path_var[1], dest_path_var[1]]
-            print('Directory timestamp synchronization for:', path_var[1], '&', dest_path_var[1], 'with Timestamp:', ts)
-            i = 0
-            for sync_paths in sync_path:
-                for dirName, subdirList, fileList in os.walk(sync_path[i]):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        print('sync:', fullpath)
-                        os.utime(fullpath, (ts, ts))
-                i += 1
-        sync_ts_var[1].setStyleSheet(
-            """QPushButton{background-color: rgb(255, 255, 0);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-
-
-class TSClass2(QThread):  # clears info_label_1 text after x time.
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
-        print('-- plugged in ts2')
-        sync_ts_var[2].setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 255);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-        get_conf_funk()
-        print('Source:', path_var[2])
-        print('Destination:', dest_path_var[2])
-        if path_bool_var[2] == 'MUSIC_SOURCE_True' and dest_path_bool_var[2] == 'MUSIC_DESTINATION_True':
-            print('-- ts2 passed checks')
-            ts = datetime.datetime.now().timestamp()
-            sync_path = [path_var[2], dest_path_var[2]]
-            print('Directory timestamp synchronization for:', path_var[2], '&', dest_path_var[2], 'with Timestamp:', ts)
-            i = 0
-            for sync_paths in sync_path:
-                for dirName, subdirList, fileList in os.walk(sync_path[i]):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        print('sync:', fullpath)
-                        os.utime(fullpath, (ts, ts))
-                i += 1
-        sync_ts_var[2].setStyleSheet(
-            """QPushButton{background-color: rgb(255, 255, 0);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-
-
-class TSClass3(QThread):  # clears info_label_1 text after x time.
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
-        print('-- plugged in ts3')
-        sync_ts_var[3].setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 255);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-        get_conf_funk()
-        print('Source:', path_var[3])
-        print('Destination:', dest_path_var[3])
-        if path_bool_var[3] == 'PICTURE_SOURCE_True' and dest_path_bool_var[3] == 'PICTURE_DESTINATION_True':
-            print('-- ts3 passed checks')
-            ts = datetime.datetime.now().timestamp()
-            sync_path = [path_var[3], dest_path_var[3]]
-            print('Directory timestamp synchronization for:', path_var[3], '&', dest_path_var[3], 'with Timestamp:', ts)
-            i = 0
-            for sync_paths in sync_path:
-                for dirName, subdirList, fileList in os.walk(sync_path[i]):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        print('sync:', fullpath)
-                        os.utime(fullpath, (ts, ts))
-                i += 1
-        sync_ts_var[3].setStyleSheet(
-            """QPushButton{background-color: rgb(255, 255, 0);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-
-
-class TSClass4(QThread):  # clears info_label_1 text after x time.
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
-        print('-- plugged in ts4')
-        sync_ts_var[4].setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 255);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-        get_conf_funk()
-        print('Source:', path_var[4])
-        print('Destination:', dest_path_var[4])
-        if path_bool_var[4] == 'PROGRAMS_SOURCE_True' and dest_path_bool_var[4] == 'PROGRAMS_DESTINATION_True':
-            print('-- ts4 passed checks')
-            ts = datetime.datetime.now().timestamp()
-            sync_path = [path_var[4], dest_path_var[4]]
-            print('Directory timestamp synchronization for:', path_var[4], '&', dest_path_var[4], 'with Timestamp:', ts)
-            i = 0
-            for sync_paths in sync_path:
-                for dirName, subdirList, fileList in os.walk(sync_path[i]):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        print('sync:', fullpath)
-                        os.utime(fullpath, (ts, ts))
-                i += 1
-        sync_ts_var[4].setStyleSheet(
-            """QPushButton{background-color: rgb(255, 255, 0);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-
-
-class TSClass5(QThread):  # clears info_label_1 text after x time.
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global path_var, dest_path_var, path_bool_var, dest_path_bool_var, sync_ts_var
-        print('-- plugged in ts5')
-        sync_ts_var[5].setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 255);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
-        get_conf_funk()
-        print('Source:', path_var[5])
-        print('Destination:', dest_path_var[5])
-        if path_bool_var[5] == 'VIDEO_SOURCE_True' and dest_path_bool_var[5] == 'VIDEO_DESTINATION_True':
-            print('-- ts5 passed checks')
-            ts = datetime.datetime.now().timestamp()
-            sync_path = [path_var[5], dest_path_var[5]]
-            print('Directory timestamp synchronization for:', path_var[5], '&', dest_path_var[5], 'with Timestamp:', ts)
-            i = 0
-            for sync_paths in sync_path:
-                for dirName, subdirList, fileList in os.walk(sync_path[i]):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        print('sync:', fullpath)
-                        os.utime(fullpath, (ts, ts))
-                i += 1
-        sync_ts_var[5].setStyleSheet(
-            """QPushButton{background-color: rgb(255, 255, 0);
-           border:0px solid rgb(0, 0, 0);}"""
-        )
 
 
 class TimerClass0(QThread):  # clears info_label_1 text after x time.
@@ -1218,7 +1176,8 @@ class ThreadClass0(QThread):
                             if compare_bool_var[0] is True:
                                 ma = os.path.getmtime(fullpath)
                                 mb = os.path.getmtime(t_path)
-                                if ma != mb:
+                                # if ma != mb:
+                                if mb < ma:
                                     print('ThreadClass0 -- copy', fullpath, ma, 'to', t_path, mb)
                                     change_var = True
                                     try:
@@ -1277,7 +1236,7 @@ class ThreadClass1(QThread):
                             if compare_bool_var[1] is True:
                                 ma = os.path.getmtime(fullpath)
                                 mb = os.path.getmtime(t_path)
-                                if ma != mb:
+                                if mb < ma:
                                     print('ThreadClass1 -- copy', fullpath, ma, 'to', t_path, mb)
                                     change_var = True
                                     try:
@@ -1336,7 +1295,7 @@ class ThreadClass2(QThread):
                             if compare_bool_var[2] is True:
                                 ma = os.path.getmtime(fullpath)
                                 mb = os.path.getmtime(t_path)
-                                if ma != mb:
+                                if mb < ma:
                                     print('ThreadClass2 -- copy', fullpath, ma, 'to', t_path, mb)
                                     change_var = True
                                     try:
@@ -1395,7 +1354,7 @@ class ThreadClass3(QThread):
                             if compare_bool_var[3] is True:
                                 ma = os.path.getmtime(fullpath)
                                 mb = os.path.getmtime(t_path)
-                                if ma != mb:
+                                if mb < ma:
                                     print('ThreadClass3 -- copy', fullpath, ma, 'to', t_path, mb)
                                     change_var = True
                                     try:
@@ -1454,7 +1413,7 @@ class ThreadClass4(QThread):
                             if compare_bool_var[4] is True:
                                 ma = os.path.getmtime(fullpath)
                                 mb = os.path.getmtime(t_path)
-                                if ma != mb:
+                                if mb < ma:
                                     print('ThreadClass4 -- copy', fullpath, ma, 'to', t_path, mb)
                                     change_var = True
                                     try:
@@ -1513,7 +1472,7 @@ class ThreadClass5(QThread):
                             if compare_bool_var[5] is True:
                                 ma = os.path.getmtime(fullpath)
                                 mb = os.path.getmtime(t_path)
-                                if ma != mb:
+                                if mb < ma:
                                     print('ThreadClass5 -- copy', fullpath, ma, 'to', t_path, mb)
                                     change_var = True
                                     try:
