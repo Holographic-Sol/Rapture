@@ -1194,7 +1194,6 @@ class ThreadClass0(QThread):
         global path_bool_var, dest_path_bool_var
         btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
         change_var = False
-        get_conf_funk()  # potential simultanious calls to unthreaded funk. call when settings write. here is temp.
         print('ThreadClass0 Source:', path_var[0])
         print('ThreadClass0 Destination:', dest_path_var[0])
         if path_bool_var[0] == 'ARCHIVE_SOURCE_True' and dest_path_bool_var[0] == 'ARCHIVE_DESTINATION_True':
@@ -1254,7 +1253,6 @@ class ThreadClass1(QThread):
         global path_bool_var, dest_path_bool_var
         btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
         change_var = False
-        get_conf_funk()
         print('ThreadClass1 Source:', path_var[1])
         print('ThreadClass1 Destination:', dest_path_var[1])
         if path_bool_var[1] == 'DOCUMENT_SOURCE_True' and dest_path_bool_var[1] == 'DOCUMENT_DESTINATION_True':
@@ -1314,7 +1312,6 @@ class ThreadClass2(QThread):
         global path_bool_var, dest_path_bool_var
         btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
         change_var = False
-        get_conf_funk()
         print('ThreadClass2 Source:', path_var[2])
         print('ThreadClass2 Destination:', dest_path_var[2])
         if path_bool_var[2] == 'MUSIC_SOURCE_True' and dest_path_bool_var[2] == 'MUSIC_DESTINATION_True':
@@ -1374,7 +1371,6 @@ class ThreadClass3(QThread):
         global path_bool_var, dest_path_bool_var
         btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
         change_var = False
-        get_conf_funk()
         print('ThreadClass3 Source:', path_var[3])
         print('ThreadClass3 Destination:', dest_path_var[3])
         if path_bool_var[3] == 'PICTURE_SOURCE_True' and dest_path_bool_var[3] == 'PICTURE_DESTINATION_True':
@@ -1434,7 +1430,6 @@ class ThreadClass4(QThread):
         global path_bool_var, dest_path_bool_var
         btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
         change_var = False
-        get_conf_funk()
         print('ThreadClass4 Source:', path_var[4])
         print('ThreadClass4 Destination:', dest_path_var[4])
         if path_bool_var[4] == 'PROGRAMS_SOURCE_True' and dest_path_bool_var[4] == 'PROGRAMS_DESTINATION_True':
@@ -1494,7 +1489,6 @@ class ThreadClass5(QThread):
         global path_bool_var, dest_path_bool_var
         btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
         change_var = False
-        get_conf_funk()
         print('ThreadClass5 Source:', path_var[5])
         print('ThreadClass5 Destination:', dest_path_var[5])
         if path_bool_var[5] == 'VIDEO_SOURCE_True' and dest_path_bool_var[5] == 'VIDEO_DESTINATION_True':
