@@ -222,8 +222,8 @@ class App(QMainWindow):
             comp_cont_button = 'comp_cont_button' + str(i)  # mode switch. default only copy missing file names.
             self.comp_cont_button = QPushButton(self)
             self.comp_cont_button.resize(30, 26)
-            # self.comp_cont_button.setIcon(QIcon(img_mode_1))
-            # self.comp_cont_button.setIconSize(QSize(10, 30))
+            self.comp_cont_button.setIcon(QIcon(img_mode_1))
+            self.comp_cont_button.setIconSize(QSize(18, 18))
             self.comp_cont_button.setStyleSheet(
                 """QPushButton{background-color: rgb(35, 35, 35);
                border:0px solid rgb(0, 0, 0);}"""
@@ -1015,7 +1015,7 @@ class App(QMainWindow):
             compare_bool_var[compare_clicked] = True
             # write if file contents changed and write missing file names.
             print('-- compare file contents set to:', compare_bool_var[compare_clicked], comp_cont_button_var[compare_clicked])
-            # comp_cont_button_var[compare_clicked].setIcon(QIcon("./image/mode_2.png"))
+            comp_cont_button_var[compare_clicked].setIcon(QIcon("./image/mode_2.png"))
             comp_cont_button_var[compare_clicked].setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
                border:0px solid rgb(30, 30, 30);}"""
@@ -1024,7 +1024,7 @@ class App(QMainWindow):
             compare_bool_var[compare_clicked] = False
             # write only missing file names and do not compare file contents.
             print('-- compare file contents set to:', compare_bool_var[compare_clicked], comp_cont_button_var[compare_clicked])
-            # comp_cont_button_var[compare_clicked].setIcon(QIcon("./image/mode_1.png"))
+            comp_cont_button_var[compare_clicked].setIcon(QIcon("./image/mode_1.png"))
             comp_cont_button_var[compare_clicked].setStyleSheet(
                 """QPushButton{background-color: rgb(35, 35, 35);
                border:0px solid rgb(30, 30, 30);}"""
