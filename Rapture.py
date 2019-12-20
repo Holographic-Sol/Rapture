@@ -210,32 +210,34 @@ class App(QMainWindow):
 
             sett_name = 'btnx_settings' + str(i)  # settings button.
             self.sett_name = QPushButton(self)
-            self.sett_name.resize(10, 10)
-            self.sett_name.setIcon(QIcon(img_settings))
-            self.sett_name.setIconSize(QSize(10, 10))
+            self.sett_name.resize(30, 10)
+            self.sett_name.setIcon(QIcon('./image/menu_down.png'))
+            self.sett_name.setIconSize(QSize(15, 15))
             self.sett_name.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
+                """QPushButton{background-color: rgb(35, 35, 35);
                border:0px solid rgb(0, 0, 0);}"""
             )
             btnx_settings_var.append(self.sett_name)
 
             comp_cont_button = 'comp_cont_button' + str(i)  # mode switch. default only copy missing file names.
             self.comp_cont_button = QPushButton(self)
-            self.comp_cont_button.resize(10, 30)
-            self.comp_cont_button.setIcon(QIcon(img_mode_1))
-            self.comp_cont_button.setIconSize(QSize(10, 30))
+            self.comp_cont_button.resize(30, 26)
+            # self.comp_cont_button.setIcon(QIcon(img_mode_1))
+            # self.comp_cont_button.setIconSize(QSize(10, 30))
             self.comp_cont_button.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
+                """QPushButton{background-color: rgb(35, 35, 35);
                border:0px solid rgb(0, 0, 0);}"""
             )
             comp_cont_button_var.append(self.comp_cont_button)
 
             stop_thr_button = 'stop_thr_button' + str(i)  # stop main thread.
             self.stop_thr_button = QPushButton(self)
-            self.stop_thr_button.resize(10, 10)
+            self.stop_thr_button.resize(30, 10)
+            self.stop_thr_button.setIcon(QIcon('./image/stop_thread.png'))
+            self.stop_thr_button.setIconSize(QSize(15, 15))
             self.stop_thr_button.setStyleSheet(
-                """QPushButton{background-color: rgb(255, 0, 0);
-               border:2px solid rgb(35, 35, 35);}"""
+                """QPushButton{background-color: rgb(35, 35, 35);
+               border:0px solid rgb(35, 35, 35);}"""
             )
             stop_thr_button_var.append(self.stop_thr_button)
 
@@ -570,26 +572,26 @@ class App(QMainWindow):
         btnx_main_var[4].move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 5))
         btnx_main_var[5].move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 5))
 
-        btnx_settings_var[0].move((back_label_ankor_w0 + 78), (back_label_ankor_h0 + 48))
-        btnx_settings_var[1].move((back_label_ankor_w1 + 78), (back_label_ankor_h1 + 48))
-        btnx_settings_var[2].move((back_label_ankor_w2 + 78), (back_label_ankor_h2 + 48))
-        btnx_settings_var[3].move((back_label_ankor_w3 + 78), (back_label_ankor_h3 + 48))
-        btnx_settings_var[4].move((back_label_ankor_w4 + 78), (back_label_ankor_h4 + 48))
-        btnx_settings_var[5].move((back_label_ankor_w5 + 78), (back_label_ankor_h5 + 48))
+        btnx_settings_var[0].move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 49))
+        btnx_settings_var[1].move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 49))
+        btnx_settings_var[2].move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 49))
+        btnx_settings_var[3].move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 49))
+        btnx_settings_var[4].move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 49))
+        btnx_settings_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 49))
 
-        comp_cont_button_var[0].move((back_label_ankor_w0 + 78), (back_label_ankor_h0 + 17))
-        comp_cont_button_var[1].move((back_label_ankor_w1 + 78), (back_label_ankor_h1 + 17))
-        comp_cont_button_var[2].move((back_label_ankor_w2 + 78), (back_label_ankor_h2 + 17))
-        comp_cont_button_var[3].move((back_label_ankor_w3 + 78), (back_label_ankor_h3 + 17))
-        comp_cont_button_var[4].move((back_label_ankor_w4 + 78), (back_label_ankor_h4 + 17))
-        comp_cont_button_var[5].move((back_label_ankor_w5 + 78), (back_label_ankor_h5 + 17))
+        comp_cont_button_var[0].move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 19))
+        comp_cont_button_var[1].move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 19))
+        comp_cont_button_var[2].move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 19))
+        comp_cont_button_var[3].move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 19))
+        comp_cont_button_var[4].move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 19))
+        comp_cont_button_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 19))
 
-        stop_thr_button_var[0].move((back_label_ankor_w0 + 78), (back_label_ankor_h0 + 5))
-        stop_thr_button_var[1].move((back_label_ankor_w1 + 78), (back_label_ankor_h1 + 5))
-        stop_thr_button_var[2].move((back_label_ankor_w2 + 78), (back_label_ankor_h2 + 5))
-        stop_thr_button_var[3].move((back_label_ankor_w3 + 78), (back_label_ankor_h3 + 5))
-        stop_thr_button_var[4].move((back_label_ankor_w4 + 78), (back_label_ankor_h4 + 5))
-        stop_thr_button_var[5].move((back_label_ankor_w5 + 78), (back_label_ankor_h5 + 5))
+        stop_thr_button_var[0].move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 5))
+        stop_thr_button_var[1].move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 5))
+        stop_thr_button_var[2].move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 5))
+        stop_thr_button_var[3].move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 5))
+        stop_thr_button_var[4].move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 5))
+        stop_thr_button_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 5))
 
         info_label_1_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 61))
         info_label_1_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 61))
