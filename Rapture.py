@@ -4,16 +4,16 @@ import time
 import shutil
 import filecmp
 import datetime
+import fileinput
 import distutils.dir_util
 import win32api
 import win32process
 import win32con
 from win32api import GetSystemMetrics
 from PyQt5.QtCore import Qt, QThread, QSize
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon, QFont
 
-conf_funk_engaged = False
 priorityclasses = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.BELOW_NORMAL_PRIORITY_CLASS,
                    win32process.NORMAL_PRIORITY_CLASS,
@@ -24,6 +24,7 @@ pid = win32api.GetCurrentProcessId()
 handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
 win32process.SetPriorityClass(handle, priorityclasses[4])
 
+settings_active = False
 thread_var = [(), (), (), (), (), ()]
 timer_thread_var = [(), (), (), (), (), ()]
 ts_thread_var = [(), (), (), (), (), ()]
@@ -31,14 +32,24 @@ path_var = []
 dest_path_var = []
 path_bool_var = []
 dest_path_bool_var = []
+source_path_entered = ''
+dest_path_entered = ''
+source_selected = ()
+dest_selected = ()
 compare_bool_var = [False, False, False, False, False, False]
 compare_clicked = ()
-config_var = ['ARCHIVE_SOURCE', 'ARCHIVE_DESTINATION',
-              'DOCUMENT_SOURCE', 'DOCUMENT_DESTINATION ',
-              'MUSIC_SOURCE', 'MUSIC_DESTINATION',
-              'PICTURE_SOURCE', 'PICTURE_DESTINATION',
-              'PROGRAMS_SOURCE', 'PROGRAMS_DESTINATION',
-              'VIDEO_SOURCE', 'VIDEO_DESTINATION']
+config_src_var = ['ARCHIVE_SOURCE',
+                  'DOCUMENT_SOURCE',
+                  'MUSIC_SOURCE',
+                  'PICTURE_SOURCE',
+                  'PROGRAMS_SOURCE',
+                  'VIDEO_SOURCE']
+config_dst_var = ['ARCHIVE_DESTINATION',
+                  'DOCUMENT_DESTINATION',
+                  'MUSIC_DESTINATION',
+                  'PICTURE_DESTINATION',
+                  'PROGRAMS_DESTINATION',
+                  'VIDEO_DESTINATION']
 btnx_main_var = []
 btnx_settings_var = []
 comp_cont_button_var = []
@@ -64,7 +75,7 @@ img_active_var = ['./image/archive_icon_active.png',
 
 
 def get_conf_funk():
-    global conf_funk_engaged, path_var, path_bool_var, dest_path_var, dest_path_bool_var
+    global path_var, path_bool_var, dest_path_var, dest_path_bool_var
     path_var = []
     path_bool_var = []
     dest_path_var = []
@@ -73,14 +84,13 @@ def get_conf_funk():
         for line in fo:
             line = line.strip()
             i = 0
-            for config_vars in config_var:
-                if line.startswith(config_var[i]):
-                    key_word_length = len(config_var[i])
+            for config_src_vars in config_src_var:
+                if line.startswith(config_src_var[i]):
+                    key_word_length = len(config_src_var[i])
                     primary_key = line[:key_word_length]
                     secondary_key = line[key_word_length:]
                     primary_key = primary_key.strip()
                     secondary_key = secondary_key.strip()
-
                     if primary_key.endswith('_SOURCE'):
                         if os.path.exists(secondary_key):
                             if (primary_key + '_True') not in dest_path_bool_var:
@@ -92,8 +102,16 @@ def get_conf_funk():
                                 path_var.append('')
                                 path_bool_var.append(primary_key + '_False')
                                 # print(primary_key, secondary_key, 'invalid')
-
-                    elif primary_key.endswith('_DESTINATION'):
+                i += 1
+            i = 0
+            for config_dst_vars in config_dst_var:
+                if line.startswith(config_dst_var[i]):
+                    key_word_length = len(config_dst_var[i])
+                    primary_key = line[:key_word_length]
+                    secondary_key = line[key_word_length:]
+                    primary_key = primary_key.strip()
+                    secondary_key = secondary_key.strip()
+                    if primary_key.endswith('_DESTINATION'):
                         if os.path.exists(secondary_key):
                             if (primary_key + '_True') not in dest_path_bool_var:
                                 dest_path_var.append(secondary_key)
@@ -129,6 +147,7 @@ class App(QMainWindow):
     def initUI(self):
         global thread_var, btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, info_label_1_var
         global img_var, img_active_var, img_mode_1, img_mode_2, img_settings, timer_thread_var, sync_ts_var, ts_thread_var
+        global path_var, dest_path_var
         self.setWindowTitle(' ')
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width, self.height)
@@ -204,6 +223,262 @@ class App(QMainWindow):
             print('created object:', self.sync_ts, '. naming object:', sync_ts)
             i += 1
 
+        self.settings_source_label = QLabel(self)
+        self.settings_source_label.move(5, 115)
+        self.settings_source_label.resize(80, 15)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.settings_source_label.setFont(newfont)
+        self.settings_source_label.setText('Source:')
+        self.settings_source_label.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        # self.settings_source_label.hide()
+        self.settings_dest_label = QLabel(self)
+        self.settings_dest_label.move(5, 135)
+        self.settings_dest_label.resize(80, 15)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.settings_dest_label.setFont(newfont)
+        self.settings_dest_label.setText('Destination:')
+        self.settings_dest_label.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        # self.settings_dest_label.hide()
+        self.setting_title0 = QLabel(self)
+        self.setting_title0.resize(100, 15)
+        self.setting_title0.move(5, 90)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title0.setFont(newfont)
+        self.setting_title0.setText("Archive Settings")
+        self.setting_title0.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        self.setting_title0.hide()
+        self.setting_title1 = QLabel(self)
+        self.setting_title1.resize(100, 15)
+        self.setting_title1.move(100, 90)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title1.setFont(newfont)
+        self.setting_title1.setText("Document Settings")
+        self.setting_title1.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        self.setting_title1.hide()
+        self.setting_title2 = QLabel(self)
+        self.setting_title2.resize(100, 15)
+        self.setting_title2.move(200, 90)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title2.setFont(newfont)
+        self.setting_title2.setText("Music Settings")
+        self.setting_title2.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        self.setting_title2.hide()
+        self.setting_title3 = QLabel(self)
+        self.setting_title3.resize(100, 15)
+        self.setting_title3.move(300, 90)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title3.setFont(newfont)
+        self.setting_title3.setText("Picture Settings")
+        self.setting_title3.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        self.setting_title3.hide()
+        self.setting_title4 = QLabel(self)
+        self.setting_title4.resize(100, 15)
+        self.setting_title4.move(400, 90)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title4.setFont(newfont)
+        self.setting_title4.setText("Program Settings")
+        self.setting_title4.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        self.setting_title4.hide()
+        self.setting_title5 = QLabel(self)
+        self.setting_title5.resize(100, 15)
+        self.setting_title5.move(500, 90)
+        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title5.setFont(newfont)
+        self.setting_title5.setText("Video Settings")
+        self.setting_title5.setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+           color: green;
+           border:0px solid rgb(35, 35, 35);}"""
+        )
+        self.setting_title5.hide()
+
+        self.settings_source0 = QLineEdit(self)
+        self.settings_source0.move(100, 115)
+        self.settings_source0.resize(473, 15)
+        self.settings_source0.setText(path_var[0])
+        self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
+        self.settings_source0.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_source0.hide()
+
+        self.settings_source1 = QLineEdit(self)
+        self.settings_source1.move(100, 115)
+        self.settings_source1.resize(473, 15)
+        self.settings_source1.setText(path_var[1])
+        self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
+        self.settings_source1.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_source1.hide()
+        self.settings_source2 = QLineEdit(self)
+        self.settings_source2.move(100, 115)
+        self.settings_source2.resize(473, 15)
+        self.settings_source2.setText(path_var[2])
+        self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
+        self.settings_source2.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_source2.hide()
+        self.settings_source3 = QLineEdit(self)
+        self.settings_source3.move(100, 115)
+        self.settings_source3.resize(473, 15)
+        self.settings_source3.setText(path_var[3])
+        self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
+        self.settings_source3.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_source3.hide()
+        self.settings_source4 = QLineEdit(self)
+        self.settings_source4.move(100, 115)
+        self.settings_source4.resize(473, 15)
+        self.settings_source4.setText(path_var[4])
+        self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
+        self.settings_source4.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_source4.hide()
+        self.settings_source5 = QLineEdit(self)
+        self.settings_source5.move(100, 115)
+        self.settings_source5.resize(473, 15)
+        self.settings_source5.setText(path_var[5])
+        self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
+        self.settings_source5.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_source5.hide()
+
+        self.settings_dest0 = QLineEdit(self)
+        self.settings_dest0.move(100, 135)
+        self.settings_dest0.resize(473, 15)
+        self.settings_dest0.setText(dest_path_var[0])
+        self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
+        self.settings_dest0.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_dest0.hide()
+        self.settings_dest1 = QLineEdit(self)
+        self.settings_dest1.move(100, 135)
+        self.settings_dest1.resize(473, 15)
+        self.settings_dest1.setText(dest_path_var[1])
+        self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
+        self.settings_dest1.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_dest1.hide()
+        self.settings_dest2 = QLineEdit(self)
+        self.settings_dest2.move(100, 135)
+        self.settings_dest2.resize(473, 15)
+        self.settings_dest2.setText(dest_path_var[2])
+        self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
+        self.settings_dest2.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_dest2.hide()
+        self.settings_dest3 = QLineEdit(self)
+        self.settings_dest3.move(100, 135)
+        self.settings_dest3.resize(473, 15)
+        self.settings_dest3.setText(dest_path_var[3])
+        self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
+        self.settings_dest3.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_dest3.hide()
+        self.settings_dest4 = QLineEdit(self)
+        self.settings_dest4.move(100, 135)
+        self.settings_dest4.resize(473, 15)
+        self.settings_dest4.setText(dest_path_var[4])
+        self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
+        self.settings_dest4.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_dest4.hide()
+        self.settings_dest5 = QLineEdit(self)
+        self.settings_dest5.move(100, 135)
+        self.settings_dest5.resize(473, 15)
+        # self.settings_dest5.setText(dest_path_var[5])
+        self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
+        self.settings_dest5.setStyleSheet(
+            """QLineEdit {background-color: rgb(35, 35, 35);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: green;
+            selection-background-color: black;
+            color: grey;}"""
+        )
+        self.settings_dest5.hide()
+
         btnx_main_var[0].move(5, 5)
         btnx_main_var[1].move(100, 5)
         btnx_main_var[2].move(200, 5)
@@ -274,6 +549,13 @@ class App(QMainWindow):
         sync_ts_var[4].clicked.connect(self.set_timestamp_funk4)
         sync_ts_var[5].clicked.connect(self.set_timestamp_funk5)
 
+        btnx_settings_var[0].clicked.connect(self.settings_funk0)
+        btnx_settings_var[1].clicked.connect(self.settings_funk1)
+        btnx_settings_var[2].clicked.connect(self.settings_funk2)
+        btnx_settings_var[3].clicked.connect(self.settings_funk3)
+        btnx_settings_var[4].clicked.connect(self.settings_funk4)
+        btnx_settings_var[5].clicked.connect(self.settings_funk5)
+
         timer_thread_var[0] = TimerClass0()
         timer_thread_var[1] = TimerClass1()
         timer_thread_var[2] = TimerClass2()
@@ -297,8 +579,212 @@ class App(QMainWindow):
 
         self.show()
 
-    # def settings_funk(self):
-        # os.startfile(config)
+    def settings_source_funk(self):
+        global source_path_entered, source_selected, config_src_var, path_var
+        print('--', 'source_selected:', source_selected, 'source path entered:', source_path_entered)
+        get_conf_funk()
+        print(config_src_var)
+        before_str = config_src_var[source_selected]+' '+path_var[source_selected]
+        after_str = config_src_var[source_selected]+' '+source_path_entered
+        print('-- before_str:', before_str)
+        print('-- after_str: ', after_str)
+        if os.path.exists(source_path_entered):
+            for line in fileinput.input('./config.txt', inplace=True):
+                print(line.rstrip().replace(before_str, after_str)),
+
+            path_var[source_selected] = source_path_entered
+
+    def settings_dest_funk(self):
+        global dest_path_entered, dest_selected, config_dst_var
+        print('--', 'dest_selected:', dest_selected, 'dest path entered:', dest_path_entered)
+        get_conf_funk()
+        before_str = config_dst_var[dest_selected] + ' ' + dest_path_var[dest_selected]
+        after_str = config_dst_var[dest_selected] + ' ' + dest_path_entered
+        print('-- before_str:', before_str)
+        print('-- after_str: ', after_str)
+        if os.path.exists(dest_path_entered):
+            for line in fileinput.input('./config.txt', inplace=True):
+                print(line.rstrip().replace(before_str, after_str)),
+
+            dest_path_var[dest_selected] = dest_path_entered
+
+    def settings_source_pre_funk0(self):
+        global source_path_entered, source_selected
+        source_selected = 0
+        source_path_entered = self.settings_source0.text()
+        self.settings_source_funk()
+
+    def settings_source_pre_funk1(self):
+        global source_path_entered, source_selected
+        source_selected = 1
+        source_path_entered = self.settings_source1.text()
+        self.settings_source_funk()
+
+    def settings_source_pre_funk2(self):
+        global source_path_entered, source_selected
+        source_selected = 2
+        source_path_entered = self.settings_source2.text()
+        self.settings_source_funk()
+
+    def settings_source_pre_funk3(self):
+        global source_path_entered, source_selected
+        source_selected = 3
+        source_path_entered = self.settings_source3.text()
+        self.settings_source_funk()
+
+    def settings_source_pre_funk4(self):
+        global source_path_entered, source_selected
+        source_selected = 4
+        source_path_entered = self.settings_source4.text()
+        self.settings_source_funk()
+
+    def settings_source_pre_funk5(self):
+        global source_path_entered, source_selected
+        source_selected = 5
+        source_path_entered = self.settings_source5.text()
+        self.settings_source_funk()
+
+    def settings_dest_pre_funk0(self):
+        global dest_path_entered, dest_selected
+        dest_selected = 0
+        dest_path_entered = self.settings_dest0.text()
+        self.settings_dest_funk()
+
+    def settings_dest_pre_funk1(self):
+        global dest_path_entered, dest_selected
+        dest_selected = 1
+        dest_path_entered = self.settings_dest1.text()
+        self.settings_dest_funk()
+
+    def settings_dest_pre_funk2(self):
+        global dest_path_entered, dest_selected
+        dest_selected = 2
+        dest_path_entered = self.settings_dest2.text()
+        self.settings_dest_funk()
+
+    def settings_dest_pre_funk3(self):
+        global dest_path_entered, dest_selected
+        dest_selected = 3
+        dest_path_entered = self.settings_dest3.text()
+        self.settings_dest_funk()
+
+    def settings_dest_pre_funk4(self):
+        global dest_path_entered, dest_selected
+        dest_selected = 4
+        dest_path_entered = self.settings_dest4.text()
+        self.settings_dest_funk()
+
+    def settings_dest_pre_funk5(self):
+        global dest_path_entered, dest_selected
+        dest_selected = 5
+        dest_path_entered = self.settings_dest5.text()
+        self.settings_dest_funk()
+
+    def hide_settings_funk(self):
+        print('-- plugged in: hide_settings_funk')
+        self.setting_title0.hide()
+        self.setting_title1.hide()
+        self.setting_title2.hide()
+        self.setting_title3.hide()
+        self.setting_title4.hide()
+        self.setting_title5.hide()
+        self.settings_source0.hide()
+        self.settings_source1.hide()
+        self.settings_source2.hide()
+        self.settings_source3.hide()
+        self.settings_source4.hide()
+        self.settings_source5.hide()
+        self.settings_dest0.hide()
+        self.settings_dest1.hide()
+        self.settings_dest2.hide()
+        self.settings_dest3.hide()
+        self.settings_dest4.hide()
+        self.settings_dest5.hide()
+
+    def settings_funk0(self):
+        print('-- plugged in: settings_funk0')
+        global settings_active
+        self.hide_settings_funk()
+        if settings_active is False:
+            self.setFixedSize(588, 160)
+            self.setting_title0.show()
+            self.settings_source0.show()
+            self.settings_dest0.show()
+            settings_active = True
+        elif settings_active is True:
+            self.setFixedSize(588, 80)
+            settings_active = False
+
+    def settings_funk1(self):
+        print('-- plugged in: settings_funk1')
+        global settings_active
+        self.hide_settings_funk()
+        if settings_active is False:
+            self.setFixedSize(588, 160)
+            self.setting_title1.show()
+            self.settings_source1.show()
+            self.settings_dest1.show()
+            settings_active = True
+        elif settings_active is True:
+            self.setFixedSize(588, 80)
+            settings_active = False
+
+    def settings_funk2(self):
+        print('-- plugged in: settings_funk2')
+        global settings_active
+        self.hide_settings_funk()
+        if settings_active is False:
+            self.setFixedSize(588, 160)
+            self.setting_title2.show()
+            self.settings_source2.show()
+            self.settings_dest2.show()
+            settings_active = True
+        elif settings_active is True:
+            self.setFixedSize(588, 80)
+            settings_active = False
+
+    def settings_funk3(self):
+        print('-- plugged in: settings_funk3')
+        global settings_active
+        self.hide_settings_funk()
+        if settings_active is False:
+            self.setFixedSize(588, 160)
+            self.setting_title3.show()
+            self.settings_source3.show()
+            self.settings_dest3.show()
+            settings_active = True
+        elif settings_active is True:
+            self.setFixedSize(588, 80)
+            settings_active = False
+
+    def settings_funk4(self):
+        print('-- plugged in: settings_funk4')
+        global settings_active
+        self.hide_settings_funk()
+        if settings_active is False:
+            self.setFixedSize(588, 160)
+            self.setting_title4.show()
+            self.settings_source4.show()
+            self.settings_dest4.show()
+            settings_active = True
+        elif settings_active is True:
+            self.setFixedSize(588, 80)
+            settings_active = False
+
+    def settings_funk5(self):
+        print('-- plugged in: settings_funk5')
+        global settings_active
+        self.hide_settings_funk()
+        if settings_active is False:
+            self.setFixedSize(588, 160)
+            self.setting_title5.show()
+            self.settings_source5.show()
+            self.settings_dest5.show()
+            settings_active = True
+        elif settings_active is True:
+            self.setFixedSize(588, 80)
+            settings_active = False
+
     def set_timestamp_funk0(self):
         ts_thread_var[0].start()
 
@@ -702,7 +1188,7 @@ class ThreadClass0(QThread):
         QThread.__init__(self)
 
     def run(self):
-        global conf_funk_engaged, btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
         change_var = False
@@ -762,7 +1248,7 @@ class ThreadClass1(QThread):
         QThread.__init__(self)
 
     def run(self):
-        global conf_funk_engaged, btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
         global path_bool_var, dest_path_bool_var
         btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
         change_var = False
