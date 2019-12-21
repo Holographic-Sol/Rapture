@@ -1161,7 +1161,6 @@ class UpdateSettingsWindow(QThread):
             settings_dest_edit_var, configuration_engaged, configuration_engaged_by_user
 
         if settings_source_edit_var[0].isReadOnly() is True:
-            print('-- checking configuration and drive/path existence, updating values')
             path_var = []
             path_bool_var = []
             dest_path_var = []
