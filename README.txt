@@ -19,9 +19,7 @@ so instead of procrastinating i saved my future self time.
 
 This will not delete 'depricated' files and folders from your chosen backup destination.
 
-I use it to backup from my secondary internal drive to my external backup ssd, its been backing itself up at lightening speed as i write the code!
-WARNING! Still in development! Please be careful and check paths and make sure everything is right before writing/backing up.
-
+I use it to backup from my secondary internal drive to my external backup ssd.
 Best Case Example:
 Secondary Internal Drive Tree:
   Archives
