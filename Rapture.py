@@ -287,6 +287,17 @@ class App(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.while_pressed_funk)
 
+        self.paths_readonly_button = QPushButton(self)
+        self.paths_readonly_button.resize(10, 10)
+        self.paths_readonly_button.move(self.width - 40, 115)
+        # self.paths_readonly_button.setIcon(QIcon('./image/menu_left.png'))
+        # self.paths_readonly_button.setIconSize(QSize(15, 35))
+        self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
+        self.paths_readonly_button.setStyleSheet(
+            """QPushButton{background-color: rgb(35, 35, 35);
+           border:0px solid rgb(0, 0, 0);}"""
+        )
+
         self.scr_left = QPushButton(self)
         self.scr_left.resize(10, 35)
         self.scr_left.move(0, 115)
@@ -680,6 +691,35 @@ class App(QMainWindow):
 
         self.show()
 
+    def paths_readonly_funk(self):
+        print('-- entered paths_readonly_funk')
+        read_only = True
+
+        if settings_source_edit_var[0].isReadOnly() is True:
+            read_only = True
+        elif settings_source_edit_var[0].isReadOnly() is False:
+            read_only = False
+
+        if read_only is True:  # Set Read Only False
+            i = 0
+            for settings_source_edit_vars in settings_source_edit_var:
+                settings_source_edit_var[i].setReadOnly(False)
+                i += 1
+            i = 0
+            for settings_dest_edit_vars in settings_dest_edit_var:
+                settings_dest_edit_var[i].setReadOnly(False)
+                i += 1
+
+        elif read_only is False:  # Set Read Only
+            i = 0
+            for settings_source_edit_vars in settings_source_edit_var:
+                settings_source_edit_var[i].setReadOnly(True)
+                i += 1
+            i = 0
+            for settings_dest_edit_vars in settings_dest_edit_var:
+                settings_dest_edit_var[i].setReadOnly(True)
+                i += 1
+
     def settings_dest_focus_funk1(self):
         print('focused')
 
@@ -759,7 +799,6 @@ class App(QMainWindow):
         after_str = config_src_var[source_selected]+' '+source_path_entered
         print('-- before_str:', before_str)
         print('-- after_str: ', after_str)
-        # distutils.dir_util.mkpath(source_path_entered)
         if os.path.exists(source_path_entered):
             for line in fileinput.input('./config.txt', inplace=True):
                 print(line.rstrip().replace(before_str, after_str)),
@@ -773,7 +812,6 @@ class App(QMainWindow):
         after_str = config_dst_var[dest_selected] + ' ' + dest_path_entered
         print('-- before_str:', before_str)
         print('-- after_str: ', after_str)
-        # distutils.dir_util.mkpath(dest_path_entered)
 
         if os.path.exists(dest_path_entered):
             for line in fileinput.input('./config.txt', inplace=True):
@@ -1120,72 +1158,74 @@ class UpdateSettingsWindow(QThread):
         global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
             settings_dest_edit_var, configuration_engaged, configuration_engaged_by_user
 
-        path_var = []
-        path_bool_var = []
-        dest_path_var = []
-        dest_path_bool_var = []
-        if os.path.exists('config.txt'):
-            with open('config.txt', 'r') as fo:
-                configuration_engaged = True
-                for line in fo:
-                    line = line.strip()
-                    i = 0
-                    for config_src_vars in config_src_var:
-                        if line.startswith(config_src_var[i]):
-                            key_word_length = len(config_src_var[i])
-                            primary_key = line[:key_word_length]
-                            secondary_key = line[key_word_length:]
-                            primary_key = primary_key.strip()
-                            secondary_key = secondary_key.strip()
-                            if primary_key.endswith('_SOURCE'):
-                                if os.path.exists(secondary_key):
-                                    if (primary_key + '_True') not in path_bool_var:
-                                        path_var.append(secondary_key)
-                                        path_bool_var.append(primary_key + '_True')
-                                        # print(primary_key, secondary_key, 'valid')
-                                elif not os.path.exists(secondary_key):
-                                    if (primary_key + '_False') not in path_bool_var:
-                                        path_var.append('')
-                                        path_bool_var.append(primary_key + '_False')
+        if settings_source_edit_var[0].isReadOnly() is True:
+            print('-- checking configuration and drive/path existence, updating values')
+            path_var = []
+            path_bool_var = []
+            dest_path_var = []
+            dest_path_bool_var = []
+            if os.path.exists('config.txt'):
+                with open('config.txt', 'r') as fo:
+                    configuration_engaged = True
+                    for line in fo:
+                        line = line.strip()
+                        i = 0
+                        for config_src_vars in config_src_var:
+                            if line.startswith(config_src_var[i]):
+                                key_word_length = len(config_src_var[i])
+                                primary_key = line[:key_word_length]
+                                secondary_key = line[key_word_length:]
+                                primary_key = primary_key.strip()
+                                secondary_key = secondary_key.strip()
+                                if primary_key.endswith('_SOURCE'):
+                                    if os.path.exists(secondary_key):
+                                        if (primary_key + '_True') not in path_bool_var:
+                                            path_var.append(secondary_key)
+                                            path_bool_var.append(primary_key + '_True')
+                                            # print(primary_key, secondary_key, 'valid')
+                                    elif not os.path.exists(secondary_key):
+                                        if (primary_key + '_False') not in path_bool_var:
+                                            path_var.append('')
+                                            path_bool_var.append(primary_key + '_False')
+                                            # print(primary_key, secondary_key, 'invalid')
+                            i += 1
+                        i = 0
+                        for config_dst_vars in config_dst_var:
+                            if line.startswith(config_dst_var[i]):
+                                key_word_length = len(config_dst_var[i])
+                                primary_key = line[:key_word_length]
+                                secondary_key = line[key_word_length:]
+                                primary_key = primary_key.strip()
+                                secondary_key = secondary_key.strip()
+                                if primary_key.endswith('_DESTINATION'):
+                                    if os.path.exists(secondary_key):
+                                        if (primary_key + '_True') not in dest_path_bool_var:
+                                            dest_path_var.append(secondary_key)
+                                            dest_path_bool_var.append(primary_key + '_True')
+                                            # print(primary_key, secondary_key, 'valid')
+                                    elif not os.path.exists(secondary_key):
+                                        if (primary_key + '_False') not in dest_path_bool_var:
+                                            dest_path_var.append('')
+                                            dest_path_bool_var.append(primary_key + '_False')
                                         # print(primary_key, secondary_key, 'invalid')
-                        i += 1
-                    i = 0
-                    for config_dst_vars in config_dst_var:
-                        if line.startswith(config_dst_var[i]):
-                            key_word_length = len(config_dst_var[i])
-                            primary_key = line[:key_word_length]
-                            secondary_key = line[key_word_length:]
-                            primary_key = primary_key.strip()
-                            secondary_key = secondary_key.strip()
-                            if primary_key.endswith('_DESTINATION'):
-                                if os.path.exists(secondary_key):
-                                    if (primary_key + '_True') not in dest_path_bool_var:
-                                        dest_path_var.append(secondary_key)
-                                        dest_path_bool_var.append(primary_key + '_True')
-                                        # print(primary_key, secondary_key, 'valid')
-                                elif not os.path.exists(secondary_key):
-                                    if (primary_key + '_False') not in dest_path_bool_var:
-                                        dest_path_var.append('')
-                                        dest_path_bool_var.append(primary_key + '_False')
-                                    # print(primary_key, secondary_key, 'invalid')
-                        i += 1
-            fo.close()
+                            i += 1
+                fo.close()
 
-            i = 0
-            for settings_source_edit_vars in settings_source_edit_var:
-                if path_var[i] != settings_source_edit_var[i]:
-                    settings_source_edit_var[i].setText(path_var[i])
-                i += 1
+                i = 0
+                for settings_source_edit_vars in settings_source_edit_var:
+                    if path_var[i] != settings_source_edit_var[i]:
+                        settings_source_edit_var[i].setText(path_var[i])
+                    i += 1
 
-            i = 0
-            for settings_dest_edit_vars in settings_dest_edit_var:
-                if dest_path_var[i] != settings_dest_edit_var[i]:
-                    settings_dest_edit_var[i].setText(dest_path_var[i])
-                i += 1
+                i = 0
+                for settings_dest_edit_vars in settings_dest_edit_var:
+                    if dest_path_var[i] != settings_dest_edit_var[i]:
+                        settings_dest_edit_var[i].setText(dest_path_var[i])
+                    i += 1
 
-        elif not os.path.exists('config.txt'):
-            print('-- missing configuration file')
-        configuration_engaged = False
+            elif not os.path.exists('config.txt'):
+                print('-- missing configuration file')
+            configuration_engaged = False
 
 
 class TimerClass0(QThread):  # clears info_label_1 text after x time.
