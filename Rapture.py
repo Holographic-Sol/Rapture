@@ -10,7 +10,7 @@ import win32con
 from win32api import GetSystemMetrics
 from PyQt5.QtCore import Qt, QThread, QSize, QTimer
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit
-from PyQt5.QtGui import QIcon, QFont, QPixmap
+from PyQt5.QtGui import QIcon, QFont, QPixmap, QMouseEvent
 
 priority_classes = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.BELOW_NORMAL_PRIORITY_CLASS,
@@ -142,8 +142,10 @@ class App(QMainWindow):
         self.height = 90
         scr_w = GetSystemMetrics(0)
         scr_h = GetSystemMetrics(1)
-        self.left = (scr_w / 2) - (self.width / 2)  # centre
-        self.top = ((scr_h / 2) - (self.height / 2))  # centre
+        # self.left = (scr_w / 2) - (self.width / 2)  # centre
+        # self.top = ((scr_h / 2) - (self.height / 2))  # centre
+        self.left = 1920 - 700  # dev pos
+        self.top = 1080 - 300  # dev pos
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         self.setPalette(p)
@@ -424,6 +426,7 @@ class App(QMainWindow):
         self.settings_source1.move(100, 115)
         self.settings_source1.resize(set_src_dst_w, 15)
         self.settings_source1.setText(path_var[1])
+        self.settings_source0.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
         self.settings_source1.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -439,6 +442,7 @@ class App(QMainWindow):
         self.settings_source2.move(100, 115)
         self.settings_source2.resize(set_src_dst_w, 15)
         self.settings_source2.setText(path_var[2])
+        self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
         self.settings_source2.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -454,6 +458,7 @@ class App(QMainWindow):
         self.settings_source3.move(100, 115)
         self.settings_source3.resize(set_src_dst_w, 15)
         self.settings_source3.setText(path_var[3])
+        self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
         self.settings_source3.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -469,6 +474,7 @@ class App(QMainWindow):
         self.settings_source4.move(100, 115)
         self.settings_source4.resize(set_src_dst_w, 15)
         self.settings_source4.setText(path_var[4])
+        self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
         self.settings_source4.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -484,6 +490,7 @@ class App(QMainWindow):
         self.settings_source5.move(100, 115)
         self.settings_source5.resize(set_src_dst_w, 15)
         self.settings_source5.setText(path_var[5])
+        self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
         self.settings_source5.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -499,6 +506,7 @@ class App(QMainWindow):
         self.settings_dest0.move(100, 135)
         self.settings_dest0.resize(set_src_dst_w, 15)
         self.settings_dest0.setText(dest_path_var[0])
+        self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
         self.settings_dest0.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -514,6 +522,7 @@ class App(QMainWindow):
         self.settings_dest1.move(100, 135)
         self.settings_dest1.resize(set_src_dst_w, 15)
         self.settings_dest1.setText(dest_path_var[1])
+        self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
         self.settings_dest1.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -529,6 +538,7 @@ class App(QMainWindow):
         self.settings_dest2.move(100, 135)
         self.settings_dest2.resize(set_src_dst_w, 15)
         self.settings_dest2.setText(dest_path_var[2])
+        self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
         self.settings_dest2.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -544,6 +554,7 @@ class App(QMainWindow):
         self.settings_dest3.move(100, 135)
         self.settings_dest3.resize(set_src_dst_w, 15)
         self.settings_dest3.setText(dest_path_var[3])
+        self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
         self.settings_dest3.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -559,6 +570,7 @@ class App(QMainWindow):
         self.settings_dest4.move(100, 135)
         self.settings_dest4.resize(set_src_dst_w, 15)
         self.settings_dest4.setText(dest_path_var[4])
+        self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
         self.settings_dest4.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -574,6 +586,7 @@ class App(QMainWindow):
         self.settings_dest5.move(100, 135)
         self.settings_dest5.resize(set_src_dst_w, 15)
         self.settings_dest5.setText(dest_path_var[5])
+        self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
         self.settings_dest5.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -667,6 +680,9 @@ class App(QMainWindow):
 
         self.show()
 
+    def settings_dest_focus_funk1(self):
+        print('focused')
+
     def pressed_int_pre_funk0(self):  # 3 timer thread functions use pressed_int as key for which function to run
         global pressed_int
         pressed_int = 0
@@ -743,7 +759,7 @@ class App(QMainWindow):
         after_str = config_src_var[source_selected]+' '+source_path_entered
         print('-- before_str:', before_str)
         print('-- after_str: ', after_str)
-        distutils.dir_util.mkpath(source_path_entered)
+        # distutils.dir_util.mkpath(source_path_entered)
         if os.path.exists(source_path_entered):
             for line in fileinput.input('./config.txt', inplace=True):
                 print(line.rstrip().replace(before_str, after_str)),
@@ -757,7 +773,8 @@ class App(QMainWindow):
         after_str = config_dst_var[dest_selected] + ' ' + dest_path_entered
         print('-- before_str:', before_str)
         print('-- after_str: ', after_str)
-        distutils.dir_util.mkpath(dest_path_entered)
+        # distutils.dir_util.mkpath(dest_path_entered)
+
         if os.path.exists(dest_path_entered):
             for line in fileinput.input('./config.txt', inplace=True):
                 print(line.rstrip().replace(before_str, after_str)),
@@ -1101,7 +1118,8 @@ class UpdateSettingsWindow(QThread):
 
     def get_conf_funk(self):
         global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
-            settings_dest_edit_var, configuration_engaged
+            settings_dest_edit_var, configuration_engaged, configuration_engaged_by_user
+
         path_var = []
         path_bool_var = []
         dest_path_var = []
@@ -1155,12 +1173,14 @@ class UpdateSettingsWindow(QThread):
 
             i = 0
             for settings_source_edit_vars in settings_source_edit_var:
-                settings_source_edit_var[i].setText(path_var[i])
+                if path_var[i] != settings_source_edit_var[i]:
+                    settings_source_edit_var[i].setText(path_var[i])
                 i += 1
 
             i = 0
             for settings_dest_edit_vars in settings_dest_edit_var:
-                settings_dest_edit_var[i].setText(dest_path_var[i])
+                if dest_path_var[i] != settings_dest_edit_var[i]:
+                    settings_dest_edit_var[i].setText(dest_path_var[i])
                 i += 1
 
         elif not os.path.exists('config.txt'):
@@ -1258,7 +1278,7 @@ class ThreadClass0(QThread):
         centillionth_str = str('0.' + zero * 303 + '1')
         centillionth = float(centillionth_str)
 
-        if configuration_engaged is True:  # wait extremely accurate amount of time until after lists have compiled
+        if configuration_engaged is True:  # wait extremely accurate amount of time until lists have compiled
             while configuration_engaged is True:
                 time.sleep(centillionth)
 
