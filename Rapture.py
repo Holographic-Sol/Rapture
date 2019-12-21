@@ -288,10 +288,10 @@ class App(QMainWindow):
         self.timer.timeout.connect(self.while_pressed_funk)
 
         self.paths_readonly_button = QPushButton(self)
-        self.paths_readonly_button.resize(10, 10)
-        self.paths_readonly_button.move(self.width - 40, 115)
-        # self.paths_readonly_button.setIcon(QIcon('./image/menu_left.png'))
-        # self.paths_readonly_button.setIconSize(QSize(15, 35))
+        self.paths_readonly_button.resize(15, 35)
+        self.paths_readonly_button.move(self.width - 48, 115)
+        self.paths_readonly_button.setIcon(QIcon('./image/read_ony_true.png'))
+        self.paths_readonly_button.setIconSize(QSize(10, 10))
         self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
         self.paths_readonly_button.setStyleSheet(
             """QPushButton{background-color: rgb(35, 35, 35);
@@ -709,6 +709,7 @@ class App(QMainWindow):
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(False)
                 i += 1
+            self.paths_readonly_button.setIcon(QIcon('./image/read_ony_false.png'))
 
         elif read_only is False:  # Set Read Only
             i = 0
@@ -719,6 +720,7 @@ class App(QMainWindow):
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(True)
                 i += 1
+            self.paths_readonly_button.setIcon(QIcon('./image/read_ony_true.png'))
 
     def settings_dest_focus_funk1(self):
         print('focused')
