@@ -3,14 +3,13 @@ import sys
 import time
 import shutil
 import fileinput
-import distutils.dir_util
 import win32api
 import win32process
 import win32con
 from win32api import GetSystemMetrics
 from PyQt5.QtCore import Qt, QThread, QSize, QTimer
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit
-from PyQt5.QtGui import QIcon, QFont, QPixmap, QMouseEvent
+from PyQt5.QtGui import QIcon, QFont, QPixmap
 
 priority_classes = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.BELOW_NORMAL_PRIORITY_CLASS,
@@ -142,10 +141,10 @@ class App(QMainWindow):
         self.height = 90
         scr_w = GetSystemMetrics(0)
         scr_h = GetSystemMetrics(1)
-        # self.left = (scr_w / 2) - (self.width / 2)  # centre
-        # self.top = ((scr_h / 2) - (self.height / 2))  # centre
-        self.left = 1920 - 700  # dev pos
-        self.top = 1080 - 300  # dev pos
+        self.left = (scr_w / 2) - (self.width / 2)  # centre
+        self.top = ((scr_h / 2) - (self.height / 2))  # centre
+        # self.left = 1920 - 700  # dev pos
+        # self.top = 1080 - 300  # dev pos
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         self.setPalette(p)
@@ -1154,7 +1153,6 @@ class UpdateSettingsWindow(QThread):
         while __name__ == '__main__':
             self.get_conf_funk()
             time.sleep(1)
-        # self.get_conf_funk()
 
     def get_conf_funk(self):
         global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
