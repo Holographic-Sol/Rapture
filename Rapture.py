@@ -2,7 +2,6 @@ import os
 import sys
 import time
 import shutil
-import datetime
 import fileinput
 import distutils.dir_util
 import win32api
@@ -13,7 +12,7 @@ from PyQt5.QtCore import Qt, QThread, QSize, QTimer
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 
-priorityclasses = [win32process.IDLE_PRIORITY_CLASS,
+priority_classes = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.BELOW_NORMAL_PRIORITY_CLASS,
                    win32process.NORMAL_PRIORITY_CLASS,
                    win32process.ABOVE_NORMAL_PRIORITY_CLASS,
@@ -21,7 +20,9 @@ priorityclasses = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.REALTIME_PRIORITY_CLASS]
 pid = win32api.GetCurrentProcessId()
 handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
-win32process.SetPriorityClass(handle, priorityclasses[4])
+win32process.SetPriorityClass(handle, priority_classes[4])
+
+configuration_engaged = False
 settings_active = False
 thread_var = [(), (), (), (), (), ()]
 timer_thread_var = [(), (), (), (), (), ()]
@@ -49,6 +50,8 @@ config_dst_var = ['ARCHIVE_DESTINATION',
                   'PICTURE_DESTINATION',
                   'PROGRAMS_DESTINATION',
                   'VIDEO_DESTINATION']
+settings_source_edit_var = []
+settings_dest_edit_var = []
 btnx_main_var = []
 btnx_settings_var = []
 comp_cont_button_var = []
@@ -80,50 +83,53 @@ def get_conf_funk():
     path_bool_var = []
     dest_path_var = []
     dest_path_bool_var = []
-    with open('config.txt', 'r') as fo:
-        for line in fo:
-            line = line.strip()
-            i = 0
-            for config_src_vars in config_src_var:
-                if line.startswith(config_src_var[i]):
-                    key_word_length = len(config_src_var[i])
-                    primary_key = line[:key_word_length]
-                    secondary_key = line[key_word_length:]
-                    primary_key = primary_key.strip()
-                    secondary_key = secondary_key.strip()
-                    if primary_key.endswith('_SOURCE'):
-                        if os.path.exists(secondary_key):
-                            if (primary_key + '_True') not in dest_path_bool_var:
-                                path_var.append(secondary_key)
-                                path_bool_var.append(primary_key + '_True')
-                                # print(primary_key, secondary_key, 'valid')
-                        elif not os.path.exists(secondary_key):
-                            if (primary_key + '_False') not in dest_path_bool_var:
-                                path_var.append('')
-                                path_bool_var.append(primary_key + '_False')
-                                # print(primary_key, secondary_key, 'invalid')
-                i += 1
-            i = 0
-            for config_dst_vars in config_dst_var:
-                if line.startswith(config_dst_var[i]):
-                    key_word_length = len(config_dst_var[i])
-                    primary_key = line[:key_word_length]
-                    secondary_key = line[key_word_length:]
-                    primary_key = primary_key.strip()
-                    secondary_key = secondary_key.strip()
-                    if primary_key.endswith('_DESTINATION'):
-                        if os.path.exists(secondary_key):
-                            if (primary_key + '_True') not in dest_path_bool_var:
-                                dest_path_var.append(secondary_key)
-                                dest_path_bool_var.append(primary_key + '_True')
-                                # print(primary_key, secondary_key, 'valid')
-                        elif not os.path.exists(secondary_key):
-                            if (primary_key + '_False') not in dest_path_bool_var:
-                                dest_path_var.append('')
-                                dest_path_bool_var.append(primary_key + '_False')
-                            # print(primary_key, secondary_key, 'invalid')
-                i += 1
-    fo.close()
+    if os.path.exists('config.txt'):
+        with open('config.txt', 'r') as fo:
+            for line in fo:
+                line = line.strip()
+                i = 0
+                for config_src_vars in config_src_var:
+                    if line.startswith(config_src_var[i]):
+                        key_word_length = len(config_src_var[i])
+                        primary_key = line[:key_word_length]
+                        secondary_key = line[key_word_length:]
+                        primary_key = primary_key.strip()
+                        secondary_key = secondary_key.strip()
+                        if primary_key.endswith('_SOURCE'):
+                            if os.path.exists(secondary_key):
+                                if (primary_key + '_True') not in path_bool_var:
+                                    path_var.append(secondary_key)
+                                    path_bool_var.append(primary_key + '_True')
+                                    print(primary_key, secondary_key, 'valid')
+                            elif not os.path.exists(secondary_key):
+                                if (primary_key + '_False') not in path_bool_var:
+                                    path_var.append('')
+                                    path_bool_var.append(primary_key + '_False')
+                                    print(primary_key, secondary_key, 'invalid')
+                    i += 1
+                i = 0
+                for config_dst_vars in config_dst_var:
+                    if line.startswith(config_dst_var[i]):
+                        key_word_length = len(config_dst_var[i])
+                        primary_key = line[:key_word_length]
+                        secondary_key = line[key_word_length:]
+                        primary_key = primary_key.strip()
+                        secondary_key = secondary_key.strip()
+                        if primary_key.endswith('_DESTINATION'):
+                            if os.path.exists(secondary_key):
+                                if (primary_key + '_True') not in dest_path_bool_var:
+                                    dest_path_var.append(secondary_key)
+                                    dest_path_bool_var.append(primary_key + '_True')
+                                    print(primary_key, secondary_key, 'valid')
+                            elif not os.path.exists(secondary_key):
+                                if (primary_key + '_False') not in dest_path_bool_var:
+                                    dest_path_var.append('')
+                                    dest_path_bool_var.append(primary_key + '_False')
+                                print(primary_key, secondary_key, 'invalid')
+                    i += 1
+        fo.close()
+    elif not os.path.exists('config.txt'):
+        print('-- missing configuration file')
 
 
 class App(QMainWindow):
@@ -147,7 +153,9 @@ class App(QMainWindow):
     def initUI(self):
         global thread_var, btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, info_label_1_var
         global img_var, img_active_var, img_mode_1, img_mode_2, img_settings, timer_thread_var
-        global path_var, dest_path_var, back_label_var, pressed_int
+        global path_var, dest_path_var, back_label_var, pressed_int, settings_source_edit_var, settings_dest_edit_var, \
+            configuration_wait_thread_var
+
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width, self.height)
@@ -409,6 +417,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_source_edit_var.append(self.settings_source0)
         self.settings_source0.hide()
 
         self.settings_source1 = QLineEdit(self)
@@ -423,6 +432,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_source_edit_var.append(self.settings_source1)
         self.settings_source1.hide()
 
         self.settings_source2 = QLineEdit(self)
@@ -437,6 +447,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_source_edit_var.append(self.settings_source2)
         self.settings_source2.hide()
 
         self.settings_source3 = QLineEdit(self)
@@ -451,6 +462,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_source_edit_var.append(self.settings_source3)
         self.settings_source3.hide()
 
         self.settings_source4 = QLineEdit(self)
@@ -465,6 +477,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_source_edit_var.append(self.settings_source4)
         self.settings_source4.hide()
 
         self.settings_source5 = QLineEdit(self)
@@ -479,6 +492,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_source_edit_var.append(self.settings_source5)
         self.settings_source5.hide()
 
         self.settings_dest0 = QLineEdit(self)
@@ -493,6 +507,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_dest_edit_var.append(self.settings_dest0)
         self.settings_dest0.hide()
 
         self.settings_dest1 = QLineEdit(self)
@@ -507,6 +522,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_dest_edit_var.append(self.settings_dest1)
         self.settings_dest1.hide()
 
         self.settings_dest2 = QLineEdit(self)
@@ -521,6 +537,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_dest_edit_var.append(self.settings_dest2)
         self.settings_dest2.hide()
 
         self.settings_dest3 = QLineEdit(self)
@@ -535,6 +552,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_dest_edit_var.append(self.settings_dest3)
         self.settings_dest3.hide()
 
         self.settings_dest4 = QLineEdit(self)
@@ -549,6 +567,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_dest_edit_var.append(self.settings_dest4)
         self.settings_dest4.hide()
 
         self.settings_dest5 = QLineEdit(self)
@@ -563,6 +582,7 @@ class App(QMainWindow):
             selection-background-color: black;
             color: grey;}"""
         )
+        settings_dest_edit_var.append(self.settings_dest5)
         self.settings_dest5.hide()
 
         btnx_main_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
@@ -627,6 +647,9 @@ class App(QMainWindow):
         btnx_settings_var[3].clicked.connect(self.settings_funk3)
         btnx_settings_var[4].clicked.connect(self.settings_funk4)
         btnx_settings_var[5].clicked.connect(self.settings_funk5)
+
+        update_settings_window_thread = UpdateSettingsWindow()
+        update_settings_window_thread.start()
 
         timer_thread_var[0] = TimerClass0()
         timer_thread_var[1] = TimerClass1()
@@ -715,7 +738,6 @@ class App(QMainWindow):
     def settings_source_funk(self):
         global source_path_entered, source_selected, config_src_var, path_var
         print('--', 'source_selected:', source_selected, 'source path entered:', source_path_entered)
-        get_conf_funk()
         print(config_src_var)
         before_str = config_src_var[source_selected]+' '+path_var[source_selected]
         after_str = config_src_var[source_selected]+' '+source_path_entered
@@ -731,7 +753,6 @@ class App(QMainWindow):
     def settings_dest_funk(self):
         global dest_path_entered, dest_selected, config_dst_var
         print('--', 'dest_selected:', dest_selected, 'dest path entered:', dest_path_entered)
-        get_conf_funk()
         before_str = config_dst_var[dest_selected] + ' ' + dest_path_var[dest_selected]
         after_str = config_dst_var[dest_selected] + ' ' + dest_path_entered
         print('-- before_str:', before_str)
@@ -1067,6 +1088,86 @@ class App(QMainWindow):
         thread_var[5].stop_thr()
 
 
+# Updates Source & Destination Paths in settings area. Shows existence/non-existence of paths.
+class UpdateSettingsWindow(QThread):
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        while __name__ == '__main__':
+            self.get_conf_funk()
+            time.sleep(1)
+        # self.get_conf_funk()
+
+    def get_conf_funk(self):
+        global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
+            settings_dest_edit_var, configuration_engaged
+        path_var = []
+        path_bool_var = []
+        dest_path_var = []
+        dest_path_bool_var = []
+        if os.path.exists('config.txt'):
+            with open('config.txt', 'r') as fo:
+                configuration_engaged = True
+                for line in fo:
+                    line = line.strip()
+                    i = 0
+                    for config_src_vars in config_src_var:
+                        if line.startswith(config_src_var[i]):
+                            key_word_length = len(config_src_var[i])
+                            primary_key = line[:key_word_length]
+                            secondary_key = line[key_word_length:]
+                            primary_key = primary_key.strip()
+                            secondary_key = secondary_key.strip()
+                            if primary_key.endswith('_SOURCE'):
+                                if os.path.exists(secondary_key):
+                                    if (primary_key + '_True') not in path_bool_var:
+                                        path_var.append(secondary_key)
+                                        path_bool_var.append(primary_key + '_True')
+                                        # print(primary_key, secondary_key, 'valid')
+                                elif not os.path.exists(secondary_key):
+                                    if (primary_key + '_False') not in path_bool_var:
+                                        path_var.append('')
+                                        path_bool_var.append(primary_key + '_False')
+                                        # print(primary_key, secondary_key, 'invalid')
+                        i += 1
+                    i = 0
+                    for config_dst_vars in config_dst_var:
+                        if line.startswith(config_dst_var[i]):
+                            key_word_length = len(config_dst_var[i])
+                            primary_key = line[:key_word_length]
+                            secondary_key = line[key_word_length:]
+                            primary_key = primary_key.strip()
+                            secondary_key = secondary_key.strip()
+                            if primary_key.endswith('_DESTINATION'):
+                                if os.path.exists(secondary_key):
+                                    if (primary_key + '_True') not in dest_path_bool_var:
+                                        dest_path_var.append(secondary_key)
+                                        dest_path_bool_var.append(primary_key + '_True')
+                                        # print(primary_key, secondary_key, 'valid')
+                                elif not os.path.exists(secondary_key):
+                                    if (primary_key + '_False') not in dest_path_bool_var:
+                                        dest_path_var.append('')
+                                        dest_path_bool_var.append(primary_key + '_False')
+                                    # print(primary_key, secondary_key, 'invalid')
+                        i += 1
+            fo.close()
+
+            i = 0
+            for settings_source_edit_vars in settings_source_edit_var:
+                settings_source_edit_var[i].setText(path_var[i])
+                i += 1
+
+            i = 0
+            for settings_dest_edit_vars in settings_dest_edit_var:
+                settings_dest_edit_var[i].setText(dest_path_var[i])
+                i += 1
+
+        elif not os.path.exists('config.txt'):
+            print('-- missing configuration file')
+        configuration_engaged = False
+
+
 class TimerClass0(QThread):  # clears info_label_1 text after x time.
     def __init__(self):
         QThread.__init__(self)
@@ -1151,52 +1252,69 @@ class ThreadClass0(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var
-        btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
-        change_var = False
-        print('ThreadClass0 Source:', path_var[0])
-        print('ThreadClass0 Destination:', dest_path_var[0])
-        if path_bool_var[0] == 'ARCHIVE_SOURCE_True' and dest_path_bool_var[0] == 'ARCHIVE_DESTINATION_True':
-            info_label_1_var[0].setText('reading...')
-            cp_var = 0
-            for dirName, subdirList, fileList in os.walk(path_var[0]):
-                for fname in fileList:
-                    fullpath = os.path.join(dirName, fname)
-                    t_path = fullpath.replace(path_var[0], '')
-                    t_path = dest_path_var[0] + t_path
-                    if not fullpath.endswith('.ini'):
-                        if not os.path.exists(t_path):
-                            print('ThreadClass0 -- copy', fullpath, 'to', t_path)
-                            change_var = True
-                            try:
-                                shutil.copy(fullpath, t_path)
-                            except IOError:
-                                os.makedirs(os.path.dirname(t_path))
-                                shutil.copy(fullpath, t_path)
-                            cp_var += 1
-                        elif os.path.exists(t_path):
-                            if compare_bool_var[0] is True:
-                                ma = os.path.getmtime(fullpath)
-                                mb = os.path.getmtime(t_path)
-                                # if ma != mb:
-                                if mb < ma:
-                                    print('ThreadClass0 -- copy', fullpath, ma, 'to', t_path, mb)
-                                    change_var = True
-                                    try:
-                                        shutil.copy(fullpath, t_path)
-                                    except IOError:
-                                        os.makedirs(os.path.dirname(t_path))
-                                        shutil.copy(fullpath, t_path)
-                                    cp_var += 1
-            print('ThreadClass0 -- files copied:', cp_var)
-            if change_var is False:
-                info_label_1_var[0].setText('unnecessary.')
-            elif change_var is True:
-                info_label_1_var[0].setText('amended.')
-        else:
-            info_label_1_var[0].setText('path error!')
-        timer_thread_var[0].start()
-        btnx_main_var[0].setIcon(QIcon(img_var[0]))
+        global path_bool_var, dest_path_bool_var, configuration_engaged
+
+        zero = '0'
+        centillionth_str = str('0.' + zero * 303 + '1')
+        centillionth = float(centillionth_str)
+
+        if configuration_engaged is True:  # wait extremely accurate amount of time until after lists have compiled
+            while configuration_engaged is True:
+                time.sleep(centillionth)
+
+        # immediately set in stone values from variables (lists update x amount of time)
+        elif configuration_engaged is False:
+            path = path_var[0]
+            dest = dest_path_var[0]
+            path_bool = path_bool_var[0]
+            dest_bool = dest_path_bool_var[0]
+            compare_bool = compare_bool_var[0]
+
+            btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
+            change_var = False
+            print('ThreadClass0 Source:', path)
+            print('ThreadClass0 Destination:', dest)
+            if path_bool == 'ARCHIVE_SOURCE_True' and dest_bool == 'ARCHIVE_DESTINATION_True':
+                info_label_1_var[0].setText('reading...')
+                cp_var = 0
+                for dirName, subdirList, fileList in os.walk(path):
+                    for fname in fileList:
+                        fullpath = os.path.join(dirName, fname)
+                        t_path = fullpath.replace(path, '')
+                        t_path = dest + t_path
+                        if not fullpath.endswith('.ini'):
+                            if not os.path.exists(t_path):
+                                print('ThreadClass0 -- copy', fullpath, 'to', t_path)
+                                change_var = True
+                                try:
+                                    shutil.copy(fullpath, t_path)
+                                except IOError:
+                                    os.makedirs(os.path.dirname(t_path))
+                                    shutil.copy(fullpath, t_path)
+                                cp_var += 1
+                            elif os.path.exists(t_path):
+                                if compare_bool is True:
+                                    ma = os.path.getmtime(fullpath)
+                                    mb = os.path.getmtime(t_path)
+                                    # if ma != mb:
+                                    if mb < ma:
+                                        print('ThreadClass0 -- copy', fullpath, ma, 'to', t_path, mb)
+                                        change_var = True
+                                        try:
+                                            shutil.copy(fullpath, t_path)
+                                        except IOError:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy(fullpath, t_path)
+                                        cp_var += 1
+                print('ThreadClass0 -- files copied:', cp_var)
+                if change_var is False:
+                    info_label_1_var[0].setText('unnecessary.')
+                elif change_var is True:
+                    info_label_1_var[0].setText('amended.')
+            else:
+                info_label_1_var[0].setText('path error!')
+            timer_thread_var[0].start()
+            btnx_main_var[0].setIcon(QIcon(img_var[0]))
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -1211,51 +1329,66 @@ class ThreadClass1(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var
-        btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
-        change_var = False
-        print('ThreadClass1 Source:', path_var[1])
-        print('ThreadClass1 Destination:', dest_path_var[1])
-        if path_bool_var[1] == 'DOCUMENT_SOURCE_True' and dest_path_bool_var[1] == 'DOCUMENT_DESTINATION_True':
-            info_label_1_var[1].setText('reading...')
-            cp_var = 0
-            for dirName, subdirList, fileList in os.walk(path_var[1]):
-                for fname in fileList:
-                    fullpath = os.path.join(dirName, fname)
-                    t_path = fullpath.replace(path_var[1], '')
-                    t_path = dest_path_var[1] + t_path
-                    if not fullpath.endswith('.ini'):
-                        if not os.path.exists(t_path):
-                            print('ThreadClass1 -- copy', fullpath, 'to', t_path)
-                            change_var = True
-                            try:
-                                shutil.copy(fullpath, t_path)
-                            except IOError:
-                                os.makedirs(os.path.dirname(t_path))
-                                shutil.copy(fullpath, t_path)
-                            cp_var += 1
-                        elif os.path.exists(t_path):
-                            if compare_bool_var[1] is True:
-                                ma = os.path.getmtime(fullpath)
-                                mb = os.path.getmtime(t_path)
-                                if mb < ma:
-                                    print('ThreadClass1 -- copy', fullpath, ma, 'to', t_path, mb)
-                                    change_var = True
-                                    try:
-                                        shutil.copy(fullpath, t_path)
-                                    except IOError:
-                                        os.makedirs(os.path.dirname(t_path))
-                                        shutil.copy(fullpath, t_path)
-                                    cp_var += 1
-            print('ThreadClass1 -- files copied:', cp_var)
-            if change_var is False:
-                info_label_1_var[1].setText('unnecessary.')
-            elif change_var is True:
-                info_label_1_var[1].setText('amended.')
-        else:
-            info_label_1_var[1].setText('path error!')
-        timer_thread_var[1].start()
-        btnx_main_var[1].setIcon(QIcon(img_var[1]))
+        global path_bool_var, dest_path_bool_var, configuration_engaged
+
+        zero = '0'
+        centillionth_str = str('0.' + zero * 303 + '1')
+        centillionth = float(centillionth_str)
+
+        if configuration_engaged is True:
+            while configuration_engaged is True:
+                time.sleep(centillionth)
+        elif configuration_engaged is False:
+            path = path_var[1]
+            dest = dest_path_var[1]
+            path_bool = path_bool_var[1]
+            dest_bool = dest_path_bool_var[1]
+            compare_bool = compare_bool_var[1]
+
+            btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
+            change_var = False
+            print('ThreadClass1 Source:', path)
+            print('ThreadClass1 Destination:', dest)
+            if path_bool == 'DOCUMENT_SOURCE_True' and dest_bool == 'DOCUMENT_DESTINATION_True':
+                info_label_1_var[1].setText('reading...')
+                cp_var = 0
+                for dirName, subdirList, fileList in os.walk(path):
+                    for fname in fileList:
+                        fullpath = os.path.join(dirName, fname)
+                        t_path = fullpath.replace(path, '')
+                        t_path = dest + t_path
+                        if not fullpath.endswith('.ini'):
+                            if not os.path.exists(t_path):
+                                print('ThreadClass1 -- copy', fullpath, 'to', t_path)
+                                change_var = True
+                                try:
+                                    shutil.copy(fullpath, t_path)
+                                except IOError:
+                                    os.makedirs(os.path.dirname(t_path))
+                                    shutil.copy(fullpath, t_path)
+                                cp_var += 1
+                            elif os.path.exists(t_path):
+                                if compare_bool is True:
+                                    ma = os.path.getmtime(fullpath)
+                                    mb = os.path.getmtime(t_path)
+                                    if mb < ma:
+                                        print('ThreadClass1 -- copy', fullpath, ma, 'to', t_path, mb)
+                                        change_var = True
+                                        try:
+                                            shutil.copy(fullpath, t_path)
+                                        except IOError:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy(fullpath, t_path)
+                                        cp_var += 1
+                print('ThreadClass1 -- files copied:', cp_var)
+                if change_var is False:
+                    info_label_1_var[1].setText('unnecessary.')
+                elif change_var is True:
+                    info_label_1_var[1].setText('amended.')
+            else:
+                info_label_1_var[1].setText('path error!')
+            timer_thread_var[1].start()
+            btnx_main_var[1].setIcon(QIcon(img_var[1]))
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -1270,51 +1403,66 @@ class ThreadClass2(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var
-        btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
-        change_var = False
-        print('ThreadClass2 Source:', path_var[2])
-        print('ThreadClass2 Destination:', dest_path_var[2])
-        if path_bool_var[2] == 'MUSIC_SOURCE_True' and dest_path_bool_var[2] == 'MUSIC_DESTINATION_True':
-            info_label_1_var[2].setText('reading...')
-            cp_var = 0
-            for dirName, subdirList, fileList in os.walk(path_var[2]):
-                for fname in fileList:
-                    fullpath = os.path.join(dirName, fname)
-                    t_path = fullpath.replace(path_var[2], '')
-                    t_path = dest_path_var[2] + t_path
-                    if not fullpath.endswith('.ini'):
-                        if not os.path.exists(t_path):
-                            print('ThreadClass2 -- copy', fullpath, 'to', t_path)
-                            change_var = True
-                            try:
-                                shutil.copy(fullpath, t_path)
-                            except IOError:
-                                os.makedirs(os.path.dirname(t_path))
-                                shutil.copy(fullpath, t_path)
-                            cp_var += 1
-                        elif os.path.exists(t_path):
-                            if compare_bool_var[2] is True:
-                                ma = os.path.getmtime(fullpath)
-                                mb = os.path.getmtime(t_path)
-                                if mb < ma:
-                                    print('ThreadClass2 -- copy', fullpath, ma, 'to', t_path, mb)
-                                    change_var = True
-                                    try:
-                                        shutil.copy(fullpath, t_path)
-                                    except IOError:
-                                        os.makedirs(os.path.dirname(t_path))
-                                        shutil.copy(fullpath, t_path)
-                                    cp_var += 1
-            print('ThreadClass2 -- files copied:', cp_var)
-            if change_var is False:
-                info_label_1_var[2].setText('unnecessary.')
-            elif change_var is True:
-                info_label_1_var[2].setText('amended.')
-        else:
-            info_label_1_var[2].setText('path error!')
-        timer_thread_var[2].start()
-        btnx_main_var[2].setIcon(QIcon(img_var[2]))
+        global path_bool_var, dest_path_bool_var, configuration_engaged
+
+        zero = '0'
+        centillionth_str = str('0.' + zero * 303 + '1')
+        centillionth = float(centillionth_str)
+
+        if configuration_engaged is True:
+            while configuration_engaged is True:
+                time.sleep(centillionth)
+        elif configuration_engaged is False:
+            path = path_var[2]
+            dest = dest_path_var[2]
+            path_bool = path_bool_var[2]
+            dest_bool = dest_path_bool_var[2]
+            compare_bool = compare_bool_var[2]
+
+            btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
+            change_var = False
+            print('ThreadClass2 Source:', path)
+            print('ThreadClass2 Destination:', dest)
+            if path_bool == 'MUSIC_SOURCE_True' and dest_bool == 'MUSIC_DESTINATION_True':
+                info_label_1_var[2].setText('reading...')
+                cp_var = 0
+                for dirName, subdirList, fileList in os.walk(path):
+                    for fname in fileList:
+                        fullpath = os.path.join(dirName, fname)
+                        t_path = fullpath.replace(path, '')
+                        t_path = dest + t_path
+                        if not fullpath.endswith('.ini'):
+                            if not os.path.exists(t_path):
+                                print('ThreadClass2 -- copy', fullpath, 'to', t_path)
+                                change_var = True
+                                try:
+                                    shutil.copy(fullpath, t_path)
+                                except IOError:
+                                    os.makedirs(os.path.dirname(t_path))
+                                    shutil.copy(fullpath, t_path)
+                                cp_var += 1
+                            elif os.path.exists(t_path):
+                                if compare_bool is True:
+                                    ma = os.path.getmtime(fullpath)
+                                    mb = os.path.getmtime(t_path)
+                                    if mb < ma:
+                                        print('ThreadClass2 -- copy', fullpath, ma, 'to', t_path, mb)
+                                        change_var = True
+                                        try:
+                                            shutil.copy(fullpath, t_path)
+                                        except IOError:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy(fullpath, t_path)
+                                        cp_var += 1
+                print('ThreadClass2 -- files copied:', cp_var)
+                if change_var is False:
+                    info_label_1_var[2].setText('unnecessary.')
+                elif change_var is True:
+                    info_label_1_var[2].setText('amended.')
+            else:
+                info_label_1_var[2].setText('path error!')
+            timer_thread_var[2].start()
+            btnx_main_var[2].setIcon(QIcon(img_var[2]))
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -1329,51 +1477,66 @@ class ThreadClass3(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var
-        btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
-        change_var = False
-        print('ThreadClass3 Source:', path_var[3])
-        print('ThreadClass3 Destination:', dest_path_var[3])
-        if path_bool_var[3] == 'PICTURE_SOURCE_True' and dest_path_bool_var[3] == 'PICTURE_DESTINATION_True':
-            info_label_1_var[3].setText('reading...')
-            cp_var = 0
-            for dirName, subdirList, fileList in os.walk(path_var[3]):
-                for fname in fileList:
-                    fullpath = os.path.join(dirName, fname)
-                    t_path = fullpath.replace(path_var[3], '')
-                    t_path = dest_path_var[3] + t_path
-                    if not fullpath.endswith('.ini'):
-                        if not os.path.exists(t_path):
-                            print('ThreadClass3 -- copy', fullpath, 'to', t_path)
-                            change_var = True
-                            try:
-                                shutil.copy(fullpath, t_path)
-                            except IOError:
-                                os.makedirs(os.path.dirname(t_path))
-                                shutil.copy(fullpath, t_path)
-                            cp_var += 1
-                        elif os.path.exists(t_path):
-                            if compare_bool_var[3] is True:
-                                ma = os.path.getmtime(fullpath)
-                                mb = os.path.getmtime(t_path)
-                                if mb < ma:
-                                    print('ThreadClass3 -- copy', fullpath, ma, 'to', t_path, mb)
-                                    change_var = True
-                                    try:
-                                        shutil.copy(fullpath, t_path)
-                                    except IOError:
-                                        os.makedirs(os.path.dirname(t_path))
-                                        shutil.copy(fullpath, t_path)
-                                    cp_var += 1
-            print('ThreadClass3 -- files copied:', cp_var)
-            if change_var is False:
-                info_label_1_var[3].setText('unnecessary.')
-            elif change_var is True:
-                info_label_1_var[3].setText('amended.')
-        else:
-            info_label_1_var[3].setText('path error!')
-        timer_thread_var[3].start()
-        btnx_main_var[3].setIcon(QIcon(img_var[3]))
+        global path_bool_var, dest_path_bool_var, configuration_engaged
+
+        zero = '0'
+        centillionth_str = str('0.' + zero * 303 + '1')
+        centillionth = float(centillionth_str)
+
+        if configuration_engaged is True:
+            while configuration_engaged is True:
+                time.sleep(centillionth)
+        elif configuration_engaged is False:
+            path = path_var[3]
+            dest = dest_path_var[3]
+            path_bool = path_bool_var[3]
+            dest_bool = dest_path_bool_var[3]
+            compare_bool = compare_bool_var[3]
+
+            btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
+            change_var = False
+            print('ThreadClass3 Source:', path)
+            print('ThreadClass3 Destination:', dest)
+            if path_bool == 'PICTURE_SOURCE_True' and dest_bool == 'PICTURE_DESTINATION_True':
+                info_label_1_var[3].setText('reading...')
+                cp_var = 0
+                for dirName, subdirList, fileList in os.walk(path):
+                    for fname in fileList:
+                        fullpath = os.path.join(dirName, fname)
+                        t_path = fullpath.replace(path, '')
+                        t_path = dest + t_path
+                        if not fullpath.endswith('.ini'):
+                            if not os.path.exists(t_path):
+                                print('ThreadClass3 -- copy', fullpath, 'to', t_path)
+                                change_var = True
+                                try:
+                                    shutil.copy(fullpath, t_path)
+                                except IOError:
+                                    os.makedirs(os.path.dirname(t_path))
+                                    shutil.copy(fullpath, t_path)
+                                cp_var += 1
+                            elif os.path.exists(t_path):
+                                if compare_bool is True:
+                                    ma = os.path.getmtime(fullpath)
+                                    mb = os.path.getmtime(t_path)
+                                    if mb < ma:
+                                        print('ThreadClass3 -- copy', fullpath, ma, 'to', t_path, mb)
+                                        change_var = True
+                                        try:
+                                            shutil.copy(fullpath, t_path)
+                                        except IOError:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy(fullpath, t_path)
+                                        cp_var += 1
+                print('ThreadClass3 -- files copied:', cp_var)
+                if change_var is False:
+                    info_label_1_var[3].setText('unnecessary.')
+                elif change_var is True:
+                    info_label_1_var[3].setText('amended.')
+            else:
+                info_label_1_var[3].setText('path error!')
+            timer_thread_var[3].start()
+            btnx_main_var[3].setIcon(QIcon(img_var[3]))
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -1388,51 +1551,66 @@ class ThreadClass4(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var
-        btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
-        change_var = False
-        print('ThreadClass4 Source:', path_var[4])
-        print('ThreadClass4 Destination:', dest_path_var[4])
-        if path_bool_var[4] == 'PROGRAMS_SOURCE_True' and dest_path_bool_var[4] == 'PROGRAMS_DESTINATION_True':
-            info_label_1_var[4].setText('reading...')
-            cp_var = 0
-            for dirName, subdirList, fileList in os.walk(path_var[4]):
-                for fname in fileList:
-                    fullpath = os.path.join(dirName, fname)
-                    t_path = fullpath.replace(path_var[4], '')
-                    t_path = dest_path_var[4] + t_path
-                    if not fullpath.endswith('.ini'):
-                        if not os.path.exists(t_path):
-                            print('ThreadClass4 -- copy', fullpath, 'to', t_path)
-                            change_var = True
-                            try:
-                                shutil.copy(fullpath, t_path)
-                            except IOError:
-                                os.makedirs(os.path.dirname(t_path))
-                                shutil.copy(fullpath, t_path)
-                            cp_var += 1
-                        elif os.path.exists(t_path):
-                            if compare_bool_var[4] is True:
-                                ma = os.path.getmtime(fullpath)
-                                mb = os.path.getmtime(t_path)
-                                if mb < ma:
-                                    print('ThreadClass4 -- copy', fullpath, ma, 'to', t_path, mb)
-                                    change_var = True
-                                    try:
-                                        shutil.copy(fullpath, t_path)
-                                    except IOError:
-                                        os.makedirs(os.path.dirname(t_path))
-                                        shutil.copy(fullpath, t_path)
-                                    cp_var += 1
-            print('ThreadClass4 -- files copied:', cp_var)
-            if change_var is False:
-                info_label_1_var[4].setText('unnecessary.')
-            elif change_var is True:
-                info_label_1_var[4].setText('amended.')
-        else:
-            info_label_1_var[4].setText('path error!')
-        timer_thread_var[4].start()
-        btnx_main_var[4].setIcon(QIcon(img_var[4]))
+        global path_bool_var, dest_path_bool_var, configuration_engaged
+
+        zero = '0'
+        centillionth_str = str('0.' + zero * 303 + '1')
+        centillionth = float(centillionth_str)
+
+        if configuration_engaged is True:
+            while configuration_engaged is True:
+                time.sleep(centillionth)
+        elif configuration_engaged is False:
+            path = path_var[4]
+            dest = dest_path_var[4]
+            path_bool = path_bool_var[4]
+            dest_bool = dest_path_bool_var[4]
+            compare_bool = compare_bool_var[4]
+
+            btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
+            change_var = False
+            print('ThreadClass4 Source:', path)
+            print('ThreadClass4 Destination:', dest)
+            if path_bool == 'PROGRAMS_SOURCE_True' and dest_bool == 'PROGRAMS_DESTINATION_True':
+                info_label_1_var[4].setText('reading...')
+                cp_var = 0
+                for dirName, subdirList, fileList in os.walk(path):
+                    for fname in fileList:
+                        fullpath = os.path.join(dirName, fname)
+                        t_path = fullpath.replace(path, '')
+                        t_path = dest + t_path
+                        if not fullpath.endswith('.ini'):
+                            if not os.path.exists(t_path):
+                                print('ThreadClass4 -- copy', fullpath, 'to', t_path)
+                                change_var = True
+                                try:
+                                    shutil.copy(fullpath, t_path)
+                                except IOError:
+                                    os.makedirs(os.path.dirname(t_path))
+                                    shutil.copy(fullpath, t_path)
+                                cp_var += 1
+                            elif os.path.exists(t_path):
+                                if compare_bool is True:
+                                    ma = os.path.getmtime(fullpath)
+                                    mb = os.path.getmtime(t_path)
+                                    if mb < ma:
+                                        print('ThreadClass4 -- copy', fullpath, ma, 'to', t_path, mb)
+                                        change_var = True
+                                        try:
+                                            shutil.copy(fullpath, t_path)
+                                        except IOError:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy(fullpath, t_path)
+                                        cp_var += 1
+                print('ThreadClass4 -- files copied:', cp_var)
+                if change_var is False:
+                    info_label_1_var[4].setText('unnecessary.')
+                elif change_var is True:
+                    info_label_1_var[4].setText('amended.')
+            else:
+                info_label_1_var[4].setText('path error!')
+            timer_thread_var[4].start()
+            btnx_main_var[4].setIcon(QIcon(img_var[4]))
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -1447,51 +1625,67 @@ class ThreadClass5(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var
-        btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
-        change_var = False
-        print('ThreadClass5 Source:', path_var[5])
-        print('ThreadClass5 Destination:', dest_path_var[5])
-        if path_bool_var[5] == 'VIDEO_SOURCE_True' and dest_path_bool_var[5] == 'VIDEO_DESTINATION_True':
-            info_label_1_var[5].setText('reading...')
-            cp_var = 0
-            for dirName, subdirList, fileList in os.walk(path_var[5]):
-                for fname in fileList:
-                    fullpath = os.path.join(dirName, fname)
-                    t_path = fullpath.replace(path_var[5], '')
-                    t_path = dest_path_var[5] + t_path
-                    if not fullpath.endswith('.ini'):
-                        if not os.path.exists(t_path):
-                            print('ThreadClass5 -- copy', fullpath, 'to', t_path)
-                            change_var = True
-                            try:
-                                shutil.copy(fullpath, t_path)
-                            except IOError:
-                                os.makedirs(os.path.dirname(t_path))
-                                shutil.copy(fullpath, t_path)
-                            cp_var += 1
-                        elif os.path.exists(t_path):
-                            if compare_bool_var[5] is True:
-                                ma = os.path.getmtime(fullpath)
-                                mb = os.path.getmtime(t_path)
-                                if mb < ma:
-                                    print('ThreadClass5 -- copy', fullpath, ma, 'to', t_path, mb)
-                                    change_var = True
-                                    try:
-                                        shutil.copy(fullpath, t_path)
-                                    except IOError:
-                                        os.makedirs(os.path.dirname(t_path))
-                                        shutil.copy(fullpath, t_path)
-                                    cp_var += 1
-            print('ThreadClass5 -- files copied:', cp_var)
-            if change_var is False:
-                info_label_1_var[5].setText('unnecessary.')
-            elif change_var is True:
-                info_label_1_var[5].setText('amended.')
-        else:
-            info_label_1_var[5].setText('path error!')
-        timer_thread_var[5].start()
-        btnx_main_var[5].setIcon(QIcon(img_var[5]))
+        global path_bool_var, dest_path_bool_var, configuration_engaged
+
+        zero = '0'
+        centillionth_str = str('0.' + zero*303 + '1')
+        centillionth = float(centillionth_str)
+
+        if configuration_engaged is True:
+            while configuration_engaged is True:
+                time.sleep(centillionth)
+
+        elif configuration_engaged is False:
+            path = path_var[5]
+            dest = dest_path_var[5]
+            path_bool = path_bool_var[5]
+            dest_bool = dest_path_bool_var[5]
+            compare_bool = compare_bool_var[5]
+
+            btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
+            change_var = False
+            print('ThreadClass5 Source:', path)
+            print('ThreadClass5 Destination:', dest)
+            if path_bool == 'VIDEO_SOURCE_True' and dest_bool == 'VIDEO_DESTINATION_True':
+                info_label_1_var[5].setText('reading...')
+                cp_var = 0
+                for dirName, subdirList, fileList in os.walk(path):
+                    for fname in fileList:
+                        fullpath = os.path.join(dirName, fname)
+                        t_path = fullpath.replace(path, '')
+                        t_path = dest + t_path
+                        if not fullpath.endswith('.ini'):
+                            if not os.path.exists(t_path):
+                                print('ThreadClass5 -- copy', fullpath, 'to', t_path)
+                                change_var = True
+                                try:
+                                    shutil.copy(fullpath, t_path)
+                                except IOError:
+                                    os.makedirs(os.path.dirname(t_path))
+                                    shutil.copy(fullpath, t_path)
+                                cp_var += 1
+                            elif os.path.exists(t_path):
+                                if compare_bool is True:
+                                    ma = os.path.getmtime(fullpath)
+                                    mb = os.path.getmtime(t_path)
+                                    if mb < ma:
+                                        print('ThreadClass5 -- copy', fullpath, ma, 'to', t_path, mb)
+                                        change_var = True
+                                        try:
+                                            shutil.copy(fullpath, t_path)
+                                        except IOError:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy(fullpath, t_path)
+                                        cp_var += 1
+                print('ThreadClass5 -- files copied:', cp_var)
+                if change_var is False:
+                    info_label_1_var[5].setText('unnecessary.')
+                elif change_var is True:
+                    info_label_1_var[5].setText('amended.')
+            else:
+                info_label_1_var[5].setText('path error!')
+            timer_thread_var[5].start()
+            btnx_main_var[5].setIcon(QIcon(img_var[5]))
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
