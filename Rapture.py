@@ -412,6 +412,7 @@ class App(QMainWindow):
         self.settings_source0.move(100, 115)
         self.settings_source0.resize(set_src_dst_w, 15)
         self.settings_source0.setText(path_var[0])
+        self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
         self.settings_source0.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
@@ -427,7 +428,7 @@ class App(QMainWindow):
         self.settings_source1.move(100, 115)
         self.settings_source1.resize(set_src_dst_w, 15)
         self.settings_source1.setText(path_var[1])
-        self.settings_source0.setReadOnly(True)
+        self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
         self.settings_source1.setStyleSheet(
             """QLineEdit {background-color: rgb(35, 35, 35);
