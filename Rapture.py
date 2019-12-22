@@ -778,22 +778,44 @@ class App(QMainWindow):
 
     def settings_source_funk(self):
         global source_path_entered, source_selected, config_src_var, path_var
-        before_str = config_src_var[source_selected]+' '+path_var[source_selected]
-        after_str = config_src_var[source_selected]+' '+source_path_entered
         if os.path.exists(source_path_entered):
-            for line in fileinput.input('./config.txt', inplace=True):
-                print(line.rstrip().replace(before_str, after_str)),
-
+            path_item = []
+            with open('config.txt', 'r') as fo:
+                for line in fo:
+                    line = line.strip()
+                    if not line.startswith(config_src_var[source_selected]):
+                        path_item.append(line)
+                    elif line.startswith(config_src_var[source_selected]):
+                        new_line = config_src_var[source_selected]+' '+source_path_entered
+                        path_item.append(new_line)
+            open('config.txt', 'w').close()
+            with open('config.txt', 'a') as fo:
+                i = 0
+                for path_items in path_item:
+                    fo.writelines(path_item[i]+'\n')
+                    i += 1
+            fo.close()
             path_var[source_selected] = source_path_entered
 
     def settings_dest_funk(self):
-        global dest_path_entered, dest_selected, config_dst_var
-        before_str = config_dst_var[dest_selected] + ' ' + dest_path_var[dest_selected]
-        after_str = config_dst_var[dest_selected] + ' ' + dest_path_entered
+        global dest_path_entered, dest_selected, config_dst_var, source_selected, dest_path_var
         if os.path.exists(dest_path_entered):
-            for line in fileinput.input('./config.txt', inplace=True):
-                print(line.rstrip().replace(before_str, after_str)),
-
+            path_item = []
+            with open('config.txt', 'r') as fo:
+                for line in fo:
+                    line = line.strip()
+                    if not line.startswith(config_dst_var[dest_selected]):
+                        path_item.append(line)
+                    elif line.startswith(config_dst_var[dest_selected]):
+                        new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
+                        path_item.append(new_line)
+            open('config.txt', 'w').close()
+            with open('config.txt', 'a') as fo:
+                i = 0
+                for path_items in path_item:
+                    fo.writelines(path_item[i] + '\n')
+                    i += 1
+            fo.close()
             dest_path_var[dest_selected] = dest_path_entered
 
     def settings_source_pre_funk0(self):
