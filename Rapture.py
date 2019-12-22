@@ -1234,7 +1234,9 @@ class UpdateSettingsWindow(QThread):
     def get_conf_funk(self):
         global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
             settings_dest_edit_var, configuration_engaged
+
         configuration_engaged = True
+
         if settings_source_edit_var[0].isReadOnly() is True:
             path_var = []
             path_bool_var = []
