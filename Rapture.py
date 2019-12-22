@@ -2,7 +2,6 @@ import os
 import sys
 import time
 import shutil
-import fileinput
 import win32api
 import win32process
 import win32con
@@ -25,6 +24,10 @@ configuration_engaged = False
 settings_active = False
 thread_var = [(), (), (), (), (), ()]
 timer_thread_var = [(), (), (), (), (), ()]
+settings_input_response_thread = ()
+settings_input_response_source_bool = None
+settings_input_response_dest_bool = None
+settings_input_response_label = [(), ()]
 path_var = []
 dest_path_var = []
 path_bool_var = []
@@ -150,12 +153,30 @@ class App(QMainWindow):
 
     def initUI(self):
         global thread_var, btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, info_label_1_var
-        global img_var, img_active_var, img_settings, timer_thread_var
+        global img_var, img_active_var, img_settings, timer_thread_var, settings_input_response_thread
         global path_var, dest_path_var, back_label_var, pressed_int, settings_source_edit_var, settings_dest_edit_var
-
+        global settings_input_response_label
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width, self.height)
+
+        self.settings_input_response_label_src = QLabel(self)
+        self.settings_input_response_label_src.move(555, 115)
+        self.settings_input_response_label_src.resize(5, 15)
+        self.settings_input_response_label_src.setStyleSheet(
+            """QLabel {background-color: rgb(15, 15, 15);
+           border:1px solid rgb(15, 15, 15);}"""
+        )
+        settings_input_response_label[0] = self.settings_input_response_label_src
+
+        self.settings_input_response_label_dst = QLabel(self)
+        self.settings_input_response_label_dst.move(555, 135)
+        self.settings_input_response_label_dst.resize(5, 15)
+        self.settings_input_response_label_dst.setStyleSheet(
+            """QLabel {background-color: rgb(15, 15, 15);
+           border:1px solid rgb(15, 15, 15);}"""
+        )
+        settings_input_response_label[1] = self.settings_input_response_label_dst
 
         self.back_label_main = QLabel(self)
         self.back_label_main.move(0, 0)
@@ -278,8 +299,8 @@ class App(QMainWindow):
         self.timer.timeout.connect(self.while_pressed_funk)
 
         self.paths_readonly_button = QPushButton(self)
-        self.paths_readonly_button.resize(15, 35)
-        self.paths_readonly_button.move(self.width - 48, 115)
+        self.paths_readonly_button.resize(20, 35)
+        self.paths_readonly_button.move(565, 115)
         self.paths_readonly_button.setIcon(QIcon(small_image[7]))
         self.paths_readonly_button.setIconSize(QSize(10, 10))
         self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
@@ -311,8 +332,8 @@ class App(QMainWindow):
         )
 
         self.settings_source_label = QLabel(self)
-        self.settings_source_label.move(30, 115)
-        self.settings_source_label.resize(80, 15)
+        self.settings_source_label.move(20, 115)
+        self.settings_source_label.resize(60, 15)
         newfont = QFont("Times", 7, QFont.Bold)
         self.settings_source_label.setFont(newfont)
         self.settings_source_label.setText('Source:')
@@ -323,8 +344,8 @@ class App(QMainWindow):
         )
 
         self.settings_dest_label = QLabel(self)
-        self.settings_dest_label.move(30, 135)
-        self.settings_dest_label.resize(80, 15)
+        self.settings_dest_label.move(20, 135)
+        self.settings_dest_label.resize(60, 15)
         newfont = QFont("Times", 7, QFont.Bold)
         self.settings_dest_label.setFont(newfont)
         self.settings_dest_label.setText('Destination:')
@@ -407,15 +428,16 @@ class App(QMainWindow):
         )
         self.setting_title5.hide()
 
-        set_src_dst_w = 453
+        set_src_dst_w = 465
+        set_src_dst_pos_w = 85
         self.settings_source0 = QLineEdit(self)
-        self.settings_source0.move(100, 115)
+        self.settings_source0.move(set_src_dst_pos_w, 115)
         self.settings_source0.resize(set_src_dst_w, 15)
         self.settings_source0.setText(path_var[0])
         self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
         self.settings_source0.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -425,13 +447,13 @@ class App(QMainWindow):
         self.settings_source0.hide()
 
         self.settings_source1 = QLineEdit(self)
-        self.settings_source1.move(100, 115)
+        self.settings_source1.move(set_src_dst_pos_w, 115)
         self.settings_source1.resize(set_src_dst_w, 15)
         self.settings_source1.setText(path_var[1])
         self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
         self.settings_source1.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -441,13 +463,13 @@ class App(QMainWindow):
         self.settings_source1.hide()
 
         self.settings_source2 = QLineEdit(self)
-        self.settings_source2.move(100, 115)
+        self.settings_source2.move(set_src_dst_pos_w, 115)
         self.settings_source2.resize(set_src_dst_w, 15)
         self.settings_source2.setText(path_var[2])
         self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
         self.settings_source2.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -457,13 +479,13 @@ class App(QMainWindow):
         self.settings_source2.hide()
 
         self.settings_source3 = QLineEdit(self)
-        self.settings_source3.move(100, 115)
+        self.settings_source3.move(set_src_dst_pos_w, 115)
         self.settings_source3.resize(set_src_dst_w, 15)
         self.settings_source3.setText(path_var[3])
         self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
         self.settings_source3.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -473,13 +495,13 @@ class App(QMainWindow):
         self.settings_source3.hide()
 
         self.settings_source4 = QLineEdit(self)
-        self.settings_source4.move(100, 115)
+        self.settings_source4.move(set_src_dst_pos_w, 115)
         self.settings_source4.resize(set_src_dst_w, 15)
         self.settings_source4.setText(path_var[4])
         self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
         self.settings_source4.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -489,13 +511,13 @@ class App(QMainWindow):
         self.settings_source4.hide()
 
         self.settings_source5 = QLineEdit(self)
-        self.settings_source5.move(100, 115)
+        self.settings_source5.move(set_src_dst_pos_w, 115)
         self.settings_source5.resize(set_src_dst_w, 15)
         self.settings_source5.setText(path_var[5])
         self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
         self.settings_source5.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -505,13 +527,13 @@ class App(QMainWindow):
         self.settings_source5.hide()
 
         self.settings_dest0 = QLineEdit(self)
-        self.settings_dest0.move(100, 135)
+        self.settings_dest0.move(set_src_dst_pos_w, 135)
         self.settings_dest0.resize(set_src_dst_w, 15)
         self.settings_dest0.setText(dest_path_var[0])
         self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
         self.settings_dest0.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -521,13 +543,13 @@ class App(QMainWindow):
         self.settings_dest0.hide()
 
         self.settings_dest1 = QLineEdit(self)
-        self.settings_dest1.move(100, 135)
+        self.settings_dest1.move(set_src_dst_pos_w, 135)
         self.settings_dest1.resize(set_src_dst_w, 15)
         self.settings_dest1.setText(dest_path_var[1])
         self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
         self.settings_dest1.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -537,13 +559,13 @@ class App(QMainWindow):
         self.settings_dest1.hide()
 
         self.settings_dest2 = QLineEdit(self)
-        self.settings_dest2.move(100, 135)
+        self.settings_dest2.move(set_src_dst_pos_w, 135)
         self.settings_dest2.resize(set_src_dst_w, 15)
         self.settings_dest2.setText(dest_path_var[2])
         self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
         self.settings_dest2.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -553,13 +575,13 @@ class App(QMainWindow):
         self.settings_dest2.hide()
 
         self.settings_dest3 = QLineEdit(self)
-        self.settings_dest3.move(100, 135)
+        self.settings_dest3.move(set_src_dst_pos_w, 135)
         self.settings_dest3.resize(set_src_dst_w, 15)
         self.settings_dest3.setText(dest_path_var[3])
         self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
         self.settings_dest3.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -569,13 +591,13 @@ class App(QMainWindow):
         self.settings_dest3.hide()
 
         self.settings_dest4 = QLineEdit(self)
-        self.settings_dest4.move(100, 135)
+        self.settings_dest4.move(set_src_dst_pos_w, 135)
         self.settings_dest4.resize(set_src_dst_w, 15)
         self.settings_dest4.setText(dest_path_var[4])
         self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
         self.settings_dest4.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -585,13 +607,13 @@ class App(QMainWindow):
         self.settings_dest4.hide()
 
         self.settings_dest5 = QLineEdit(self)
-        self.settings_dest5.move(100, 135)
+        self.settings_dest5.move(set_src_dst_pos_w, 135)
         self.settings_dest5.resize(set_src_dst_w, 15)
         self.settings_dest5.setText(dest_path_var[5])
         self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
         self.settings_dest5.setStyleSheet(
-            """QLineEdit {background-color: rgb(35, 35, 35);
+            """QLineEdit {background-color: rgb(20, 20, 20);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -679,6 +701,8 @@ class App(QMainWindow):
         thread_var[3] = ThreadClass3()
         thread_var[4] = ThreadClass4()
         thread_var[5] = ThreadClass5()
+
+        settings_input_response_thread = SettingsInputResponse()
 
         self.show()
 
@@ -778,8 +802,10 @@ class App(QMainWindow):
             self.settings_funk0()
 
     def settings_source_funk(self):
-        global source_path_entered, source_selected, config_src_var, path_var
+        global source_path_entered, source_selected, config_src_var, path_var, settings_source_edit_var
+        global settings_input_response_thread, settings_input_response_source_bool
         if os.path.exists(source_path_entered):
+            settings_input_response_source_bool = True
             path_item = []
             with open('config.txt', 'r') as fo:
                 for line in fo:
@@ -797,10 +823,17 @@ class App(QMainWindow):
                     i += 1
             fo.close()
             path_var[source_selected] = source_path_entered
+            settings_input_response_thread.start()
+        elif not os.path.exists(source_path_entered):
+            settings_input_response_source_bool = False
+            settings_source_edit_var[source_selected].setText(path_var[source_selected])
+            settings_input_response_thread.start()
 
     def settings_dest_funk(self):
-        global dest_path_entered, dest_selected, config_dst_var, source_selected, dest_path_var
+        global dest_path_entered, dest_selected, config_dst_var, dest_path_var, settings_dest_edit_var
+        global settings_input_response_thread, settings_input_response_dest_bool
         if os.path.exists(dest_path_entered):
+            settings_input_response_dest_bool = True
             path_item = []
             with open('config.txt', 'r') as fo:
                 for line in fo:
@@ -818,6 +851,12 @@ class App(QMainWindow):
                     i += 1
             fo.close()
             dest_path_var[dest_selected] = dest_path_entered
+            settings_input_response_thread.start()
+
+        elif not os.path.exists(dest_path_entered):
+            settings_input_response_dest_bool = False
+            settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+            settings_input_response_thread.start()
 
     def settings_source_pre_funk0(self):
         global source_path_entered, source_selected
@@ -1123,6 +1162,64 @@ class App(QMainWindow):
         global thread_var
         timer_thread_var[5].start()
         thread_var[5].stop_thr()
+
+
+class SettingsInputResponse(QThread):
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global settings_input_response_source_bool, settings_input_response_dest_bool
+        global settings_source_edit_var, settings_dest_edit_var, settings_input_response_label
+        global source_selected, dest_selected
+
+        if settings_input_response_source_bool is True:
+            settings_input_response_label[0].setStyleSheet(
+                """QLabel {background-color: rgb(0, 255, 0);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
+            settings_input_response_source_bool = None
+            time.sleep(1)
+            settings_input_response_label[0].setStyleSheet(
+                """QLabel {background-color: rgb(15, 15, 15);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
+
+        elif settings_input_response_source_bool is False:
+            settings_input_response_label[0].setStyleSheet(
+                """QLabel {background-color: rgb(255, 0, 0);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
+            settings_input_response_source_bool = None
+            time.sleep(1)
+            settings_input_response_label[0].setStyleSheet(
+                """QLabel {background-color: rgb(15, 15, 15);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
+
+        elif settings_input_response_dest_bool is True:
+            settings_input_response_label[1].setStyleSheet(
+                """QLabel {background-color: rgb(0, 255, 0);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
+            settings_input_response_dest_bool = None
+            time.sleep(1)
+            settings_input_response_label[1].setStyleSheet(
+                """QLabel {background-color: rgb(15, 15, 15);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
+
+        elif settings_input_response_dest_bool is False:
+            settings_input_response_label[1].setStyleSheet(
+                """QLabel {background-color: rgb(255, 0, 0);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
+            settings_input_response_dest_bool = None
+            time.sleep(1)
+            settings_input_response_label[1].setStyleSheet(
+                """QLabel {background-color: rgb(15, 15, 15);
+                border:1px solid rgb(15, 15, 15);}"""
+            )
 
 
 class UpdateSettingsWindow(QThread):
