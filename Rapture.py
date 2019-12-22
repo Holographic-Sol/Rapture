@@ -135,7 +135,7 @@ class App(QMainWindow):
     def __init__(self):
         super(App, self).__init__()
         self.setWindowIcon(QIcon('./icon.png'))
-        self.title = '[development] rapture extreme backup (sol)ution'
+        self.title = 'Rapture Extreme Backup Solution'
         get_conf_funk()
         self.width = 605
         self.height = 90
