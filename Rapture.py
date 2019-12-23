@@ -302,7 +302,7 @@ class App(QMainWindow):
         self.paths_readonly_button.resize(20, 35)
         self.paths_readonly_button.move(565, 115)
         self.paths_readonly_button.setIcon(QIcon(small_image[7]))
-        self.paths_readonly_button.setIconSize(QSize(10, 10))
+        self.paths_readonly_button.setIconSize(QSize(18, 18))
         self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
         self.paths_readonly_button.setStyleSheet(
             """QPushButton{background-color: rgb(35, 35, 35);
@@ -437,7 +437,7 @@ class App(QMainWindow):
         self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
         self.settings_source0.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -453,7 +453,7 @@ class App(QMainWindow):
         self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
         self.settings_source1.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -469,7 +469,7 @@ class App(QMainWindow):
         self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
         self.settings_source2.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -485,7 +485,7 @@ class App(QMainWindow):
         self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
         self.settings_source3.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -501,7 +501,7 @@ class App(QMainWindow):
         self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
         self.settings_source4.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -517,7 +517,7 @@ class App(QMainWindow):
         self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
         self.settings_source5.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -533,7 +533,7 @@ class App(QMainWindow):
         self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
         self.settings_dest0.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -549,7 +549,7 @@ class App(QMainWindow):
         self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
         self.settings_dest1.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -565,7 +565,7 @@ class App(QMainWindow):
         self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
         self.settings_dest2.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -581,7 +581,7 @@ class App(QMainWindow):
         self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
         self.settings_dest3.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -597,7 +597,7 @@ class App(QMainWindow):
         self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
         self.settings_dest4.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -613,7 +613,7 @@ class App(QMainWindow):
         self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
         self.settings_dest5.setStyleSheet(
-            """QLineEdit {background-color: rgb(20, 20, 20);
+            """QLineEdit {background-color: rgb(10, 10, 10);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -719,10 +719,24 @@ class App(QMainWindow):
             i = 0
             for settings_source_edit_vars in settings_source_edit_var:
                 settings_source_edit_var[i].setReadOnly(False)
+                settings_source_edit_var[i].setStyleSheet(
+                    """QLineEdit {background-color: rgb(20, 20, 20);
+                    border:0px solid rgb(0, 0, 0);
+                    selection-color: green;
+                    selection-background-color: black;
+                    color: grey;}"""
+                )
                 i += 1
             i = 0
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(False)
+                settings_dest_edit_var[i].setStyleSheet(
+                    """QLineEdit {background-color: rgb(20, 20, 20);
+                    border:0px solid rgb(0, 0, 0);
+                    selection-color: green;
+                    selection-background-color: black;
+                    color: grey;}"""
+                )
                 i += 1
             self.paths_readonly_button.setIcon(QIcon(small_image[6]))
 
@@ -730,10 +744,24 @@ class App(QMainWindow):
             i = 0
             for settings_source_edit_vars in settings_source_edit_var:
                 settings_source_edit_var[i].setReadOnly(True)
+                settings_source_edit_var[i].setStyleSheet(
+                    """QLineEdit {background-color: rgb(10, 10, 10);
+                    border:0px solid rgb(0, 0, 0);
+                    selection-color: green;
+                    selection-background-color: black;
+                    color: grey;}"""
+                )
                 i += 1
             i = 0
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(True)
+                settings_dest_edit_var[i].setStyleSheet(
+                    """QLineEdit {background-color: rgb(10, 10, 10);
+                    border:0px solid rgb(0, 0, 0);
+                    selection-color: green;
+                    selection-background-color: black;
+                    color: grey;}"""
+                )
                 i += 1
             self.paths_readonly_button.setIcon(QIcon(small_image[7]))
 
