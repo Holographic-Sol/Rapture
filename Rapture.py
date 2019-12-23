@@ -302,7 +302,7 @@ class App(QMainWindow):
         self.paths_readonly_button.resize(20, 35)
         self.paths_readonly_button.move(565, 115)
         self.paths_readonly_button.setIcon(QIcon(small_image[7]))
-        self.paths_readonly_button.setIconSize(QSize(18, 18))
+        self.paths_readonly_button.setIconSize(QSize(20, 35))
         self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
         self.paths_readonly_button.setStyleSheet(
             """QPushButton{background-color: rgb(35, 35, 35);
@@ -1257,7 +1257,7 @@ class UpdateSettingsWindow(QThread):
     def run(self):
         while __name__ == '__main__':
             self.get_conf_funk()
-            time.sleep(1)
+            time.sleep(2.0)
 
     def get_conf_funk(self):
         global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
@@ -1265,65 +1265,25 @@ class UpdateSettingsWindow(QThread):
 
         configuration_engaged = True
 
-        if settings_source_edit_var[0].isReadOnly() is True:
-            path_var = []
-            path_bool_var = []
-            dest_path_var = []
-            dest_path_bool_var = []
-            if os.path.exists('config.txt'):
-                with open('config.txt', 'r') as fo:
-                    configuration_engaged = True
-                    for line in fo:
-                        line = line.strip()
-                        i = 0
-                        for config_src_vars in config_src_var:
-                            if line.startswith(config_src_var[i]):
-                                key_word_length = len(config_src_var[i])
-                                primary_key = line[:key_word_length]
-                                secondary_key = line[key_word_length:]
-                                primary_key = primary_key.strip()
-                                secondary_key = secondary_key.strip()
-                                if primary_key.endswith('_SOURCE'):
-                                    if os.path.exists(secondary_key):
-                                        if (primary_key + '_True') not in path_bool_var:
-                                            path_var.append(secondary_key)
-                                            path_bool_var.append(primary_key + '_True')
-                                    elif not os.path.exists(secondary_key):
-                                        if (primary_key + '_False') not in path_bool_var:
-                                            path_var.append('')
-                                            path_bool_var.append(primary_key + '_False')
-                            i += 1
-                        i = 0
-                        for config_dst_vars in config_dst_var:
-                            if line.startswith(config_dst_var[i]):
-                                key_word_length = len(config_dst_var[i])
-                                primary_key = line[:key_word_length]
-                                secondary_key = line[key_word_length:]
-                                primary_key = primary_key.strip()
-                                secondary_key = secondary_key.strip()
-                                if primary_key.endswith('_DESTINATION'):
-                                    if os.path.exists(secondary_key):
-                                        if (primary_key + '_True') not in dest_path_bool_var:
-                                            dest_path_var.append(secondary_key)
-                                            dest_path_bool_var.append(primary_key + '_True')
-                                    elif not os.path.exists(secondary_key):
-                                        if (primary_key + '_False') not in dest_path_bool_var:
-                                            dest_path_var.append('')
-                                            dest_path_bool_var.append(primary_key + '_False')
-                            i += 1
-                fo.close()
+        i = 0
+        for settings_source_edit_vars in settings_source_edit_var:
+            if os.path.exists(path_var[i]) and path_var[i] != settings_source_edit_var[i].text():
+                if settings_source_edit_var[0].isReadOnly() is True:
+                    settings_source_edit_var[i].setText(path_var[i])
+            elif not os.path.exists(path_var[i]):
+                if settings_source_edit_var[0].isReadOnly() is True:
+                    settings_source_edit_var[i].setText('')
+            i += 1
 
-                i = 0
-                for settings_source_edit_vars in settings_source_edit_var:
-                    if path_var[i] != settings_source_edit_var[i]:
-                        settings_source_edit_var[i].setText(path_var[i])
-                    i += 1
-
-                i = 0
-                for settings_dest_edit_vars in settings_dest_edit_var:
-                    if dest_path_var[i] != settings_dest_edit_var[i]:
-                        settings_dest_edit_var[i].setText(dest_path_var[i])
-                    i += 1
+        i = 0
+        for settings_dest_edit_vars in settings_dest_edit_var:
+            if os.path.exists(dest_path_var[i]) and dest_path_var[i] != settings_dest_edit_var[i].text():
+                if settings_source_edit_var[0].isReadOnly() is True:
+                    settings_dest_edit_var[i].setText(dest_path_var[i])
+            elif not os.path.exists(dest_path_var[i]):
+                if settings_source_edit_var[0].isReadOnly() is True:
+                    settings_dest_edit_var[i].setText('')
+            i += 1
 
         configuration_engaged = False
 
