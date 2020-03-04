@@ -337,7 +337,7 @@ class App(QMainWindow):
         self.settings_source_label.resize(60, 15)
         newfont = QFont("Times", 7, QFont.Bold)
         self.settings_source_label.setFont(newfont)
-        self.settings_source_label.setText('Source:')
+        self.settings_source_label.setText('In:')
         self.settings_source_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -349,7 +349,7 @@ class App(QMainWindow):
         self.settings_dest_label.resize(60, 15)
         newfont = QFont("Times", 7, QFont.Bold)
         self.settings_dest_label.setFont(newfont)
-        self.settings_dest_label.setText('Destination:')
+        self.settings_dest_label.setText('Out:')
         self.settings_dest_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
