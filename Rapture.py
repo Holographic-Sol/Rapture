@@ -357,11 +357,11 @@ class App(QMainWindow):
         )
 
         self.setting_title0 = QLabel(self)
-        self.setting_title0.resize(100, 15)
+        self.setting_title0.resize(605, 15)
         self.setting_title0.move(back_label_ankor_w0, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title0.setFont(newfont)
-        self.setting_title0.setText("Archive Settings")
+        self.setting_title0.setText("Archive")
         self.setting_title0.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -369,11 +369,11 @@ class App(QMainWindow):
         )
         self.setting_title0.hide()
         self.setting_title1 = QLabel(self)
-        self.setting_title1.resize(100, 15)
+        self.setting_title1.resize(605, 15)
         self.setting_title1.move(back_label_ankor_w1, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title1.setFont(newfont)
-        self.setting_title1.setText("Document Settings")
+        self.setting_title1.setText("Document")
         self.setting_title1.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -381,11 +381,11 @@ class App(QMainWindow):
         )
         self.setting_title1.hide()
         self.setting_title2 = QLabel(self)
-        self.setting_title2.resize(100, 15)
+        self.setting_title2.resize(605, 15)
         self.setting_title2.move(back_label_ankor_w2, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title2.setFont(newfont)
-        self.setting_title2.setText("Music Settings")
+        self.setting_title2.setText("Music")
         self.setting_title2.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -393,11 +393,11 @@ class App(QMainWindow):
         )
         self.setting_title2.hide()
         self.setting_title3 = QLabel(self)
-        self.setting_title3.resize(100, 15)
+        self.setting_title3.resize(605, 15)
         self.setting_title3.move(back_label_ankor_w3, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title3.setFont(newfont)
-        self.setting_title3.setText("Picture Settings")
+        self.setting_title3.setText("Picture")
         self.setting_title3.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -405,11 +405,11 @@ class App(QMainWindow):
         )
         self.setting_title3.hide()
         self.setting_title4 = QLabel(self)
-        self.setting_title4.resize(100, 15)
+        self.setting_title4.resize(605, 15)
         self.setting_title4.move(back_label_ankor_w4, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title4.setFont(newfont)
-        self.setting_title4.setText("Program Settings")
+        self.setting_title4.setText("Program")
         self.setting_title4.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -417,11 +417,11 @@ class App(QMainWindow):
         )
         self.setting_title4.hide()
         self.setting_title5 = QLabel(self)
-        self.setting_title5.resize(100, 15)
+        self.setting_title5.resize(605, 15)
         self.setting_title5.move(back_label_ankor_w5, 95)
         newfont = QFont("Times", 7, QFont.Bold)
         self.setting_title5.setFont(newfont)
-        self.setting_title5.setText("Video Settings")
+        self.setting_title5.setText("Video")
         self.setting_title5.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
