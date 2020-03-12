@@ -6,9 +6,15 @@ import win32api
 import win32process
 import win32con
 from win32api import GetSystemMetrics
-from PyQt5.QtCore import Qt, QThread, QSize, QTimer
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit
+from PyQt5.QtCore import Qt, QThread, QSize, QTimer, QPoint, QCoreApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit, QDesktopWidget
 from PyQt5.QtGui import QIcon, QFont, QPixmap
+
+if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+
+if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
 priority_classes = [win32process.IDLE_PRIORITY_CLASS,
                    win32process.BELOW_NORMAL_PRIORITY_CLASS,
@@ -142,13 +148,14 @@ class App(QMainWindow):
         self.title = 'Rapture Extreme Backup Solution'
         get_conf_funk()
         self.width = 605
-        self.height = 90
+        self.height = 110
         scr_w = GetSystemMetrics(0)
         scr_h = GetSystemMetrics(1)
         self.left = (scr_w / 2) - (self.width / 2)
         self.top = ((scr_h / 2) - (self.height / 2))
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
+        self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
         self.setPalette(p)
         self.initUI()
 
@@ -158,11 +165,33 @@ class App(QMainWindow):
         global path_var, dest_path_var, back_label_var, pressed_int, settings_source_edit_var, settings_dest_edit_var
         global settings_input_response_label, update_settings_window_thread
         self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        # self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width, self.height)
 
+        self.close_button = QPushButton(self)
+        self.close_button.move((self.width - 20), 0)
+        self.close_button.resize(20, 20)
+        self.close_button.setIcon(QIcon("./image/img_close.png"))
+        self.close_button.setIconSize(QSize(8, 8))
+        self.close_button.clicked.connect(QCoreApplication.instance().quit)
+        self.close_button.setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 0);
+               border:0px solid rgb(0, 0, 0);}"""
+            )
+
+        self.minimize_button = QPushButton(self)
+        self.minimize_button.move((self.width - 50), 0)
+        self.minimize_button.resize(20, 20)
+        self.minimize_button.setIcon(QIcon("./image/img_minimize.png"))
+        self.minimize_button.setIconSize(QSize(50, 20))
+        self.minimize_button.clicked.connect(self.showMinimized)
+        self.minimize_button.setStyleSheet(
+            """QPushButton{background-color: rgb(0, 0, 0);
+               border:0px solid rgb(0, 0, 0);}"""
+            )
+
         self.settings_input_response_label_src = QLabel(self)
-        self.settings_input_response_label_src.move(550, 115)
+        self.settings_input_response_label_src.move(550, 135)
         self.settings_input_response_label_src.resize(5, 15)
         self.settings_input_response_label_src.setStyleSheet(
             """QLabel {background-color: rgb(15, 15, 15);
@@ -171,7 +200,7 @@ class App(QMainWindow):
         settings_input_response_label[0] = self.settings_input_response_label_src
 
         self.settings_input_response_label_dst = QLabel(self)
-        self.settings_input_response_label_dst.move(550, 135)
+        self.settings_input_response_label_dst.move(550, 155)
         self.settings_input_response_label_dst.resize(5, 15)
         self.settings_input_response_label_dst.setStyleSheet(
             """QLabel {background-color: rgb(15, 15, 15);
@@ -180,7 +209,7 @@ class App(QMainWindow):
         settings_input_response_label[1] = self.settings_input_response_label_dst
 
         self.back_label_main = QLabel(self)
-        self.back_label_main.move(0, 0)
+        self.back_label_main.move(0, 20)
         self.back_label_main.resize(self.width, 90)
         self.back_label_main.setStyleSheet(
             """QLabel {background-color: rgb(13, 13, 13);
@@ -207,12 +236,12 @@ class App(QMainWindow):
         back_label_ankor_w4 = 405
         back_label_ankor_w5 = 505
 
-        back_label_ankor_h0 = 5
-        back_label_ankor_h1 = 5
-        back_label_ankor_h2 = 5
-        back_label_ankor_h3 = 5
-        back_label_ankor_h4 = 5
-        back_label_ankor_h5 = 5
+        back_label_ankor_h0 = 25
+        back_label_ankor_h1 = 25
+        back_label_ankor_h2 = 25
+        back_label_ankor_h3 = 25
+        back_label_ankor_h4 = 25
+        back_label_ankor_h5 = 25
 
         back_label_var[0].move(back_label_ankor_w0, back_label_ankor_h0)
         back_label_var[1].move(back_label_ankor_w1, back_label_ankor_h1)
@@ -271,7 +300,7 @@ class App(QMainWindow):
             info_label_1 = 'info_label_1' + str(i)
             self.info_label_1 = QLabel(self)
             self.info_label_1.resize(85, 15)
-            newfont = QFont("Times", 7, QFont.Bold)
+            newfont = QFont("Times", 8, QFont.Bold)
             self.info_label_1.setFont(newfont)
             self.info_label_1.setText("")
             self.info_label_1.setStyleSheet(
@@ -285,7 +314,7 @@ class App(QMainWindow):
 
         self.hide_settings_button = QPushButton(self)
         self.hide_settings_button.resize(self.width, 10)
-        self.hide_settings_button.move(0, 160)
+        self.hide_settings_button.move(0, 180)
         self.hide_settings_button.setIcon(QIcon(small_image[1]))
         self.hide_settings_button.clicked.connect(self.hide_settings_page_funk)
         self.hide_settings_button.setIconSize(QSize(15, 15))
@@ -301,7 +330,7 @@ class App(QMainWindow):
 
         self.paths_readonly_button = QPushButton(self)
         self.paths_readonly_button.resize(15, 35)
-        self.paths_readonly_button.move(560, 115)
+        self.paths_readonly_button.move(560, 135)
         self.paths_readonly_button.setIcon(QIcon(small_image[7]))
         self.paths_readonly_button.setIconSize(QSize(15, 35))
         self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
@@ -312,7 +341,7 @@ class App(QMainWindow):
 
         self.scr_left = QPushButton(self)
         self.scr_left.resize(10, 35)
-        self.scr_left.move(0, 115)
+        self.scr_left.move(0, 135)
         self.scr_left.setIcon(QIcon(small_image[2]))
         self.scr_left.setIconSize(QSize(15, 35))
         self.scr_left.clicked.connect(self.scr_left_funk)
@@ -323,7 +352,7 @@ class App(QMainWindow):
 
         self.scr_right = QPushButton(self)
         self.scr_right.resize(10, 35)
-        self.scr_right.move((self.width - 10), 115)
+        self.scr_right.move((self.width - 10), 135)
         self.scr_right.setIcon(QIcon(small_image[3]))
         self.scr_right.setIconSize(QSize(15, 35))
         self.scr_right.clicked.connect(self.scr_right_funk)
@@ -333,11 +362,11 @@ class App(QMainWindow):
         )
 
         self.settings_source_label = QLabel(self)
-        self.settings_source_label.move(30, 115)
+        self.settings_source_label.move(30, 135)
         self.settings_source_label.resize(60, 15)
-        newfont = QFont("Times", 7, QFont.Bold)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.settings_source_label.setFont(newfont)
-        self.settings_source_label.setText('In:')
+        self.settings_source_label.setText('Source:')
         self.settings_source_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -345,11 +374,11 @@ class App(QMainWindow):
         )
 
         self.settings_dest_label = QLabel(self)
-        self.settings_dest_label.move(30, 135)
+        self.settings_dest_label.move(30, 155)
         self.settings_dest_label.resize(60, 15)
-        newfont = QFont("Times", 7, QFont.Bold)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.settings_dest_label.setFont(newfont)
-        self.settings_dest_label.setText('Out:')
+        self.settings_dest_label.setText('Destination:')
         self.settings_dest_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
            color: green;
@@ -358,8 +387,8 @@ class App(QMainWindow):
 
         self.setting_title0 = QLabel(self)
         self.setting_title0.resize(605, 15)
-        self.setting_title0.move(back_label_ankor_w0, 95)
-        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title0.move(back_label_ankor_w0, 115)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.setting_title0.setFont(newfont)
         self.setting_title0.setText("Archive")
         self.setting_title0.setStyleSheet(
@@ -370,8 +399,8 @@ class App(QMainWindow):
         self.setting_title0.hide()
         self.setting_title1 = QLabel(self)
         self.setting_title1.resize(605, 15)
-        self.setting_title1.move(back_label_ankor_w1, 95)
-        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title1.move(back_label_ankor_w1, 115)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.setting_title1.setFont(newfont)
         self.setting_title1.setText("Document")
         self.setting_title1.setStyleSheet(
@@ -382,8 +411,8 @@ class App(QMainWindow):
         self.setting_title1.hide()
         self.setting_title2 = QLabel(self)
         self.setting_title2.resize(605, 15)
-        self.setting_title2.move(back_label_ankor_w2, 95)
-        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title2.move(back_label_ankor_w2, 115)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.setting_title2.setFont(newfont)
         self.setting_title2.setText("Music")
         self.setting_title2.setStyleSheet(
@@ -394,8 +423,8 @@ class App(QMainWindow):
         self.setting_title2.hide()
         self.setting_title3 = QLabel(self)
         self.setting_title3.resize(605, 15)
-        self.setting_title3.move(back_label_ankor_w3, 95)
-        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title3.move(back_label_ankor_w3, 115)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.setting_title3.setFont(newfont)
         self.setting_title3.setText("Picture")
         self.setting_title3.setStyleSheet(
@@ -406,8 +435,8 @@ class App(QMainWindow):
         self.setting_title3.hide()
         self.setting_title4 = QLabel(self)
         self.setting_title4.resize(605, 15)
-        self.setting_title4.move(back_label_ankor_w4, 95)
-        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title4.move(back_label_ankor_w4, 115)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.setting_title4.setFont(newfont)
         self.setting_title4.setText("Program")
         self.setting_title4.setStyleSheet(
@@ -418,8 +447,8 @@ class App(QMainWindow):
         self.setting_title4.hide()
         self.setting_title5 = QLabel(self)
         self.setting_title5.resize(605, 15)
-        self.setting_title5.move(back_label_ankor_w5, 95)
-        newfont = QFont("Times", 7, QFont.Bold)
+        self.setting_title5.move(back_label_ankor_w5, 115)
+        newfont = QFont("Times", 8, QFont.Bold)
         self.setting_title5.setFont(newfont)
         self.setting_title5.setText("Video")
         self.setting_title5.setStyleSheet(
@@ -432,7 +461,7 @@ class App(QMainWindow):
         set_src_dst_w = 450
         set_src_dst_pos_w = 95
         self.settings_source0 = QLineEdit(self)
-        self.settings_source0.move(set_src_dst_pos_w, 115)
+        self.settings_source0.move(set_src_dst_pos_w, 135)
         self.settings_source0.resize(set_src_dst_w, 15)
         self.settings_source0.setText(path_var[0])
         self.settings_source0.setReadOnly(True)
@@ -448,7 +477,7 @@ class App(QMainWindow):
         self.settings_source0.hide()
 
         self.settings_source1 = QLineEdit(self)
-        self.settings_source1.move(set_src_dst_pos_w, 115)
+        self.settings_source1.move(set_src_dst_pos_w, 135)
         self.settings_source1.resize(set_src_dst_w, 15)
         self.settings_source1.setText(path_var[1])
         self.settings_source1.setReadOnly(True)
@@ -464,7 +493,7 @@ class App(QMainWindow):
         self.settings_source1.hide()
 
         self.settings_source2 = QLineEdit(self)
-        self.settings_source2.move(set_src_dst_pos_w, 115)
+        self.settings_source2.move(set_src_dst_pos_w, 135)
         self.settings_source2.resize(set_src_dst_w, 15)
         self.settings_source2.setText(path_var[2])
         self.settings_source2.setReadOnly(True)
@@ -480,7 +509,7 @@ class App(QMainWindow):
         self.settings_source2.hide()
 
         self.settings_source3 = QLineEdit(self)
-        self.settings_source3.move(set_src_dst_pos_w, 115)
+        self.settings_source3.move(set_src_dst_pos_w, 135)
         self.settings_source3.resize(set_src_dst_w, 15)
         self.settings_source3.setText(path_var[3])
         self.settings_source3.setReadOnly(True)
@@ -496,7 +525,7 @@ class App(QMainWindow):
         self.settings_source3.hide()
 
         self.settings_source4 = QLineEdit(self)
-        self.settings_source4.move(set_src_dst_pos_w, 115)
+        self.settings_source4.move(set_src_dst_pos_w, 135)
         self.settings_source4.resize(set_src_dst_w, 15)
         self.settings_source4.setText(path_var[4])
         self.settings_source4.setReadOnly(True)
@@ -512,7 +541,7 @@ class App(QMainWindow):
         self.settings_source4.hide()
 
         self.settings_source5 = QLineEdit(self)
-        self.settings_source5.move(set_src_dst_pos_w, 115)
+        self.settings_source5.move(set_src_dst_pos_w, 135)
         self.settings_source5.resize(set_src_dst_w, 15)
         self.settings_source5.setText(path_var[5])
         self.settings_source5.setReadOnly(True)
@@ -528,7 +557,7 @@ class App(QMainWindow):
         self.settings_source5.hide()
 
         self.settings_dest0 = QLineEdit(self)
-        self.settings_dest0.move(set_src_dst_pos_w, 135)
+        self.settings_dest0.move(set_src_dst_pos_w, 155)
         self.settings_dest0.resize(set_src_dst_w, 15)
         self.settings_dest0.setText(dest_path_var[0])
         self.settings_dest0.setReadOnly(True)
@@ -544,7 +573,7 @@ class App(QMainWindow):
         self.settings_dest0.hide()
 
         self.settings_dest1 = QLineEdit(self)
-        self.settings_dest1.move(set_src_dst_pos_w, 135)
+        self.settings_dest1.move(set_src_dst_pos_w, 155)
         self.settings_dest1.resize(set_src_dst_w, 15)
         self.settings_dest1.setText(dest_path_var[1])
         self.settings_dest1.setReadOnly(True)
@@ -560,7 +589,7 @@ class App(QMainWindow):
         self.settings_dest1.hide()
 
         self.settings_dest2 = QLineEdit(self)
-        self.settings_dest2.move(set_src_dst_pos_w, 135)
+        self.settings_dest2.move(set_src_dst_pos_w, 155)
         self.settings_dest2.resize(set_src_dst_w, 15)
         self.settings_dest2.setText(dest_path_var[2])
         self.settings_dest2.setReadOnly(True)
@@ -576,7 +605,7 @@ class App(QMainWindow):
         self.settings_dest2.hide()
 
         self.settings_dest3 = QLineEdit(self)
-        self.settings_dest3.move(set_src_dst_pos_w, 135)
+        self.settings_dest3.move(set_src_dst_pos_w, 155)
         self.settings_dest3.resize(set_src_dst_w, 15)
         self.settings_dest3.setText(dest_path_var[3])
         self.settings_dest3.setReadOnly(True)
@@ -592,7 +621,7 @@ class App(QMainWindow):
         self.settings_dest3.hide()
 
         self.settings_dest4 = QLineEdit(self)
-        self.settings_dest4.move(set_src_dst_pos_w, 135)
+        self.settings_dest4.move(set_src_dst_pos_w, 155)
         self.settings_dest4.resize(set_src_dst_w, 15)
         self.settings_dest4.setText(dest_path_var[4])
         self.settings_dest4.setReadOnly(True)
@@ -608,7 +637,7 @@ class App(QMainWindow):
         self.settings_dest4.hide()
 
         self.settings_dest5 = QLineEdit(self)
-        self.settings_dest5.move(set_src_dst_pos_w, 135)
+        self.settings_dest5.move(set_src_dst_pos_w, 155)
         self.settings_dest5.resize(set_src_dst_w, 15)
         self.settings_dest5.setText(dest_path_var[5])
         self.settings_dest5.setReadOnly(True)
@@ -686,6 +715,10 @@ class App(QMainWindow):
         btnx_settings_var[4].clicked.connect(self.settings_funk4)
         btnx_settings_var[5].clicked.connect(self.settings_funk5)
 
+        self.oldPos = self.pos()
+        scaling_thread = ScalingClass(self.setGeometry, self.width, self.height, self.pos)
+        scaling_thread.start()
+
         update_settings_window_thread = UpdateSettingsWindow()
         update_settings_window_thread.start()
 
@@ -706,6 +739,20 @@ class App(QMainWindow):
         settings_input_response_thread = SettingsInputResponse()
 
         self.show()
+
+    def center(self):
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+    def mousePressEvent(self, event):
+        self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        delta = QPoint(event.globalPos() - self.oldPos)
+        self.move(self.x() + delta.x(), self.y() + delta.y())
+        self.oldPos = event.globalPos()
 
     # def update_settings_window_funk(self):
     #     global update_settings_window_thread
@@ -1008,14 +1055,14 @@ class App(QMainWindow):
 
     def hide_settings_page_funk(self):
         self.hide_settings_funk()
-        self.setFixedSize(self.width, 90)
+        self.setFixedSize(self.width, 110)
 
     def settings_funk0(self):
         global settings_active, settings_active_int
         settings_active_int = 0
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 170)
+            self.setFixedSize(self.width, 190)
 
             back_label_var[0].resize(95, 85)
             pixmap = QPixmap(background_img[1])
@@ -1030,7 +1077,7 @@ class App(QMainWindow):
         settings_active_int = 1
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 170)
+            self.setFixedSize(self.width, 190)
 
             back_label_var[1].resize(95, 85)
             pixmap = QPixmap(background_img[1])
@@ -1045,7 +1092,7 @@ class App(QMainWindow):
         settings_active_int = 2
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 170)
+            self.setFixedSize(self.width, 190)
 
             back_label_var[2].resize(95, 85)
             pixmap = QPixmap(background_img[1])
@@ -1060,7 +1107,7 @@ class App(QMainWindow):
         settings_active_int = 3
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 170)
+            self.setFixedSize(self.width, 190)
 
             back_label_var[3].resize(95, 85)
             pixmap = QPixmap(background_img[1])
@@ -1075,7 +1122,7 @@ class App(QMainWindow):
         settings_active_int = 4
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 170)
+            self.setFixedSize(self.width, 190)
 
             back_label_var[4].resize(95, 85)
             pixmap = QPixmap(background_img[1])
@@ -1090,7 +1137,7 @@ class App(QMainWindow):
         settings_active_int = 5
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 170)
+            self.setFixedSize(self.width, 190)
 
             back_label_var[5].resize(95, 85)
             pixmap = QPixmap(background_img[1])
@@ -1195,6 +1242,21 @@ class App(QMainWindow):
         global thread_var
         timer_thread_var[5].start()
         thread_var[5].stop_thr()
+
+
+class ScalingClass(QThread):
+    def __init__(self, setGeometry, width, height, pos):
+        QThread.__init__(self)
+        self.setGeometry = setGeometry
+        self.width = width
+        self.height = height
+        self.pos = pos
+
+    def run(self):
+        print('-- plugged in: ScalingClass')
+        while True:
+            time.sleep(0.01)
+            self.setGeometry(self.pos().x(), self.pos().y(), self.width, self.height)
 
 
 class SettingsInputResponse(QThread):
