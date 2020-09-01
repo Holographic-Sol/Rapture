@@ -18,7 +18,7 @@ This not designed to delete files and folders from your chosen backup destinatio
 
 WHY?
 1. Alot of the time I am editing many files in many places and find myself going in and out of directories everywhere copying things over to backup drives.
-2. If I do 1^ alot over time, what need's copying? Mayey I will copy everything to be sure? Not anymore.
+2. If I do 1^ alot over time, what need's copying? Maybe I will copy everything to be sure? Not anymore.
 2. I wrote this because I have a lot of files and when i back up id like it to be faster and so instead of procrastinating i saved my future self time and kept leanrning.
 
 
