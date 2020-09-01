@@ -1,37 +1,29 @@
-Backs up target directory extremely fast.
+Copy Source to Destination EXTREMELY fast.
 
-Mode 1 (Default): Copy Missing - Only copies file names not found in backup directory.
-Mode 1 button has white and green arrows to show it is in Mode 1.
 
-Mode 2: Comprehensive - Is Mode One plus compares file timestamps and copy is source timestamp is newer than backup timestamp.
-Mode 2 button has white arrows to show it is in Mode 2.
-Mode 2 comapres file modification timestamps and copies source file to destination if your destination timestamp < source timestamp.
 
+WHAT DOES IT DO?
+Mode 1: (Default) Copy Missing - Only copies file names not found in backup directory.
 Mode one is useful if you dont edit the files. (like a music library, picture directory etc...)
+
+Mode 2: Comprehensive - Is Mode One plus compares file timestamps so if source timestamp is newer than destination timestamp destination file will be ammended.
 Mode two is useful if you edit files. (documents, or you edit your music and pictures too you can still use it...)
 
-Configure in config.txt before use!
 
-Initial backup will of course take time but after that it can be insanely fast.
 
-I wrote this because I have a lot of files and when i back up id like it to be faster and
-so instead of procrastinating i saved my future self time.
+WHAT DOES IT NOT DO?
+This not designed to delete files and folders from your chosen backup destination.
 
-This will not delete 'depricated' files and folders from your chosen backup destination.
 
-I use it to backup from my secondary internal drive to my external backup ssd.
-Best Case Example:
-Secondary Internal Drive Tree:
-  Archives
-  Documents
-  Music
-  Pictures
-  Programs (Steam+Steam Library, other things i keep portably away from drive C:\\)
-  Video
-Backup drive reflects Secondary Internal Drive Tree.
 
-Backing up steam (for me 700GB+) with this should be much faster than pasting a new copy as this will only copy
-what has changed and or what is missing. I will wait to test and compare. I Can't test yet but will soon.
+WHY?
+1. Alot of the time I am editing many files in many places and find myself going in and out of directories everywhere copying things over to backup drives.
+2. If I do 1^ alot over time, what need's copying? Mayey I will copy everything to be sure? Not anymore.
+2. I wrote this because I have a lot of files and when i back up id like it to be faster and so instead of procrastinating i saved my future self time and kept leanrning.
 
-NOTE: Must run in admin account.
-  
+
+
+NOTES:
+1. Running in admin account is preferable.
+2. Initial backup will of course take time but after that it can be insanely fast once only new/new+ammended files are being written to the destination.
+3. Try it with a huge Steam library and you will see.
