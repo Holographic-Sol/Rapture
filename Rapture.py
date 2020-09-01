@@ -44,9 +44,24 @@ dest_path_entered = ''
 source_selected = ()
 dest_selected = ()
 settings_active_int = 0
+settings_active_int_prev = ()
 pressed_int = ()
 compare_bool_var = [False, False, False, False, False, False]
+confirm_op0_bool = False
+confirm_op0_wait = True
+confirm_op1_bool = False
+confirm_op1_wait = True
+confirm_op2_bool = False
+confirm_op2_wait = True
+confirm_op3_bool = False
+confirm_op3_wait = True
+confirm_op4_bool = False
+confirm_op4_wait = True
+confirm_op5_bool = False
+confirm_op5_wait = True
 compare_clicked = ()
+back_label_ankor_w0 = ()
+back_label_ankor_h0 = ()
 config_src_var = ['ARCHIVE_SOURCE',
                   'DOCUMENT_SOURCE',
                   'MUSIC_SOURCE',
@@ -115,10 +130,12 @@ def get_conf_funk():
                                 if (primary_key + '_True') not in path_bool_var:
                                     path_var.append(secondary_key)
                                     path_bool_var.append(primary_key + '_True')
+                                    print(primary_key + '_True')
                             elif not os.path.exists(secondary_key):
                                 if (primary_key + '_False') not in path_bool_var:
                                     path_var.append('')
                                     path_bool_var.append(primary_key + '_False')
+                                    print(primary_key + '_False')
                     i += 1
                 i = 0
                 for config_dst_vars in config_dst_var:
@@ -163,7 +180,10 @@ class App(QMainWindow):
         global thread_var, btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, info_label_1_var
         global img_var, img_active_var, img_settings, timer_thread_var, settings_input_response_thread
         global path_var, dest_path_var, back_label_var, pressed_int, settings_source_edit_var, settings_dest_edit_var
-        global settings_input_response_label, update_settings_window_thread
+        global settings_input_response_label, update_settings_window_thread, confirm_op0_bool, confirm_op0_wait
+        global confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait, confirm_op3_bool, confirm_op3_wait
+        global confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait
+
         self.setWindowTitle(self.title)
         # self.setGeometry(self.left, self.top, self.width, self.height)
         self.setFixedSize(self.width, self.height)
@@ -212,7 +232,7 @@ class App(QMainWindow):
         self.back_label_main.move(0, 20)
         self.back_label_main.resize(self.width, 90)
         self.back_label_main.setStyleSheet(
-            """QLabel {background-color: rgb(13, 13, 13);
+            """QLabel {background-color: rgb(30, 30, 30);
            border:0px solid rgb(35, 35, 35);}"""
         )
         i = 0
@@ -715,6 +735,172 @@ class App(QMainWindow):
         btnx_settings_var[4].clicked.connect(self.settings_funk4)
         btnx_settings_var[5].clicked.connect(self.settings_funk5)
 
+        # confirmation styling
+        confirmation_font = QFont("Times", 7, QFont.Bold)
+
+        # confimration 0
+        self.confirm_op0_tru = QPushButton(self)
+        self.confirm_op0_tru.resize(40, 15)
+        self.confirm_op0_tru.setFont(confirmation_font)
+        self.confirm_op0_tru.setText("Yes")
+        self.confirm_op0_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op0_tru.move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 62))
+        self.confirm_op0_tru.clicked.connect(self.confirm_op0_funk0)
+        self.confirm_op0_tru.hide()
+
+        self.confirm_op0_fal = QPushButton(self)
+        self.confirm_op0_fal.resize(40, 15)
+        self.confirm_op0_fal.setFont(confirmation_font)
+        self.confirm_op0_fal.setText("No")
+        self.confirm_op0_fal.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op0_fal.move((95 - 38), (back_label_ankor_h0 + 62))
+        self.confirm_op0_fal.clicked.connect(self.confirm_op0_funk1)
+        self.confirm_op0_fal.hide()
+
+        # confimration 1
+        self.confirm_op1_tru = QPushButton(self)
+        self.confirm_op1_tru.resize(40, 15)
+        self.confirm_op1_tru.setFont(confirmation_font)
+        self.confirm_op1_tru.setText("Yes")
+        self.confirm_op1_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op1_tru.move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 62))
+        self.confirm_op1_tru.clicked.connect(self.confirm_op1_funk0)
+        self.confirm_op1_tru.hide()
+
+        self.confirm_op1_fal = QPushButton(self)
+        self.confirm_op1_fal.resize(40, 15)
+        self.confirm_op1_fal.setFont(confirmation_font)
+        self.confirm_op1_fal.setText("No")
+        self.confirm_op1_fal.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op1_fal.move((195 - 38), (back_label_ankor_h1 + 62))
+        self.confirm_op1_fal.clicked.connect(self.confirm_op1_funk1)
+        self.confirm_op1_fal.hide()
+
+        # confimration 2
+        self.confirm_op2_tru = QPushButton(self)
+        self.confirm_op2_tru.resize(40, 15)
+        self.confirm_op2_tru.setFont(confirmation_font)
+        self.confirm_op2_tru.setText("Yes")
+        self.confirm_op2_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op2_tru.move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 62))
+        self.confirm_op2_tru.clicked.connect(self.confirm_op2_funk0)
+        self.confirm_op2_tru.hide()
+
+        self.confirm_op2_fal = QPushButton(self)
+        self.confirm_op2_fal.resize(40, 15)
+        self.confirm_op2_fal.setFont(confirmation_font)
+        self.confirm_op2_fal.setText("No")
+        self.confirm_op2_fal.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op2_fal.move((295 - 38), (back_label_ankor_h2 + 62))
+        self.confirm_op2_fal.clicked.connect(self.confirm_op2_funk1)
+        self.confirm_op2_fal.hide()
+
+        # confimration 3
+        self.confirm_op3_tru = QPushButton(self)
+        self.confirm_op3_tru.resize(40, 15)
+        self.confirm_op3_tru.setFont(confirmation_font)
+        self.confirm_op3_tru.setText("Yes")
+        self.confirm_op3_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op3_tru.move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 62))
+        self.confirm_op3_tru.clicked.connect(self.confirm_op3_funk0)
+        self.confirm_op3_tru.hide()
+
+        self.confirm_op3_fal = QPushButton(self)
+        self.confirm_op3_fal.resize(40, 15)
+        self.confirm_op3_fal.setFont(confirmation_font)
+        self.confirm_op3_fal.setText("No")
+        self.confirm_op3_fal.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op3_fal.move((395 - 38), (back_label_ankor_h3 + 62))
+        self.confirm_op3_fal.clicked.connect(self.confirm_op3_funk1)
+        self.confirm_op3_fal.hide()
+
+        # confimration 4
+        self.confirm_op4_tru = QPushButton(self)
+        self.confirm_op4_tru.resize(40, 15)
+        self.confirm_op4_tru.setFont(confirmation_font)
+        self.confirm_op4_tru.setText("Yes")
+        self.confirm_op4_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op4_tru.move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 62))
+        self.confirm_op4_tru.clicked.connect(self.confirm_op4_funk0)
+        self.confirm_op4_tru.hide()
+
+        self.confirm_op4_fal = QPushButton(self)
+        self.confirm_op4_fal.resize(40, 15)
+        self.confirm_op4_fal.setFont(confirmation_font)
+        self.confirm_op4_fal.setText("No")
+        self.confirm_op4_fal.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op4_fal.move((495 - 38), (back_label_ankor_h4 + 62))
+        self.confirm_op4_fal.clicked.connect(self.confirm_op4_funk1)
+        self.confirm_op4_fal.hide()
+
+        # confimration 5
+        self.confirm_op5_tru = QPushButton(self)
+        self.confirm_op5_tru.resize(40, 15)
+        self.confirm_op5_tru.setFont(confirmation_font)
+        self.confirm_op5_tru.setText("Yes")
+        self.confirm_op5_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op5_tru.move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 62))
+        self.confirm_op5_tru.clicked.connect(self.confirm_op5_funk0)
+        self.confirm_op5_tru.hide()
+
+        self.confirm_op5_fal = QPushButton(self)
+        self.confirm_op5_fal.resize(40, 15)
+        self.confirm_op5_fal.setFont(confirmation_font)
+        self.confirm_op5_fal.setText("No")
+        self.confirm_op5_fal.setStyleSheet(
+                """QPushButton{background-color: rgb(0, 0, 0);
+                border:2px solid rgb(30, 30, 30);
+                color: green}"""
+            )
+        self.confirm_op5_fal.move((595 - 38), (back_label_ankor_h5 + 62))
+        self.confirm_op5_fal.clicked.connect(self.confirm_op5_funk1)
+        self.confirm_op5_fal.hide()
+
+
         self.oldPos = self.pos()
         scaling_thread = ScalingClass(self.setGeometry, self.width, self.height, self.pos)
         scaling_thread.start()
@@ -729,12 +915,12 @@ class App(QMainWindow):
         timer_thread_var[4] = TimerClass4()
         timer_thread_var[5] = TimerClass5()
 
-        thread_var[0] = ThreadClass0()
-        thread_var[1] = ThreadClass1()
-        thread_var[2] = ThreadClass2()
-        thread_var[3] = ThreadClass3()
-        thread_var[4] = ThreadClass4()
-        thread_var[5] = ThreadClass5()
+        thread_var[0] = ThreadClass0(self.confirm_op0_tru, self.confirm_op0_fal)
+        thread_var[1] = ThreadClass1(self.confirm_op1_tru, self.confirm_op1_fal)
+        thread_var[2] = ThreadClass2(self.confirm_op2_tru, self.confirm_op2_fal)
+        thread_var[3] = ThreadClass3(self.confirm_op3_tru, self.confirm_op3_fal)
+        thread_var[4] = ThreadClass4(self.confirm_op4_tru, self.confirm_op4_fal)
+        thread_var[5] = ThreadClass5(self.confirm_op5_tru, self.confirm_op5_fal)
 
         settings_input_response_thread = SettingsInputResponse()
 
@@ -757,6 +943,84 @@ class App(QMainWindow):
     # def update_settings_window_funk(self):
     #     global update_settings_window_thread
     #     update_settings_window_thread.start()
+
+    # confirmation 0
+    def confirm_op0_funk0(self):
+        global confirm_op0_bool, confirm_op0_wait
+        print('-- plugged in: confirm_op0_funk0: accepted')
+        confirm_op0_bool = True
+        confirm_op0_wait = False
+
+    def confirm_op0_funk1(self):
+        global confirm_op0_bool, confirm_op0_wait
+        print('-- plugged in: confirm_op0_funk1: declined')
+        confirm_op0_bool = False
+        confirm_op0_wait = False
+
+    # confirmation 1
+    def confirm_op1_funk0(self):
+        global confirm_op1_bool, confirm_op1_wait
+        print('-- plugged in: confirm_op1_funk0: accepted')
+        confirm_op1_bool = True
+        confirm_op1_wait = False
+
+    def confirm_op1_funk1(self):
+        global confirm_op1_bool, confirm_op1_wait
+        print('-- plugged in: confirm_op1_funk1: declined')
+        confirm_op1_bool = False
+        confirm_op1_wait = False
+
+    # confirmation 2
+    def confirm_op2_funk0(self):
+        global confirm_op2_bool, confirm_op2_wait
+        print('-- plugged in: confirm_op2_funk0: accepted')
+        confirm_op2_bool = True
+        confirm_op2_wait = False
+
+    def confirm_op2_funk1(self):
+        global confirm_op2_bool, confirm_op2_wait
+        print('-- plugged in: confirm_op2_funk0: declined')
+        confirm_op2_bool = False
+        confirm_op2_wait = False
+
+    # confirmation 3
+    def confirm_op3_funk0(self):
+        global confirm_op3_bool, confirm_op3_wait
+        print('-- plugged in: confirm_op3_funk0: accepted')
+        confirm_op3_bool = True
+        confirm_op3_wait = False
+
+    def confirm_op3_funk1(self):
+        global confirm_op3_bool, confirm_op3_wait
+        print('-- plugged in: confirm_op3_funk1: declined')
+        confirm_op3_bool = False
+        confirm_op3_wait = False
+
+    # confirmation 4
+    def confirm_op4_funk0(self):
+        global confirm_op4_bool, confirm_op4_wait
+        print('-- plugged in: confirm_op4_funk0: accepted')
+        confirm_op4_bool = True
+        confirm_op4_wait = False
+
+    def confirm_op4_funk1(self):
+        global confirm_op4_bool, confirm_op4_wait
+        print('-- plugged in: confirm_op4_funk1: declined')
+        confirm_op4_bool = False
+        confirm_op4_wait = False
+
+    # confirmation 5
+    def confirm_op5_funk0(self):
+        global confirm_op5_bool, confirm_op5_wait
+        print('-- plugged in: confirm_op5_funk0: accepted')
+        confirm_op5_bool = True
+        confirm_op5_wait = False
+
+    def confirm_op5_funk1(self):
+        global confirm_op5_bool, confirm_op5_wait
+        print('-- plugged in: confirm_op5_funk1: declined')
+        confirm_op5_bool = False
+        confirm_op5_wait = False
 
     def paths_readonly_funk(self):
         global settings_source_edit_vars
@@ -1053,100 +1317,159 @@ class App(QMainWindow):
         pixmap = QPixmap(background_img[0])
         back_label_var[5].setPixmap(pixmap)
 
+        btnx_settings_var[0].setIcon(QIcon(small_image[0]))
+        btnx_settings_var[1].setIcon(QIcon(small_image[0]))
+        btnx_settings_var[2].setIcon(QIcon(small_image[0]))
+        btnx_settings_var[3].setIcon(QIcon(small_image[0]))
+        btnx_settings_var[4].setIcon(QIcon(small_image[0]))
+        btnx_settings_var[5].setIcon(QIcon(small_image[0]))
+
     def hide_settings_page_funk(self):
         self.hide_settings_funk()
         self.setFixedSize(self.width, 110)
 
     def settings_funk0(self):
-        global settings_active, settings_active_int
+        global settings_active, settings_active_int, settings_active_int_prev
         settings_active_int = 0
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 190)
+            if settings_active_int != settings_active_int_prev:
+                self.setFixedSize(self.width, 190)
 
-            back_label_var[0].resize(95, 85)
-            pixmap = QPixmap(background_img[1])
-            back_label_var[0].setPixmap(pixmap)
+                btnx_settings_var[0].setIcon(QIcon(small_image[1]))
 
-            self.setting_title0.show()
-            self.settings_source0.show()
-            self.settings_dest0.show()
+                back_label_var[0].resize(95, 85)
+                pixmap = QPixmap(background_img[1])
+                back_label_var[0].setPixmap(pixmap)
+
+                self.setting_title0.show()
+                self.settings_source0.show()
+                self.settings_dest0.show()
+
+                settings_active_int_prev = settings_active_int
+
+            elif settings_active_int == settings_active_int_prev:
+                self.hide_settings_page_funk()
+                settings_active_int_prev = ()
+
 
     def settings_funk1(self):
-        global settings_active, settings_active_int
+        global settings_active, settings_active_int, settings_active_int_prev
         settings_active_int = 1
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 190)
+            if settings_active_int != settings_active_int_prev:
+                self.setFixedSize(self.width, 190)
 
-            back_label_var[1].resize(95, 85)
-            pixmap = QPixmap(background_img[1])
-            back_label_var[1].setPixmap(pixmap)
+                btnx_settings_var[1].setIcon(QIcon(small_image[1]))
 
-            self.setting_title1.show()
-            self.settings_source1.show()
-            self.settings_dest1.show()
+                back_label_var[1].resize(95, 85)
+                pixmap = QPixmap(background_img[1])
+                back_label_var[1].setPixmap(pixmap)
+
+                self.setting_title1.show()
+                self.settings_source1.show()
+                self.settings_dest1.show()
+
+                settings_active_int_prev = settings_active_int
+
+            elif settings_active_int == settings_active_int_prev:
+                self.hide_settings_page_funk()
+                settings_active_int_prev = ()
+
 
     def settings_funk2(self):
-        global settings_active, settings_active_int
+        global settings_active, settings_active_int, settings_active_int_prev
         settings_active_int = 2
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 190)
+            if settings_active_int != settings_active_int_prev:
+                self.setFixedSize(self.width, 190)
 
-            back_label_var[2].resize(95, 85)
-            pixmap = QPixmap(background_img[1])
-            back_label_var[2].setPixmap(pixmap)
+                btnx_settings_var[2].setIcon(QIcon(small_image[1]))
 
-            self.setting_title2.show()
-            self.settings_source2.show()
-            self.settings_dest2.show()
+                back_label_var[2].resize(95, 85)
+                pixmap = QPixmap(background_img[1])
+                back_label_var[2].setPixmap(pixmap)
+
+                self.setting_title2.show()
+                self.settings_source2.show()
+                self.settings_dest2.show()
+                settings_active_int_prev = settings_active_int
+
+            elif settings_active_int == settings_active_int_prev:
+                self.hide_settings_page_funk()
+                settings_active_int_prev = ()
 
     def settings_funk3(self):
-        global settings_active, settings_active_int
+        global settings_active, settings_active_int, settings_active_int_prev
         settings_active_int = 3
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 190)
+            if settings_active_int != settings_active_int_prev:
+                self.setFixedSize(self.width, 190)
 
-            back_label_var[3].resize(95, 85)
-            pixmap = QPixmap(background_img[1])
-            back_label_var[3].setPixmap(pixmap)
+                btnx_settings_var[3].setIcon(QIcon(small_image[1]))
 
-            self.setting_title3.show()
-            self.settings_source3.show()
-            self.settings_dest3.show()
+                back_label_var[3].resize(95, 85)
+                pixmap = QPixmap(background_img[1])
+                back_label_var[3].setPixmap(pixmap)
+
+                self.setting_title3.show()
+                self.settings_source3.show()
+                self.settings_dest3.show()
+                settings_active_int_prev = settings_active_int
+
+            elif settings_active_int == settings_active_int_prev:
+                self.hide_settings_page_funk()
+                settings_active_int_prev = ()
 
     def settings_funk4(self):
-        global settings_active, settings_active_int
+        global settings_active, settings_active_int, settings_active_int_prev
         settings_active_int = 4
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 190)
+            if settings_active_int != settings_active_int_prev:
+                self.setFixedSize(self.width, 190)
 
-            back_label_var[4].resize(95, 85)
-            pixmap = QPixmap(background_img[1])
-            back_label_var[4].setPixmap(pixmap)
+                btnx_settings_var[4].setIcon(QIcon(small_image[1]))
 
-            self.setting_title4.show()
-            self.settings_source4.show()
-            self.settings_dest4.show()
+                back_label_var[4].resize(95, 85)
+                pixmap = QPixmap(background_img[1])
+                back_label_var[4].setPixmap(pixmap)
+
+                self.setting_title4.show()
+                self.settings_source4.show()
+                self.settings_dest4.show()
+                settings_active_int_prev = settings_active_int
+
+            elif settings_active_int == settings_active_int_prev:
+                self.hide_settings_page_funk()
+                settings_active_int_prev = ()
 
     def settings_funk5(self):
-        global settings_active, settings_active_int
+        global settings_active, settings_active_int, settings_active_int_prev
         settings_active_int = 5
         self.hide_settings_funk()
         if settings_active is False:
-            self.setFixedSize(self.width, 190)
+            if settings_active_int != settings_active_int_prev:
+                self.setFixedSize(self.width, 190)
 
-            back_label_var[5].resize(95, 85)
-            pixmap = QPixmap(background_img[1])
-            back_label_var[5].setPixmap(pixmap)
+                btnx_settings_var[5].setIcon(QIcon(small_image[1]))
 
-            self.setting_title5.show()
-            self.settings_source5.show()
-            self.settings_dest5.show()
-            self.settings_dest5.show()
+                back_label_var[5].resize(95, 85)
+                pixmap = QPixmap(background_img[1])
+                back_label_var[5].setPixmap(pixmap)
+
+                self.setting_title5.show()
+                self.settings_source5.show()
+                self.settings_dest5.show()
+                self.settings_dest5.show()
+                settings_active_int_prev = settings_active_int
+
+            elif settings_active_int == settings_active_int_prev:
+                self.hide_settings_page_funk()
+                settings_active_int_prev = ()
 
     def thread_funk_0(self):
         thread_var[0].start()
@@ -1474,12 +1797,14 @@ class TimerClass5(QThread):
 
 
 class ThreadClass0(QThread):
-    def __init__(self):
+    def __init__(self, confirm_op0_tru, confirm_op0_fal):
         QThread.__init__(self)
+        self.confirm_op0_tru = confirm_op0_tru
+        self.confirm_op0_fal = confirm_op0_fal
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool
 
         zero = '0'
         centillionth_str = str('0.' + zero * 303 + '1')
@@ -1496,43 +1821,66 @@ class ThreadClass0(QThread):
             dest_bool = dest_path_bool_var[0]
             compare_bool = compare_bool_var[0]
 
-            btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
-            change_var = False
-            if path_bool == 'ARCHIVE_SOURCE_True' and dest_bool == 'ARCHIVE_DESTINATION_True':
-                info_label_1_var[0].setText('reading...')
-                cp_var = 0
-                for dirName, subdirList, fileList in os.walk(path):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        t_path = fullpath.replace(path, '')
-                        t_path = dest + t_path
-                        if not fullpath.endswith('.ini'):
-                            if not os.path.exists(t_path):
-                                change_var = True
-                                try:
-                                    shutil.copy(fullpath, t_path)
-                                except IOError:
-                                    os.makedirs(os.path.dirname(t_path))
-                                    shutil.copy(fullpath, t_path)
-                                cp_var += 1
-                            elif os.path.exists(t_path):
-                                if compare_bool is True:
-                                    ma = os.path.getmtime(fullpath)
-                                    mb = os.path.getmtime(t_path)
-                                    if mb < ma:
-                                        change_var = True
-                                        try:
-                                            shutil.copy(fullpath, t_path)
-                                        except IOError:
-                                            os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
-                                        cp_var += 1
-                if change_var is False:
-                    info_label_1_var[0].setText('unnecessary.')
-                elif change_var is True:
-                    info_label_1_var[0].setText('amended.')
-            else:
-                info_label_1_var[0].setText('path error!')
+            # Confirm potential write
+            btnx_main_var[0].setIcon(QIcon('./image/img_archives_amber.png'))
+            info_label_1_var[0].hide()
+            self.confirm_op0_tru.show()
+            self.confirm_op0_fal.show()
+
+            while confirm_op0_wait is True:
+                time.sleep(0.3)
+
+            confirm_op0_wait = True
+
+            self.confirm_op0_tru.hide()
+            self.confirm_op0_fal.hide()
+            btnx_main_var[0].setIcon(QIcon(img_var[0]))
+            info_label_1_var[0].show()
+
+            if confirm_op0_bool is True:
+                print('-- ThreadClass0: confirm_op0_bool: accepted')
+                btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
+                change_var = False
+                print('-- Source Path:', path)
+                print('-- Destination Path:', dest)
+                if path_bool == 'ARCHIVE_SOURCE_True' and dest_bool == 'ARCHIVE_DESTINATION_True':
+                    print('foo 0')
+                    info_label_1_var[0].setText('reading...')
+                    cp_var = 0
+                    for dirname, subdirlist, filelist in os.walk(path):
+                        for fname in filelist:
+                            fullpath = os.path.join(dirname, fname)
+                            t_path = fullpath.replace(path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy(fullpath, t_path)
+                                    except IOError:
+                                        os.makedirs(os.path.dirname(t_path))
+                                        shutil.copy(fullpath, t_path)
+                                    cp_var += 1
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy(fullpath, t_path)
+                                            except ioerror:
+                                                os.makedirs(os.path.dirname(t_path))
+                                                shutil.copy(fullpath, t_path)
+                                            cp_var += 1
+                    if change_var is False:
+                        info_label_1_var[0].setText('unnecessary.')
+                    elif change_var is True:
+                        info_label_1_var[0].seText('amended.')
+                else:
+                    info_label_1_var[0].setText('path error!')
+            elif confirm_op0_bool is False:
+                print('-- ThreadClass0: confirm_op0_bool: declined')
             timer_thread_var[0].start()
             btnx_main_var[0].setIcon(QIcon(img_var[0]))
 
@@ -1544,12 +1892,14 @@ class ThreadClass0(QThread):
 
 
 class ThreadClass1(QThread):
-    def __init__(self):
+    def __init__(self, confirm_op1_tru, confirm_op1_fal):
         QThread.__init__(self)
+        self.confirm_op1_tru = confirm_op1_tru
+        self.confirm_op1_fal = confirm_op1_fal
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool
 
         zero = '0'
         centillionth_str = str('0.' + zero * 303 + '1')
@@ -1565,43 +1915,61 @@ class ThreadClass1(QThread):
             dest_bool = dest_path_bool_var[1]
             compare_bool = compare_bool_var[1]
 
-            btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
-            change_var = False
-            if path_bool == 'DOCUMENT_SOURCE_True' and dest_bool == 'DOCUMENT_DESTINATION_True':
-                info_label_1_var[1].setText('reading...')
-                cp_var = 0
-                for dirName, subdirList, fileList in os.walk(path):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        t_path = fullpath.replace(path, '')
-                        t_path = dest + t_path
-                        if not fullpath.endswith('.ini'):
-                            if not os.path.exists(t_path):
-                                change_var = True
-                                try:
-                                    shutil.copy(fullpath, t_path)
-                                except IOError:
-                                    os.makedirs(os.path.dirname(t_path))
-                                    shutil.copy(fullpath, t_path)
-                                cp_var += 1
-                            elif os.path.exists(t_path):
-                                if compare_bool is True:
-                                    ma = os.path.getmtime(fullpath)
-                                    mb = os.path.getmtime(t_path)
-                                    if mb < ma:
-                                        change_var = True
-                                        try:
-                                            shutil.copy(fullpath, t_path)
-                                        except IOError:
-                                            os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
-                                        cp_var += 1
-                if change_var is False:
-                    info_label_1_var[1].setText('unnecessary.')
-                elif change_var is True:
-                    info_label_1_var[1].setText('amended.')
-            else:
-                info_label_1_var[1].setText('path error!')
+            # Confirm potential write
+            btnx_main_var[1].setIcon(QIcon('./image/img_document_amber.png'))
+            info_label_1_var[1].hide()
+            self.confirm_op1_tru.show()
+            self.confirm_op1_fal.show()
+
+            while confirm_op1_wait is True:
+                time.sleep(0.3)
+
+            confirm_op1_wait = True
+
+            self.confirm_op1_tru.hide()
+            self.confirm_op1_fal.hide()
+            btnx_main_var[1].setIcon(QIcon(img_var[1]))
+            info_label_1_var[1].show()
+
+            if confirm_op1_bool is True:
+                print('-- ThreadClass1: confirm_op1_bool: accepted')
+                btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
+                change_var = False
+                if path_bool == 'DOCUMENT_SOURCE_True' and dest_bool == 'DOCUMENT_DESTINATION_True':
+                    info_label_1_var[1].setText('reading...')
+                    cp_var = 0
+                    for dirName, subdirList, fileList in os.walk(path):
+                        for fname in fileList:
+                            fullpath = os.path.join(dirName, fname)
+                            t_path = fullpath.replace(path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy(fullpath, t_path)
+                                    except IOError:
+                                        os.makedirs(os.path.dirname(t_path))
+                                        shutil.copy(fullpath, t_path)
+                                    cp_var += 1
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy(fullpath, t_path)
+                                            except IOError:
+                                                os.makedirs(os.path.dirname(t_path))
+                                                shutil.copy(fullpath, t_path)
+                                            cp_var += 1
+                    if change_var is False:
+                        info_label_1_var[1].setText('unnecessary.')
+                    elif change_var is True:
+                        info_label_1_var[1].setText('amended.')
+                else:
+                    info_label_1_var[1].setText('path error!')
             timer_thread_var[1].start()
             btnx_main_var[1].setIcon(QIcon(img_var[1]))
 
@@ -1613,12 +1981,14 @@ class ThreadClass1(QThread):
 
 
 class ThreadClass2(QThread):
-    def __init__(self):
+    def __init__(self, confirm_op2_tru, confirm_op2_fal):
         QThread.__init__(self)
+        self.confirm_op2_tru = confirm_op2_tru
+        self.confirm_op2_fal = confirm_op2_fal
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool
 
         zero = '0'
         centillionth_str = str('0.' + zero * 303 + '1')
@@ -1634,43 +2004,61 @@ class ThreadClass2(QThread):
             dest_bool = dest_path_bool_var[2]
             compare_bool = compare_bool_var[2]
 
-            btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
-            change_var = False
-            if path_bool == 'MUSIC_SOURCE_True' and dest_bool == 'MUSIC_DESTINATION_True':
-                info_label_1_var[2].setText('reading...')
-                cp_var = 0
-                for dirName, subdirList, fileList in os.walk(path):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        t_path = fullpath.replace(path, '')
-                        t_path = dest + t_path
-                        if not fullpath.endswith('.ini'):
-                            if not os.path.exists(t_path):
-                                change_var = True
-                                try:
-                                    shutil.copy(fullpath, t_path)
-                                except IOError:
-                                    os.makedirs(os.path.dirname(t_path))
-                                    shutil.copy(fullpath, t_path)
-                                cp_var += 1
-                            elif os.path.exists(t_path):
-                                if compare_bool is True:
-                                    ma = os.path.getmtime(fullpath)
-                                    mb = os.path.getmtime(t_path)
-                                    if mb < ma:
-                                        change_var = True
-                                        try:
-                                            shutil.copy(fullpath, t_path)
-                                        except IOError:
-                                            os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
-                                        cp_var += 1
-                if change_var is False:
-                    info_label_1_var[2].setText('unnecessary.')
-                elif change_var is True:
-                    info_label_1_var[2].setText('amended.')
-            else:
-                info_label_1_var[2].setText('path error!')
+            # Confirm potential write
+            btnx_main_var[2].setIcon(QIcon('./image/img_music_amber.png'))
+            info_label_1_var[2].hide()
+            self.confirm_op2_tru.show()
+            self.confirm_op2_fal.show()
+
+            while confirm_op2_wait is True:
+                time.sleep(0.3)
+
+            confirm_op2_wait = True
+
+            self.confirm_op2_tru.hide()
+            self.confirm_op2_fal.hide()
+            btnx_main_var[2].setIcon(QIcon(img_var[2]))
+            info_label_1_var[2].show()
+
+            if confirm_op2_bool is True:
+                print('-- ThreadClass2: confirm_op2_bool: accepted')
+                btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
+                change_var = False
+                if path_bool == 'MUSIC_SOURCE_True' and dest_bool == 'MUSIC_DESTINATION_True':
+                    info_label_1_var[2].setText('reading...')
+                    cp_var = 0
+                    for dirName, subdirList, fileList in os.walk(path):
+                        for fname in fileList:
+                            fullpath = os.path.join(dirName, fname)
+                            t_path = fullpath.replace(path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy(fullpath, t_path)
+                                    except IOError:
+                                        os.makedirs(os.path.dirname(t_path))
+                                        shutil.copy(fullpath, t_path)
+                                    cp_var += 1
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy(fullpath, t_path)
+                                            except IOError:
+                                                os.makedirs(os.path.dirname(t_path))
+                                                shutil.copy(fullpath, t_path)
+                                            cp_var += 1
+                    if change_var is False:
+                        info_label_1_var[2].setText('unnecessary.')
+                    elif change_var is True:
+                        info_label_1_var[2].setText('amended.')
+                else:
+                    info_label_1_var[2].setText('path error!')
             timer_thread_var[2].start()
             btnx_main_var[2].setIcon(QIcon(img_var[2]))
 
@@ -1682,12 +2070,14 @@ class ThreadClass2(QThread):
 
 
 class ThreadClass3(QThread):
-    def __init__(self):
+    def __init__(self, confirm_op3_tru, confirm_op3_fal):
         QThread.__init__(self)
+        self.confirm_op3_tru = confirm_op3_tru
+        self.confirm_op3_fal = confirm_op3_fal
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool
 
         zero = '0'
         centillionth_str = str('0.' + zero * 303 + '1')
@@ -1703,43 +2093,61 @@ class ThreadClass3(QThread):
             dest_bool = dest_path_bool_var[3]
             compare_bool = compare_bool_var[3]
 
-            btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
-            change_var = False
-            if path_bool == 'PICTURE_SOURCE_True' and dest_bool == 'PICTURE_DESTINATION_True':
-                info_label_1_var[3].setText('reading...')
-                cp_var = 0
-                for dirName, subdirList, fileList in os.walk(path):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        t_path = fullpath.replace(path, '')
-                        t_path = dest + t_path
-                        if not fullpath.endswith('.ini'):
-                            if not os.path.exists(t_path):
-                                change_var = True
-                                try:
-                                    shutil.copy(fullpath, t_path)
-                                except IOError:
-                                    os.makedirs(os.path.dirname(t_path))
-                                    shutil.copy(fullpath, t_path)
-                                cp_var += 1
-                            elif os.path.exists(t_path):
-                                if compare_bool is True:
-                                    ma = os.path.getmtime(fullpath)
-                                    mb = os.path.getmtime(t_path)
-                                    if mb < ma:
-                                        change_var = True
-                                        try:
-                                            shutil.copy(fullpath, t_path)
-                                        except IOError:
-                                            os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
-                                        cp_var += 1
-                if change_var is False:
-                    info_label_1_var[3].setText('unnecessary.')
-                elif change_var is True:
-                    info_label_1_var[3].setText('amended.')
-            else:
-                info_label_1_var[3].setText('path error!')
+            # Confirm potential write
+            btnx_main_var[3].setIcon(QIcon('./image/img_pictures_amber.png'))
+            info_label_1_var[3].hide()
+            self.confirm_op3_tru.show()
+            self.confirm_op3_fal.show()
+
+            while confirm_op3_wait is True:
+                time.sleep(0.3)
+
+            confirm_op3_wait = True
+
+            self.confirm_op3_tru.hide()
+            self.confirm_op3_fal.hide()
+            btnx_main_var[3].setIcon(QIcon(img_var[3]))
+            info_label_1_var[3].show()
+
+            if confirm_op3_bool is True:
+                print('-- ThreadClass3: confirm_op3_bool: accepted')
+                btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
+                change_var = False
+                if path_bool == 'PICTURE_SOURCE_True' and dest_bool == 'PICTURE_DESTINATION_True':
+                    info_label_1_var[3].setText('reading...')
+                    cp_var = 0
+                    for dirName, subdirList, fileList in os.walk(path):
+                        for fname in fileList:
+                            fullpath = os.path.join(dirName, fname)
+                            t_path = fullpath.replace(path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy(fullpath, t_path)
+                                    except IOError:
+                                        os.makedirs(os.path.dirname(t_path))
+                                        shutil.copy(fullpath, t_path)
+                                    cp_var += 1
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy(fullpath, t_path)
+                                            except IOError:
+                                                os.makedirs(os.path.dirname(t_path))
+                                                shutil.copy(fullpath, t_path)
+                                            cp_var += 1
+                    if change_var is False:
+                        info_label_1_var[3].setText('unnecessary.')
+                    elif change_var is True:
+                        info_label_1_var[3].setText('amended.')
+                else:
+                    info_label_1_var[3].setText('path error!')
             timer_thread_var[3].start()
             btnx_main_var[3].setIcon(QIcon(img_var[3]))
 
@@ -1751,12 +2159,14 @@ class ThreadClass3(QThread):
 
 
 class ThreadClass4(QThread):
-    def __init__(self):
+    def __init__(self, confirm_op4_tru, confirm_op4_fal):
         QThread.__init__(self)
+        self.confirm_op4_tru = confirm_op4_tru
+        self.confirm_op4_fal = confirm_op4_fal
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool
 
         zero = '0'
         centillionth_str = str('0.' + zero * 303 + '1')
@@ -1772,43 +2182,61 @@ class ThreadClass4(QThread):
             dest_bool = dest_path_bool_var[4]
             compare_bool = compare_bool_var[4]
 
-            btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
-            change_var = False
-            if path_bool == 'PROGRAMS_SOURCE_True' and dest_bool == 'PROGRAMS_DESTINATION_True':
-                info_label_1_var[4].setText('reading...')
-                cp_var = 0
-                for dirName, subdirList, fileList in os.walk(path):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        t_path = fullpath.replace(path, '')
-                        t_path = dest + t_path
-                        if not fullpath.endswith('.ini'):
-                            if not os.path.exists(t_path):
-                                change_var = True
-                                try:
-                                    shutil.copy(fullpath, t_path)
-                                except IOError:
-                                    os.makedirs(os.path.dirname(t_path))
-                                    shutil.copy(fullpath, t_path)
-                                cp_var += 1
-                            elif os.path.exists(t_path):
-                                if compare_bool is True:
-                                    ma = os.path.getmtime(fullpath)
-                                    mb = os.path.getmtime(t_path)
-                                    if mb < ma:
-                                        change_var = True
-                                        try:
-                                            shutil.copy(fullpath, t_path)
-                                        except IOError:
-                                            os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
-                                        cp_var += 1
-                if change_var is False:
-                    info_label_1_var[4].setText('unnecessary.')
-                elif change_var is True:
-                    info_label_1_var[4].setText('amended.')
-            else:
-                info_label_1_var[4].setText('path error!')
+            # Confirm potential write
+            btnx_main_var[4].setIcon(QIcon('./image/img_program_amber.png'))
+            info_label_1_var[4].hide()
+            self.confirm_op4_tru.show()
+            self.confirm_op4_fal.show()
+
+            while confirm_op4_wait is True:
+                time.sleep(0.3)
+
+            confirm_op4_wait = True
+
+            self.confirm_op4_tru.hide()
+            self.confirm_op4_fal.hide()
+            btnx_main_var[4].setIcon(QIcon(img_var[4]))
+            info_label_1_var[4].show()
+
+            if confirm_op4_bool is True:
+                print('-- ThreadClass4: confirm_op4_bool: accepted')
+                btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
+                change_var = False
+                if path_bool == 'PROGRAMS_SOURCE_True' and dest_bool == 'PROGRAMS_DESTINATION_True':
+                    info_label_1_var[4].setText('reading...')
+                    cp_var = 0
+                    for dirName, subdirList, fileList in os.walk(path):
+                        for fname in fileList:
+                            fullpath = os.path.join(dirName, fname)
+                            t_path = fullpath.replace(path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy(fullpath, t_path)
+                                    except IOError:
+                                        os.makedirs(os.path.dirname(t_path))
+                                        shutil.copy(fullpath, t_path)
+                                    cp_var += 1
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy(fullpath, t_path)
+                                            except IOError:
+                                                os.makedirs(os.path.dirname(t_path))
+                                                shutil.copy(fullpath, t_path)
+                                            cp_var += 1
+                    if change_var is False:
+                        info_label_1_var[4].setText('unnecessary.')
+                    elif change_var is True:
+                        info_label_1_var[4].setText('amended.')
+                else:
+                    info_label_1_var[4].setText('path error!')
             timer_thread_var[4].start()
             btnx_main_var[4].setIcon(QIcon(img_var[4]))
 
@@ -1820,12 +2248,14 @@ class ThreadClass4(QThread):
 
 
 class ThreadClass5(QThread):
-    def __init__(self):
+    def __init__(self, confirm_op5_tru, confirm_op5_fal):
         QThread.__init__(self)
+        self.confirm_op5_tru = confirm_op5_tru
+        self.confirm_op5_fal = confirm_op5_fal
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool
 
         zero = '0'
         centillionth_str = str('0.' + zero*303 + '1')
@@ -1842,43 +2272,61 @@ class ThreadClass5(QThread):
             dest_bool = dest_path_bool_var[5]
             compare_bool = compare_bool_var[5]
 
-            btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
-            change_var = False
-            if path_bool == 'VIDEO_SOURCE_True' and dest_bool == 'VIDEO_DESTINATION_True':
-                info_label_1_var[5].setText('reading...')
-                cp_var = 0
-                for dirName, subdirList, fileList in os.walk(path):
-                    for fname in fileList:
-                        fullpath = os.path.join(dirName, fname)
-                        t_path = fullpath.replace(path, '')
-                        t_path = dest + t_path
-                        if not fullpath.endswith('.ini'):
-                            if not os.path.exists(t_path):
-                                change_var = True
-                                try:
-                                    shutil.copy(fullpath, t_path)
-                                except IOError:
-                                    os.makedirs(os.path.dirname(t_path))
-                                    shutil.copy(fullpath, t_path)
-                                cp_var += 1
-                            elif os.path.exists(t_path):
-                                if compare_bool is True:
-                                    ma = os.path.getmtime(fullpath)
-                                    mb = os.path.getmtime(t_path)
-                                    if mb < ma:
-                                        change_var = True
-                                        try:
-                                            shutil.copy(fullpath, t_path)
-                                        except IOError:
-                                            os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
-                                        cp_var += 1
-                if change_var is False:
-                    info_label_1_var[5].setText('unnecessary.')
-                elif change_var is True:
-                    info_label_1_var[5].setText('amended.')
-            else:
-                info_label_1_var[5].setText('path error!')
+            # Confirm potential write
+            btnx_main_var[5].setIcon(QIcon('./image/img_video_amber.png'))
+            info_label_1_var[5].hide()
+            self.confirm_op5_tru.show()
+            self.confirm_op5_fal.show()
+
+            while confirm_op5_wait is True:
+                time.sleep(0.3)
+
+            confirm_op5_wait = True
+
+            self.confirm_op5_tru.hide()
+            self.confirm_op5_fal.hide()
+            btnx_main_var[5].setIcon(QIcon(img_var[5]))
+            info_label_1_var[5].show()
+
+            if confirm_op5_bool is True:
+                print('-- ThreadClass5: confirm_op5_bool: accepted')
+                btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
+                change_var = False
+                if path_bool == 'VIDEO_SOURCE_True' and dest_bool == 'VIDEO_DESTINATION_True':
+                    info_label_1_var[5].setText('reading...')
+                    cp_var = 0
+                    for dirName, subdirList, fileList in os.walk(path):
+                        for fname in fileList:
+                            fullpath = os.path.join(dirName, fname)
+                            t_path = fullpath.replace(path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy(fullpath, t_path)
+                                    except IOError:
+                                        os.makedirs(os.path.dirname(t_path))
+                                        shutil.copy(fullpath, t_path)
+                                    cp_var += 1
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy(fullpath, t_path)
+                                            except IOError:
+                                                os.makedirs(os.path.dirname(t_path))
+                                                shutil.copy(fullpath, t_path)
+                                            cp_var += 1
+                    if change_var is False:
+                        info_label_1_var[5].setText('unnecessary.')
+                    elif change_var is True:
+                        info_label_1_var[5].setText('amended.')
+                else:
+                    info_label_1_var[5].setText('path error!')
             timer_thread_var[5].start()
             btnx_main_var[5].setIcon(QIcon(img_var[5]))
 
