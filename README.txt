@@ -3,7 +3,7 @@ Copy Source to Destination EXTREMELY fast.
 
 
 WHAT DOES IT DO?
-Mode 1: (Default) Copy Missing - Only copies file names not found in backup directory.
+Mode 1: (Default) Copy Missing - Only copies file names not found in destination directory.
 Mode one is useful if you dont edit the files. (like a music library, picture directory etc...)
 
 Mode 2: Comprehensive - Is Mode One plus compares file timestamps so if source timestamp is newer than destination timestamp destination file will be ammended.
