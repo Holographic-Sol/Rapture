@@ -32,4 +32,6 @@ Backup drive reflects Secondary Internal Drive Tree.
 
 Backing up steam (for me 700GB+) with this should be much faster than pasting a new copy as this will only copy
 what has changed and or what is missing. I will wait to test and compare. I Can't test yet but will soon.
+
+NOTE: Must run in admin account.
   
