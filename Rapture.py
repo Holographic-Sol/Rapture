@@ -192,6 +192,10 @@ class App(QMainWindow):
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
 
+        # Font Setup. Cambria Math, Candara, Consolas, Corbel, Segoe UI
+        font_s6 = QFont("Segoe UI", 6, QFont.Normal)
+        font_s8 = QFont("Segoe UI", 8, QFont.Normal)
+
         # Title Bar: Close
         self.close_button = QPushButton(self)
         self.close_button.move((self.width - 20), 0)
@@ -340,8 +344,7 @@ class App(QMainWindow):
             info_label_1 = 'info_label_1' + str(i)
             self.info_label_1 = QLabel(self)
             self.info_label_1.resize(85, 15)
-            newfont = QFont("Times", 8, QFont.Bold)
-            self.info_label_1.setFont(newfont)
+            self.info_label_1.setFont(font_s6)
             self.info_label_1.setText("")
             self.info_label_1.setStyleSheet(
                 """QLabel {background-color: rgb(0, 0, 0);
@@ -404,8 +407,7 @@ class App(QMainWindow):
         self.settings_source_label = QLabel(self)
         self.settings_source_label.move(30, 135)
         self.settings_source_label.resize(60, 15)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.settings_source_label.setFont(newfont)
+        self.settings_source_label.setFont(font_s6)
         self.settings_source_label.setText('Source:')
         self.settings_source_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -417,8 +419,7 @@ class App(QMainWindow):
         self.settings_dest_label = QLabel(self)
         self.settings_dest_label.move(30, 155)
         self.settings_dest_label.resize(60, 15)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.settings_dest_label.setFont(newfont)
+        self.settings_dest_label.setFont(font_s6)
         self.settings_dest_label.setText('Destination:')
         self.settings_dest_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -430,8 +431,7 @@ class App(QMainWindow):
         self.setting_title0 = QLabel(self)
         self.setting_title0.resize(605, 15)
         self.setting_title0.move(back_label_ankor_w0, 115)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.setting_title0.setFont(newfont)
+        self.setting_title0.setFont(font_s6)
         self.setting_title0.setText("Archive")
         self.setting_title0.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -444,8 +444,7 @@ class App(QMainWindow):
         self.setting_title1 = QLabel(self)
         self.setting_title1.resize(605, 15)
         self.setting_title1.move(back_label_ankor_w1, 115)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.setting_title1.setFont(newfont)
+        self.setting_title1.setFont(font_s6)
         self.setting_title1.setText("Document")
         self.setting_title1.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -458,8 +457,7 @@ class App(QMainWindow):
         self.setting_title2 = QLabel(self)
         self.setting_title2.resize(605, 15)
         self.setting_title2.move(back_label_ankor_w2, 115)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.setting_title2.setFont(newfont)
+        self.setting_title2.setFont(font_s6)
         self.setting_title2.setText("Music")
         self.setting_title2.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -472,8 +470,7 @@ class App(QMainWindow):
         self.setting_title3 = QLabel(self)
         self.setting_title3.resize(605, 15)
         self.setting_title3.move(back_label_ankor_w3, 115)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.setting_title3.setFont(newfont)
+        self.setting_title3.setFont(font_s6)
         self.setting_title3.setText("Picture")
         self.setting_title3.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -486,8 +483,7 @@ class App(QMainWindow):
         self.setting_title4 = QLabel(self)
         self.setting_title4.resize(605, 15)
         self.setting_title4.move(back_label_ankor_w4, 115)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.setting_title4.setFont(newfont)
+        self.setting_title4.setFont(font_s6)
         self.setting_title4.setText("Program")
         self.setting_title4.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -500,8 +496,7 @@ class App(QMainWindow):
         self.setting_title5 = QLabel(self)
         self.setting_title5.resize(605, 15)
         self.setting_title5.move(back_label_ankor_w5, 115)
-        newfont = QFont("Times", 8, QFont.Bold)
-        self.setting_title5.setFont(newfont)
+        self.setting_title5.setFont(font_s6)
         self.setting_title5.setText("Video")
         self.setting_title5.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -517,6 +512,7 @@ class App(QMainWindow):
         self.settings_source0 = QLineEdit(self)
         self.settings_source0.move(set_src_dst_pos_w, 135)
         self.settings_source0.resize(set_src_dst_w, 15)
+        self.settings_source0.setFont(font_s6)
         self.settings_source0.setText(path_var[0])
         self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
@@ -534,6 +530,7 @@ class App(QMainWindow):
         self.settings_source1 = QLineEdit(self)
         self.settings_source1.move(set_src_dst_pos_w, 135)
         self.settings_source1.resize(set_src_dst_w, 15)
+        self.settings_source1.setFont(font_s6)
         self.settings_source1.setText(path_var[1])
         self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
@@ -551,6 +548,7 @@ class App(QMainWindow):
         self.settings_source2 = QLineEdit(self)
         self.settings_source2.move(set_src_dst_pos_w, 135)
         self.settings_source2.resize(set_src_dst_w, 15)
+        self.settings_source2.setFont(font_s6)
         self.settings_source2.setText(path_var[2])
         self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
@@ -568,6 +566,7 @@ class App(QMainWindow):
         self.settings_source3 = QLineEdit(self)
         self.settings_source3.move(set_src_dst_pos_w, 135)
         self.settings_source3.resize(set_src_dst_w, 15)
+        self.settings_source3.setFont(font_s6)
         self.settings_source3.setText(path_var[3])
         self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
@@ -585,6 +584,7 @@ class App(QMainWindow):
         self.settings_source4 = QLineEdit(self)
         self.settings_source4.move(set_src_dst_pos_w, 135)
         self.settings_source4.resize(set_src_dst_w, 15)
+        self.settings_source4.setFont(font_s6)
         self.settings_source4.setText(path_var[4])
         self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
@@ -602,6 +602,7 @@ class App(QMainWindow):
         self.settings_source5 = QLineEdit(self)
         self.settings_source5.move(set_src_dst_pos_w, 135)
         self.settings_source5.resize(set_src_dst_w, 15)
+        self.settings_source5.setFont(font_s6)
         self.settings_source5.setText(path_var[5])
         self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
@@ -619,6 +620,7 @@ class App(QMainWindow):
         self.settings_dest0 = QLineEdit(self)
         self.settings_dest0.move(set_src_dst_pos_w, 155)
         self.settings_dest0.resize(set_src_dst_w, 15)
+        self.settings_dest0.setFont(font_s6)
         self.settings_dest0.setText(dest_path_var[0])
         self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
@@ -636,6 +638,7 @@ class App(QMainWindow):
         self.settings_dest1 = QLineEdit(self)
         self.settings_dest1.move(set_src_dst_pos_w, 155)
         self.settings_dest1.resize(set_src_dst_w, 15)
+        self.settings_dest1.setFont(font_s6)
         self.settings_dest1.setText(dest_path_var[1])
         self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
@@ -653,6 +656,7 @@ class App(QMainWindow):
         self.settings_dest2 = QLineEdit(self)
         self.settings_dest2.move(set_src_dst_pos_w, 155)
         self.settings_dest2.resize(set_src_dst_w, 15)
+        self.settings_dest2.setFont(font_s6)
         self.settings_dest2.setText(dest_path_var[2])
         self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
@@ -670,6 +674,7 @@ class App(QMainWindow):
         self.settings_dest3 = QLineEdit(self)
         self.settings_dest3.move(set_src_dst_pos_w, 155)
         self.settings_dest3.resize(set_src_dst_w, 15)
+        self.settings_dest3.setFont(font_s6)
         self.settings_dest3.setText(dest_path_var[3])
         self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
@@ -687,6 +692,7 @@ class App(QMainWindow):
         self.settings_dest4 = QLineEdit(self)
         self.settings_dest4.move(set_src_dst_pos_w, 155)
         self.settings_dest4.resize(set_src_dst_w, 15)
+        self.settings_dest4.setFont(font_s6)
         self.settings_dest4.setText(dest_path_var[4])
         self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
@@ -704,6 +710,7 @@ class App(QMainWindow):
         self.settings_dest5 = QLineEdit(self)
         self.settings_dest5.move(set_src_dst_pos_w, 155)
         self.settings_dest5.resize(set_src_dst_w, 15)
+        self.settings_dest5.setFont(font_s6)
         self.settings_dest5.setText(dest_path_var[5])
         self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
@@ -797,13 +804,10 @@ class App(QMainWindow):
         btnx_settings_var[4].clicked.connect(self.settings_funk4)
         btnx_settings_var[5].clicked.connect(self.settings_funk5)
 
-        # confirmation styling
-        confirmation_font = QFont("Times", 7, QFont.Bold)
-
         # Sector 1: Main Function Confirmation 0
         self.confirm_op0_tru = QPushButton(self)
         self.confirm_op0_tru.resize(40, 15)
-        self.confirm_op0_tru.setFont(confirmation_font)
+        self.confirm_op0_tru.setFont(font_s6)
         self.confirm_op0_tru.setText("Yes")
         self.confirm_op0_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -817,7 +821,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Declination 0
         self.confirm_op0_fal = QPushButton(self)
         self.confirm_op0_fal.resize(40, 15)
-        self.confirm_op0_fal.setFont(confirmation_font)
+        self.confirm_op0_fal.setFont(font_s6)
         self.confirm_op0_fal.setText("No")
         self.confirm_op0_fal.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -831,7 +835,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 1
         self.confirm_op1_tru = QPushButton(self)
         self.confirm_op1_tru.resize(40, 15)
-        self.confirm_op1_tru.setFont(confirmation_font)
+        self.confirm_op1_tru.setFont(font_s6)
         self.confirm_op1_tru.setText("Yes")
         self.confirm_op1_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -845,7 +849,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Declination 1
         self.confirm_op1_fal = QPushButton(self)
         self.confirm_op1_fal.resize(40, 15)
-        self.confirm_op1_fal.setFont(confirmation_font)
+        self.confirm_op1_fal.setFont(font_s6)
         self.confirm_op1_fal.setText("No")
         self.confirm_op1_fal.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -859,7 +863,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 2
         self.confirm_op2_tru = QPushButton(self)
         self.confirm_op2_tru.resize(40, 15)
-        self.confirm_op2_tru.setFont(confirmation_font)
+        self.confirm_op2_tru.setFont(font_s6)
         self.confirm_op2_tru.setText("Yes")
         self.confirm_op2_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -873,7 +877,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Declination 2
         self.confirm_op2_fal = QPushButton(self)
         self.confirm_op2_fal.resize(40, 15)
-        self.confirm_op2_fal.setFont(confirmation_font)
+        self.confirm_op2_fal.setFont(font_s6)
         self.confirm_op2_fal.setText("No")
         self.confirm_op2_fal.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -887,7 +891,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 3
         self.confirm_op3_tru = QPushButton(self)
         self.confirm_op3_tru.resize(40, 15)
-        self.confirm_op3_tru.setFont(confirmation_font)
+        self.confirm_op3_tru.setFont(font_s6)
         self.confirm_op3_tru.setText("Yes")
         self.confirm_op3_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -901,7 +905,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Declination 3
         self.confirm_op3_fal = QPushButton(self)
         self.confirm_op3_fal.resize(40, 15)
-        self.confirm_op3_fal.setFont(confirmation_font)
+        self.confirm_op3_fal.setFont(font_s6)
         self.confirm_op3_fal.setText("No")
         self.confirm_op3_fal.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -915,7 +919,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 4
         self.confirm_op4_tru = QPushButton(self)
         self.confirm_op4_tru.resize(40, 15)
-        self.confirm_op4_tru.setFont(confirmation_font)
+        self.confirm_op4_tru.setFont(font_s6)
         self.confirm_op4_tru.setText("Yes")
         self.confirm_op4_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -929,7 +933,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Declination 4
         self.confirm_op4_fal = QPushButton(self)
         self.confirm_op4_fal.resize(40, 15)
-        self.confirm_op4_fal.setFont(confirmation_font)
+        self.confirm_op4_fal.setFont(font_s6)
         self.confirm_op4_fal.setText("No")
         self.confirm_op4_fal.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -943,7 +947,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 5
         self.confirm_op5_tru = QPushButton(self)
         self.confirm_op5_tru.resize(40, 15)
-        self.confirm_op5_tru.setFont(confirmation_font)
+        self.confirm_op5_tru.setFont(font_s6)
         self.confirm_op5_tru.setText("Yes")
         self.confirm_op5_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -957,7 +961,7 @@ class App(QMainWindow):
         # Sector 1: Main Function Declination 5
         self.confirm_op5_fal = QPushButton(self)
         self.confirm_op5_fal.resize(40, 15)
-        self.confirm_op5_fal.setFont(confirmation_font)
+        self.confirm_op5_fal.setFont(font_s6)
         self.confirm_op5_fal.setText("No")
         self.confirm_op5_fal.setStyleSheet(
                 """QPushButton{background-color: rgb(0, 0, 0);
@@ -1371,26 +1375,62 @@ class App(QMainWindow):
         back_label_var[0].resize(95, 80)
         pixmap = QPixmap(background_img[0])
         back_label_var[0].setPixmap(pixmap)
+        back_label_var[0].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:1px solid rgb(0, 0, 0);
+                    border-left:1px solid rgb(0, 0, 0);
+                    border-right:1px solid rgb(0, 0, 0)}"""
+                    )
 
         back_label_var[1].resize(95, 80)
         pixmap = QPixmap(background_img[0])
         back_label_var[1].setPixmap(pixmap)
+        back_label_var[1].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:1px solid rgb(0, 0, 0);
+                    border-left:1px solid rgb(0, 0, 0);
+                    border-right:1px solid rgb(0, 0, 0)}"""
+                    )
 
         back_label_var[2].resize(95, 80)
         pixmap = QPixmap(background_img[0])
         back_label_var[2].setPixmap(pixmap)
+        back_label_var[2].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:1px solid rgb(0, 0, 0);
+                    border-left:1px solid rgb(0, 0, 0);
+                    border-right:1px solid rgb(0, 0, 0)}"""
+                    )
 
         back_label_var[3].resize(95, 80)
         pixmap = QPixmap(background_img[0])
         back_label_var[3].setPixmap(pixmap)
+        back_label_var[3].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:1px solid rgb(0, 0, 0);
+                    border-left:1px solid rgb(0, 0, 0);
+                    border-right:1px solid rgb(0, 0, 0)}"""
+                    )
 
         back_label_var[4].resize(95, 80)
         pixmap = QPixmap(background_img[0])
         back_label_var[4].setPixmap(pixmap)
+        back_label_var[4].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:1px solid rgb(0, 0, 0);
+                    border-left:1px solid rgb(0, 0, 0);
+                    border-right:1px solid rgb(0, 0, 0)}"""
+                    )
 
         back_label_var[5].resize(95, 80)
         pixmap = QPixmap(background_img[0])
         back_label_var[5].setPixmap(pixmap)
+        back_label_var[5].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:1px solid rgb(0, 0, 0);
+                    border-left:1px solid rgb(0, 0, 0);
+                    border-right:1px solid rgb(0, 0, 0)}"""
+                    )
 
         btnx_settings_var[0].setIcon(QIcon(small_image[0]))
         btnx_settings_var[1].setIcon(QIcon(small_image[0]))
@@ -1421,6 +1461,11 @@ class App(QMainWindow):
                 pixmap = QPixmap(background_img[1])
                 back_label_var[0].setPixmap(pixmap)
 
+                back_label_var[0].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:2px solid rgb(0, 0, 0);}"""
+                    )
+
                 self.setting_title0.show()
                 self.settings_source0.show()
                 self.settings_dest0.show()
@@ -1445,6 +1490,11 @@ class App(QMainWindow):
                 back_label_var[1].resize(95, 85)
                 pixmap = QPixmap(background_img[1])
                 back_label_var[1].setPixmap(pixmap)
+
+                back_label_var[1].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:2px solid rgb(0, 0, 0);}"""
+                    )
 
                 self.setting_title1.show()
                 self.settings_source1.show()
@@ -1471,6 +1521,11 @@ class App(QMainWindow):
                 pixmap = QPixmap(background_img[1])
                 back_label_var[2].setPixmap(pixmap)
 
+                back_label_var[2].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:2px solid rgb(0, 0, 0);}"""
+                    )
+
                 self.setting_title2.show()
                 self.settings_source2.show()
                 self.settings_dest2.show()
@@ -1494,6 +1549,11 @@ class App(QMainWindow):
                 back_label_var[3].resize(95, 85)
                 pixmap = QPixmap(background_img[1])
                 back_label_var[3].setPixmap(pixmap)
+
+                back_label_var[3].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:2px solid rgb(0, 0, 0);}"""
+                    )
 
                 self.setting_title3.show()
                 self.settings_source3.show()
@@ -1519,6 +1579,11 @@ class App(QMainWindow):
                 pixmap = QPixmap(background_img[1])
                 back_label_var[4].setPixmap(pixmap)
 
+                back_label_var[4].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:2px solid rgb(0, 0, 0);}"""
+                    )
+
                 self.setting_title4.show()
                 self.settings_source4.show()
                 self.settings_dest4.show()
@@ -1542,6 +1607,11 @@ class App(QMainWindow):
                 back_label_var[5].resize(95, 85)
                 pixmap = QPixmap(background_img[1])
                 back_label_var[5].setPixmap(pixmap)
+
+                back_label_var[5].setStyleSheet(
+                    """QLabel {background-color: rgb(0, 0, 0);
+                    border-top:2px solid rgb(0, 0, 0);}"""
+                    )
 
                 self.setting_title5.show()
                 self.settings_source5.show()
