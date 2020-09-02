@@ -2053,7 +2053,7 @@ class ThreadClass1(QThread):
                 btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
                 change_var = False
                 if path_bool == 'DOCUMENT_SOURCE_True' and dest_bool == 'DOCUMENT_DESTINATION_True':
-                    info_label_1_var[1].setText('reading...')
+                    info_label_1_var[1].setText('working...')
                     cp_var = 0
                     for dirName, subdirList, fileList in os.walk(path):
                         for fname in fileList:
@@ -2147,7 +2147,7 @@ class ThreadClass2(QThread):
                 btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
                 change_var = False
                 if path_bool == 'MUSIC_SOURCE_True' and dest_bool == 'MUSIC_DESTINATION_True':
-                    info_label_1_var[2].setText('reading...')
+                    info_label_1_var[2].setText('working...')
                     cp_var = 0
                     for dirName, subdirList, fileList in os.walk(path):
                         for fname in fileList:
@@ -2241,7 +2241,7 @@ class ThreadClass3(QThread):
                 btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
                 change_var = False
                 if path_bool == 'PICTURE_SOURCE_True' and dest_bool == 'PICTURE_DESTINATION_True':
-                    info_label_1_var[3].setText('reading...')
+                    info_label_1_var[3].setText('working...')
                     cp_var = 0
                     for dirName, subdirList, fileList in os.walk(path):
                         for fname in fileList:
@@ -2335,7 +2335,7 @@ class ThreadClass4(QThread):
                 btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
                 change_var = False
                 if path_bool == 'PROGRAMS_SOURCE_True' and dest_bool == 'PROGRAMS_DESTINATION_True':
-                    info_label_1_var[4].setText('reading...')
+                    info_label_1_var[4].setText('working...')
                     cp_var = 0
                     for dirName, subdirList, fileList in os.walk(path):
                         for fname in fileList:
@@ -2429,7 +2429,7 @@ class ThreadClass5(QThread):
                 btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
                 change_var = False
                 if path_bool == 'VIDEO_SOURCE_True' and dest_bool == 'VIDEO_DESTINATION_True':
-                    info_label_1_var[5].setText('reading...')
+                    info_label_1_var[5].setText('working...')
                     cp_var = 0
                     for dirName, subdirList, fileList in os.walk(path):
                         for fname in fileList:
