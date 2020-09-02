@@ -245,7 +245,7 @@ class App(QMainWindow):
            border:0px solid rgb(35, 35, 35);}"""
            )
 
-        # Sector 1: Background Sections
+        # Sector 1: Background Tiles
         i = 0
         while i < 6:
             back_label = 'back_label' + str(i)
@@ -773,13 +773,21 @@ class App(QMainWindow):
         stop_thr_button_var[4].clicked.connect(self.stop_thr_funk4)
         stop_thr_button_var[5].clicked.connect(self.stop_thr_funk5)
 
-        # Sector 1: Plug Main Function Buttons Into Functions
+        # Sector 1: Plug Main Function Buttons Into Main Function Button Threads
         btnx_main_var[0].clicked.connect(self.thread_funk_0)
         btnx_main_var[1].clicked.connect(self.thread_funk_1)
         btnx_main_var[2].clicked.connect(self.thread_funk_2)
         btnx_main_var[3].clicked.connect(self.thread_funk_3)
         btnx_main_var[4].clicked.connect(self.thread_funk_4)
         btnx_main_var[5].clicked.connect(self.thread_funk_5)
+
+        # Sector 1: Plug Main Function Buttons Into Drop Down Settings Functions
+        btnx_main_var[0].clicked.connect(self.settings_funk0)
+        btnx_main_var[1].clicked.connect(self.settings_funk1)
+        btnx_main_var[2].clicked.connect(self.settings_funk2)
+        btnx_main_var[3].clicked.connect(self.settings_funk3)
+        btnx_main_var[4].clicked.connect(self.settings_funk4)
+        btnx_main_var[5].clicked.connect(self.settings_funk5)
 
         # Sector 1: Plug Drop Down Settings Buttons Into Functions
         btnx_settings_var[0].clicked.connect(self.settings_funk0)
@@ -1340,6 +1348,7 @@ class App(QMainWindow):
 
     # Sector 2 Funtion: Hides Objects in Sector 2, Resizes Sector One Background Labels, Rotates Sector 1 Drop Down Settings Arrows
     def hide_settings_funk(self):
+        print('-- plugged in: hide_settings_funk')
         self.setting_title0.hide()
         self.setting_title1.hide()
         self.setting_title2.hide()
@@ -1402,7 +1411,9 @@ class App(QMainWindow):
         self.hide_settings_funk()
         if settings_active is False:
             if settings_active_int != settings_active_int_prev:
+                print('0.1')
                 self.setFixedSize(self.width, 190)
+                print('1')
 
                 btnx_settings_var[0].setIcon(QIcon(small_image[1]))
 
