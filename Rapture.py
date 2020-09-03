@@ -2275,6 +2275,7 @@ class ThreadClass0(QThread):
                     cp_var = 0
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
+
                             fullpath = os.path.join(dirname, fname)
                             t_path = fullpath.replace(path, '')
                             t_path = dest + t_path
@@ -2284,11 +2285,11 @@ class ThreadClass0(QThread):
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
-                                        shutil.copy2(fullpath, t_path)
+                                        shutil.copy(fullpath, t_path)
                                     except IOError:
-                                        distutils.dir_util.mkpath(t_path)
                                         try:
-                                            shutil.copy2(fullpath, t_path)
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
                                             self.tb_0.append(output_str)
@@ -2318,11 +2319,11 @@ class ThreadClass0(QThread):
                                         if mb < ma:
                                             change_var = True
                                             try:
-                                                shutil.copy(fullpath, t_path)
+                                                shutil.copy2(fullpath, t_path)
                                             except IOError:
-                                                distutils.dir_util.mkpath(t_path)
                                                 try:
-                                                    shutil.copy(fullpath, t_path)
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
                                                 except:
                                                     output_str = str('error: ' + t_path)
                                                     self.tb_0.append(output_str)
@@ -2341,6 +2342,7 @@ class ThreadClass0(QThread):
                                                 self.tb_0.append(output_str)
 
                                             cp_var += 1
+
                     if change_var is False:
                         info_label_1_var[0].setText('unnecessary.')
                     elif change_var is True:
@@ -2354,6 +2356,7 @@ class ThreadClass0(QThread):
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
+
         btnx_main_var[0].setIcon(QIcon(img_var[0]))
         info_label_1_var[0].setText('aborted.')
         self.terminate()
@@ -2433,18 +2436,18 @@ class ThreadClass1(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except IOError:
-                                        distutils.dir_util.mkpath(t_path)
                                         try:
+                                            os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
-                                            self.tb_1.append(output_str)
+                                            self.tb_2.append(output_str)
 
                                     # Check File Now Exists In Destination
                                     siz_src = os.path.getsize(fullpath)
                                     siz_dest = os.path.getsize(t_path)
 
-                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 or os.path.exists(t_path) and siz_dest is 0 and mb > ma:
+                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0:
                                         output_str = str('copied new: ' + t_path)
                                         self.tb_1.append(output_str)
 
@@ -2466,11 +2469,11 @@ class ThreadClass1(QThread):
                                         if mb < ma:
                                             change_var = True
                                             try:
-                                                shutil.copy(fullpath, t_path)
+                                                shutil.copy2(fullpath, t_path)
                                             except IOError:
-                                                distutils.dir_util.mkpath(t_path)
                                                 try:
-                                                    shutil.copy(fullpath, t_path)
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
                                                 except:
                                                     output_str = str('error: ' + t_path)
                                                     self.tb_1.append(output_str)
@@ -2578,8 +2581,8 @@ class ThreadClass2(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except IOError:
-                                        distutils.dir_util.mkpath(t_path)
                                         try:
+                                            os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
@@ -2609,11 +2612,11 @@ class ThreadClass2(QThread):
                                         if mb < ma:
                                             change_var = True
                                             try:
-                                                shutil.copy(fullpath, t_path)
+                                                shutil.copy2(fullpath, t_path)
                                             except IOError:
-                                                distutils.dir_util.mkpath(t_path)
                                                 try:
-                                                    shutil.copy(fullpath, t_path)
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
                                                 except:
                                                     output_str = str('error: ' + t_path)
                                                     self.tb_2.append(output_str)
@@ -2720,8 +2723,8 @@ class ThreadClass3(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except IOError:
-                                        distutils.dir_util.mkpath(t_path)
                                         try:
+                                            os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
@@ -2752,11 +2755,11 @@ class ThreadClass3(QThread):
                                         if mb < ma:
                                             change_var = True
                                             try:
-                                                shutil.copy(fullpath, t_path)
+                                                shutil.copy2(fullpath, t_path)
                                             except IOError:
-                                                distutils.dir_util.mkpath(t_path)
                                                 try:
-                                                    shutil.copy(fullpath, t_path)
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
                                                 except:
                                                     output_str = str('error: ' + t_path)
                                                     self.tb_3.append(output_str)
@@ -2864,8 +2867,8 @@ class ThreadClass4(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except IOError:
-                                        distutils.dir_util.mkpath(t_path)
                                         try:
+                                            os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
@@ -2896,11 +2899,11 @@ class ThreadClass4(QThread):
                                         if mb < ma:
                                             change_var = True
                                             try:
-                                                shutil.copy(fullpath, t_path)
+                                                shutil.copy2(fullpath, t_path)
                                             except IOError:
-                                                distutils.dir_util.mkpath(t_path)
                                                 try:
-                                                    shutil.copy(fullpath, t_path)
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
                                                 except:
                                                     output_str = str('error: ' + t_path)
                                                     self.tb_4.append(output_str)
@@ -3008,8 +3011,8 @@ class ThreadClass5(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except IOError:
-                                        distutils.dir_util.mkpath(t_path)
                                         try:
+                                            os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
@@ -3049,11 +3052,11 @@ class ThreadClass5(QThread):
                                         if mb < ma:
                                             change_var = True
                                             try:
-                                                shutil.copy(fullpath, t_path)
+                                                shutil.copy2(fullpath, t_path)
                                             except IOError:
-                                                distutils.dir_util.mkpath(t_path)
                                                 try:
-                                                    shutil.copy(fullpath, t_path)
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
                                                 except:
                                                     output_str = str('error: ' + t_path)
                                                     self.tb_5.append(output_str)
