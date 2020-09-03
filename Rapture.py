@@ -59,6 +59,7 @@ confirm_op4_bool = False
 confirm_op4_wait = True
 confirm_op5_bool = False
 confirm_op5_wait = True
+btnx_primed_0 = False
 
 source_selected = ()
 dest_selected = ()
@@ -392,7 +393,7 @@ class App(QMainWindow):
         global path_var, dest_path_var, back_label_var, pressed_int, settings_source_edit_var, settings_dest_edit_var
         global settings_input_response_label, update_settings_window_thread, confirm_op0_bool, confirm_op0_wait
         global confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait, confirm_op3_bool, confirm_op3_wait
-        global confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait
+        global confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait, btnx_primed_0
 
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
@@ -929,6 +930,84 @@ class App(QMainWindow):
         settings_dest_edit_var.append(self.settings_dest5)
         self.settings_dest5.hide()
 
+         # Sector 1: Main Function Confirmation 0
+        self.confirm_op0_tru = QPushButton(self)
+        self.confirm_op0_tru.resize(87, 13)
+        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op0_tru.setIconSize(QSize(45, 10))
+        self.confirm_op0_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(30, 30, 30);
+                border:0px solid rgb(30, 30, 30);}"""
+                )
+        self.confirm_op0_tru.move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 63))
+        self.confirm_op0_tru.clicked.connect(self.confirm_op0_funk0)
+        self.confirm_op0_tru.hide()
+
+        # Sector 1: Main Function Confirmation 1
+        self.confirm_op1_tru = QPushButton(self)
+        self.confirm_op1_tru.resize(87, 13)
+        self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op1_tru.setIconSize(QSize(45, 10))
+        self.confirm_op1_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(30, 30, 30);
+                border:0px solid rgb(30, 30, 30);}"""
+                )
+        self.confirm_op1_tru.move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 63))
+        self.confirm_op1_tru.clicked.connect(self.confirm_op1_funk0)
+        self.confirm_op1_tru.hide()
+
+        # Sector 1: Main Function Confirmation 2
+        self.confirm_op2_tru = QPushButton(self)
+        self.confirm_op2_tru.resize(87, 13)
+        self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op2_tru.setIconSize(QSize(45, 10))
+        self.confirm_op2_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(30, 30, 30);
+                border:0px solid rgb(30, 30, 30);}"""
+                )
+        self.confirm_op2_tru.move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 63))
+        self.confirm_op2_tru.clicked.connect(self.confirm_op2_funk0)
+        self.confirm_op2_tru.hide()
+
+        # Sector 1: Main Function Confirmation 3
+        self.confirm_op3_tru = QPushButton(self)
+        self.confirm_op3_tru.resize(87, 13)
+        self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op3_tru.setIconSize(QSize(45, 10))
+        self.confirm_op3_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(30, 30, 30);
+                border:0px solid rgb(30, 30, 30);}"""
+                )
+        self.confirm_op3_tru.move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 63))
+        self.confirm_op3_tru.clicked.connect(self.confirm_op3_funk0)
+        self.confirm_op3_tru.hide()
+
+        # Sector 1: Main Function Confirmation 4
+        self.confirm_op4_tru = QPushButton(self)
+        self.confirm_op4_tru.resize(87, 13)
+        self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op4_tru.setIconSize(QSize(45, 10))
+        self.confirm_op4_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(30, 30, 30);
+                border:0px solid rgb(30, 30, 30);}"""
+                )
+        self.confirm_op4_tru.move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 63))
+        self.confirm_op4_tru.clicked.connect(self.confirm_op4_funk0)
+        self.confirm_op4_tru.hide()
+
+        # Sector 1: Main Function Confirmation 5
+        self.confirm_op5_tru = QPushButton(self)
+        self.confirm_op5_tru.resize(87, 13)
+        self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op5_tru.setIconSize(QSize(45, 10))
+        self.confirm_op5_tru.setStyleSheet(
+                """QPushButton{background-color: rgb(30, 30, 30);
+                border:0px solid rgb(30, 30, 30);}"""
+                )
+        self.confirm_op5_tru.move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 63))
+        self.confirm_op5_tru.clicked.connect(self.confirm_op5_funk0)
+        self.confirm_op5_tru.hide()
+
         # Sector 1: Attatch Main Function Buttons To Background Tiles Position
         btnx_main_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
         btnx_main_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 5))
@@ -994,12 +1073,12 @@ class App(QMainWindow):
         btnx_main_var[5].clicked.connect(self.thread_funk_5)
 
         # Sector 1: Plug Main Function Buttons Into Drop Down Settings Functions
-        btnx_main_var[0].clicked.connect(self.settings_funk0)
-        btnx_main_var[1].clicked.connect(self.settings_funk1)
-        btnx_main_var[2].clicked.connect(self.settings_funk2)
-        btnx_main_var[3].clicked.connect(self.settings_funk3)
-        btnx_main_var[4].clicked.connect(self.settings_funk4)
-        btnx_main_var[5].clicked.connect(self.settings_funk5)
+        btnx_main_var[0].clicked.connect(self.btnx_set_focus_funk_0)
+        btnx_main_var[1].clicked.connect(self.btnx_set_focus_funk_1)
+        btnx_main_var[2].clicked.connect(self.btnx_set_focus_funk_2)
+        btnx_main_var[3].clicked.connect(self.btnx_set_focus_funk_3)
+        btnx_main_var[4].clicked.connect(self.btnx_set_focus_funk_4)
+        btnx_main_var[5].clicked.connect(self.btnx_set_focus_funk_5)
 
         # Sector 1: Plug Drop Down Settings Buttons Into Functions
         btnx_settings_var[0].clicked.connect(self.settings_funk0)
@@ -1008,174 +1087,6 @@ class App(QMainWindow):
         btnx_settings_var[3].clicked.connect(self.settings_funk3)
         btnx_settings_var[4].clicked.connect(self.settings_funk4)
         btnx_settings_var[5].clicked.connect(self.settings_funk5)
-
-        # Sector 1: Main Function Confirmation 0
-        self.confirm_op0_tru = QPushButton(self)
-        self.confirm_op0_tru.resize(40, 15)
-        self.confirm_op0_tru.setFont(font_s6)
-        self.confirm_op0_tru.setText("Yes")
-        self.confirm_op0_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op0_tru.move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 62))
-        self.confirm_op0_tru.clicked.connect(self.confirm_op0_funk0)
-        self.confirm_op0_tru.hide()
-
-        # Sector 1: Main Function Declination 0
-        self.confirm_op0_fal = QPushButton(self)
-        self.confirm_op0_fal.resize(40, 15)
-        self.confirm_op0_fal.setFont(font_s6)
-        self.confirm_op0_fal.setText("No")
-        self.confirm_op0_fal.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op0_fal.move((95 - 38), (back_label_ankor_h0 + 62))
-        self.confirm_op0_fal.clicked.connect(self.confirm_op0_funk1)
-        self.confirm_op0_fal.hide()
-
-        # Sector 1: Main Function Confirmation 1
-        self.confirm_op1_tru = QPushButton(self)
-        self.confirm_op1_tru.resize(40, 15)
-        self.confirm_op1_tru.setFont(font_s6)
-        self.confirm_op1_tru.setText("Yes")
-        self.confirm_op1_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op1_tru.move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 62))
-        self.confirm_op1_tru.clicked.connect(self.confirm_op1_funk0)
-        self.confirm_op1_tru.hide()
-
-        # Sector 1: Main Function Declination 1
-        self.confirm_op1_fal = QPushButton(self)
-        self.confirm_op1_fal.resize(40, 15)
-        self.confirm_op1_fal.setFont(font_s6)
-        self.confirm_op1_fal.setText("No")
-        self.confirm_op1_fal.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op1_fal.move((195 - 38), (back_label_ankor_h1 + 62))
-        self.confirm_op1_fal.clicked.connect(self.confirm_op1_funk1)
-        self.confirm_op1_fal.hide()
-
-        # Sector 1: Main Function Confirmation 2
-        self.confirm_op2_tru = QPushButton(self)
-        self.confirm_op2_tru.resize(40, 15)
-        self.confirm_op2_tru.setFont(font_s6)
-        self.confirm_op2_tru.setText("Yes")
-        self.confirm_op2_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op2_tru.move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 62))
-        self.confirm_op2_tru.clicked.connect(self.confirm_op2_funk0)
-        self.confirm_op2_tru.hide()
-
-        # Sector 1: Main Function Declination 2
-        self.confirm_op2_fal = QPushButton(self)
-        self.confirm_op2_fal.resize(40, 15)
-        self.confirm_op2_fal.setFont(font_s6)
-        self.confirm_op2_fal.setText("No")
-        self.confirm_op2_fal.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op2_fal.move((295 - 38), (back_label_ankor_h2 + 62))
-        self.confirm_op2_fal.clicked.connect(self.confirm_op2_funk1)
-        self.confirm_op2_fal.hide()
-
-        # Sector 1: Main Function Confirmation 3
-        self.confirm_op3_tru = QPushButton(self)
-        self.confirm_op3_tru.resize(40, 15)
-        self.confirm_op3_tru.setFont(font_s6)
-        self.confirm_op3_tru.setText("Yes")
-        self.confirm_op3_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op3_tru.move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 62))
-        self.confirm_op3_tru.clicked.connect(self.confirm_op3_funk0)
-        self.confirm_op3_tru.hide()
-
-        # Sector 1: Main Function Declination 3
-        self.confirm_op3_fal = QPushButton(self)
-        self.confirm_op3_fal.resize(40, 15)
-        self.confirm_op3_fal.setFont(font_s6)
-        self.confirm_op3_fal.setText("No")
-        self.confirm_op3_fal.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op3_fal.move((395 - 38), (back_label_ankor_h3 + 62))
-        self.confirm_op3_fal.clicked.connect(self.confirm_op3_funk1)
-        self.confirm_op3_fal.hide()
-
-        # Sector 1: Main Function Confirmation 4
-        self.confirm_op4_tru = QPushButton(self)
-        self.confirm_op4_tru.resize(40, 15)
-        self.confirm_op4_tru.setFont(font_s6)
-        self.confirm_op4_tru.setText("Yes")
-        self.confirm_op4_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op4_tru.move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 62))
-        self.confirm_op4_tru.clicked.connect(self.confirm_op4_funk0)
-        self.confirm_op4_tru.hide()
-
-        # Sector 1: Main Function Declination 4
-        self.confirm_op4_fal = QPushButton(self)
-        self.confirm_op4_fal.resize(40, 15)
-        self.confirm_op4_fal.setFont(font_s6)
-        self.confirm_op4_fal.setText("No")
-        self.confirm_op4_fal.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op4_fal.move((495 - 38), (back_label_ankor_h4 + 62))
-        self.confirm_op4_fal.clicked.connect(self.confirm_op4_funk1)
-        self.confirm_op4_fal.hide()
-
-        # Sector 1: Main Function Confirmation 5
-        self.confirm_op5_tru = QPushButton(self)
-        self.confirm_op5_tru.resize(40, 15)
-        self.confirm_op5_tru.setFont(font_s6)
-        self.confirm_op5_tru.setText("Yes")
-        self.confirm_op5_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op5_tru.move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 62))
-        self.confirm_op5_tru.clicked.connect(self.confirm_op5_funk0)
-        self.confirm_op5_tru.hide()
-
-        # Sector 1: Main Function Declination 5
-        self.confirm_op5_fal = QPushButton(self)
-        self.confirm_op5_fal.resize(40, 15)
-        self.confirm_op5_fal.setFont(font_s6)
-        self.confirm_op5_fal.setText("No")
-        self.confirm_op5_fal.setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-                border:2px solid rgb(30, 30, 30);
-                color: green}"""
-                )
-        self.confirm_op5_fal.move((595 - 38), (back_label_ankor_h5 + 62))
-        self.confirm_op5_fal.clicked.connect(self.confirm_op5_funk1)
-        self.confirm_op5_fal.hide()
 
         # Thread: Adjusts App Geometry To Account For Display Re-Scaling
         self.oldPos = self.pos()
@@ -1195,12 +1106,12 @@ class App(QMainWindow):
         timer_thread_var[5] = TimerClass5()
 
         # Threads: Main Function Threads. Read/Write Operations & Time Stamp Comparing
-        thread_var[0] = ThreadClass0(self.confirm_op0_tru, self.confirm_op0_fal, self.tb_0)
-        thread_var[1] = ThreadClass1(self.confirm_op1_tru, self.confirm_op1_fal, self.tb_1)
-        thread_var[2] = ThreadClass2(self.confirm_op2_tru, self.confirm_op2_fal, self.tb_2)
-        thread_var[3] = ThreadClass3(self.confirm_op3_tru, self.confirm_op3_fal, self.tb_3)
-        thread_var[4] = ThreadClass4(self.confirm_op4_tru, self.confirm_op4_fal, self.tb_4)
-        thread_var[5] = ThreadClass5(self.confirm_op5_tru, self.confirm_op5_fal, self.tb_5)
+        thread_var[0] = ThreadClass0(self.confirm_op0_tru, self.tb_0)
+        thread_var[1] = ThreadClass1(self.confirm_op1_tru, self.tb_1)
+        thread_var[2] = ThreadClass2(self.confirm_op2_tru, self.tb_2)
+        thread_var[3] = ThreadClass3(self.confirm_op3_tru, self.tb_3)
+        thread_var[4] = ThreadClass4(self.confirm_op4_tru, self.tb_4)
+        thread_var[5] = ThreadClass5(self.confirm_op5_tru, self.tb_5)
 
         # Thread: 2x LED In Sector 2 Displays Source & Destination Path Validity
         settings_input_response_thread = SettingsInputResponse()
@@ -1231,25 +1142,11 @@ class App(QMainWindow):
         confirm_op0_bool = True
         confirm_op0_wait = False
 
-    # Section 1 Funtion: Main Function Declination 0
-    def confirm_op0_funk1(self):
-        global confirm_op0_bool, confirm_op0_wait
-        print('-- plugged in: confirm_op0_funk1: declined')
-        confirm_op0_bool = False
-        confirm_op0_wait = False
-
     # Section 1 Funtion: Main Function Confirmation 1
     def confirm_op1_funk0(self):
         global confirm_op1_bool, confirm_op1_wait
         print('-- plugged in: confirm_op1_funk0: accepted')
         confirm_op1_bool = True
-        confirm_op1_wait = False
-
-    # Section 1 Funtion: Main Function Declination 1
-    def confirm_op1_funk1(self):
-        global confirm_op1_bool, confirm_op1_wait
-        print('-- plugged in: confirm_op1_funk1: declined')
-        confirm_op1_bool = False
         confirm_op1_wait = False
 
     # Section 1 Funtion: Main Function Confirmation 2
@@ -1259,25 +1156,11 @@ class App(QMainWindow):
         confirm_op2_bool = True
         confirm_op2_wait = False
 
-    # Section 1 Funtion: Main Function Declination 2
-    def confirm_op2_funk1(self):
-        global confirm_op2_bool, confirm_op2_wait
-        print('-- plugged in: confirm_op2_funk0: declined')
-        confirm_op2_bool = False
-        confirm_op2_wait = False
-
     # Section 1 Funtion: Main Function Confirmation 3
     def confirm_op3_funk0(self):
         global confirm_op3_bool, confirm_op3_wait
         print('-- plugged in: confirm_op3_funk0: accepted')
         confirm_op3_bool = True
-        confirm_op3_wait = False
-
-    # Section 1 Funtion: Main Function Declination 3
-    def confirm_op3_funk1(self):
-        global confirm_op3_bool, confirm_op3_wait
-        print('-- plugged in: confirm_op3_funk1: declined')
-        confirm_op3_bool = False
         confirm_op3_wait = False
 
     # Section 1 Funtion: Main Function Confirmation 4
@@ -1287,25 +1170,11 @@ class App(QMainWindow):
         confirm_op4_bool = True
         confirm_op4_wait = False
 
-    # Section 1 Funtion: Main Function Declination 4
-    def confirm_op4_funk1(self):
-        global confirm_op4_bool, confirm_op4_wait
-        print('-- plugged in: confirm_op4_funk1: declined')
-        confirm_op4_bool = False
-        confirm_op4_wait = False
-
     # Section 1 Funtion: Main Function Confirmation 5
     def confirm_op5_funk0(self):
         global confirm_op5_bool, confirm_op5_wait
         print('-- plugged in: confirm_op5_funk0: accepted')
         confirm_op5_bool = True
-        confirm_op5_wait = False
-
-    # Section 1 Funtion: Main Function Declination 5
-    def confirm_op5_funk1(self):
-        global confirm_op5_bool, confirm_op5_wait
-        print('-- plugged in: confirm_op5_funk1: declined')
-        confirm_op5_bool = False
         confirm_op5_wait = False
 
     # Section 2 Funtion: Set's ReadOnly For Source And Settings Configuration And Configures Display To Reflect ReadOnly State
@@ -1655,6 +1524,128 @@ class App(QMainWindow):
     def hide_settings_page_funk(self):
         self.hide_settings_funk()
         self.setFixedSize(self.width, 110)
+
+    def btnx_set_focus_funk_0(self):
+        global settings_active_int, btnx_primed_0
+
+        settings_active_int = 0
+        self.hide_settings_funk()
+        self.setFixedSize(self.width, 500)
+
+        btnx_settings_var[0].setIcon(QIcon(small_image[1]))
+        back_label_var[0].resize(95, 85)
+        pixmap = QPixmap(background_img[0])
+        back_label_var[0].setPixmap(pixmap)
+        back_label_var[0].setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+            border-top:2px solid rgb(0, 0, 0);}"""
+            )
+
+        self.setting_title0.show()
+        self.settings_source0.show()
+        self.settings_dest0.show()
+        self.tb_0.show()
+
+    def btnx_set_focus_funk_1(self):
+        global settings_active_int
+
+        settings_active_int = 1
+        self.hide_settings_funk()
+
+        self.setFixedSize(self.width, 500)
+        btnx_settings_var[1].setIcon(QIcon(small_image[1]))
+        back_label_var[1].resize(95, 85)
+        pixmap = QPixmap(background_img[0])
+        back_label_var[1].setPixmap(pixmap)
+        back_label_var[1].setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+            border-top:2px solid rgb(0, 0, 0);}"""
+            )
+        self.setting_title1.show()
+        self.settings_source1.show()
+        self.settings_dest1.show()
+        self.tb_1.show()
+
+    def btnx_set_focus_funk_2(self):
+        global settings_active_int
+
+        settings_active_int = 2
+        self.hide_settings_funk()
+
+        self.setFixedSize(self.width, 500)
+        btnx_settings_var[2].setIcon(QIcon(small_image[1]))
+        back_label_var[2].resize(95, 85)
+        pixmap = QPixmap(background_img[0])
+        back_label_var[2].setPixmap(pixmap)
+        back_label_var[2].setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+            border-top:2px solid rgb(0, 0, 0);}"""
+            )
+        self.setting_title2.show()
+        self.settings_source2.show()
+        self.settings_dest2.show()
+        self.tb_2.show()
+
+    def btnx_set_focus_funk_3(self):
+        global settings_active_int
+
+        settings_active_int = 3
+        self.hide_settings_funk()
+
+        self.setFixedSize(self.width, 500)
+        btnx_settings_var[3].setIcon(QIcon(small_image[1]))
+        back_label_var[3].resize(95, 85)
+        pixmap = QPixmap(background_img[0])
+        back_label_var[3].setPixmap(pixmap)
+        back_label_var[3].setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+            border-top:2px solid rgb(0, 0, 0);}"""
+            )
+        self.setting_title3.show()
+        self.settings_source3.show()
+        self.settings_dest3.show()
+        self.tb_3.show()
+
+    def btnx_set_focus_funk_4(self):
+        global settings_active_int
+
+        settings_active_int = 4
+        self.hide_settings_funk()
+
+        self.setFixedSize(self.width, 500)
+        btnx_settings_var[4].setIcon(QIcon(small_image[1]))
+        back_label_var[4].resize(95, 85)
+        pixmap = QPixmap(background_img[0])
+        back_label_var[4].setPixmap(pixmap)
+        back_label_var[4].setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+            border-top:2px solid rgb(0, 0, 0);}"""
+            )
+        self.setting_title4.show()
+        self.settings_source4.show()
+        self.settings_dest4.show()
+        self.tb_4.show()
+
+    def btnx_set_focus_funk_5(self):
+        global settings_active_int
+
+        settings_active_int = 5
+        self.hide_settings_funk()
+
+        self.setFixedSize(self.width, 500)
+        btnx_settings_var[5].setIcon(QIcon(small_image[1]))
+        back_label_var[5].resize(95, 85)
+        pixmap = QPixmap(background_img[0])
+        back_label_var[5].setPixmap(pixmap)
+        back_label_var[5].setStyleSheet(
+            """QLabel {background-color: rgb(0, 0, 0);
+            border-top:2px solid rgb(0, 0, 0);}"""
+            )
+        self.setting_title5.show()
+        self.settings_source5.show()
+        self.settings_dest5.show()
+        self.tb_5.show()
+
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 0
     def settings_funk0(self):
@@ -2214,10 +2205,9 @@ class TimerClass5(QThread):
 
 # Sector 1 Class: Main Function Button Thread 0
 class ThreadClass0(QThread):
-    def __init__(self, confirm_op0_tru, confirm_op0_fal, tb_0):
+    def __init__(self, confirm_op0_tru, tb_0):
         QThread.__init__(self)
         self.confirm_op0_tru = confirm_op0_tru
-        self.confirm_op0_fal = confirm_op0_fal
         self.tb_0 = tb_0
 
     def run(self):
@@ -2246,14 +2236,12 @@ class ThreadClass0(QThread):
             btnx_main_var[0].setIcon(QIcon('./image/img_archives_amber.png'))
             info_label_1_var[0].hide()
             self.confirm_op0_tru.show()
-            self.confirm_op0_fal.show()
             while confirm_op0_wait is True:
                 time.sleep(0.3)
             confirm_op0_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op0_tru.hide()
-            self.confirm_op0_fal.hide()
             btnx_main_var[0].setIcon(QIcon(img_var[0]))
             info_label_1_var[0].show()
 
@@ -2337,7 +2325,7 @@ class ThreadClass0(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb > ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb > ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_0.append(output_str)
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
@@ -2359,7 +2347,12 @@ class ThreadClass0(QThread):
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
-
+        global confirm_op0_bool, confirm_op0_wait
+        
+        confirm_op0_bool = False
+        confirm_op0_wait = True
+        print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
+        self.confirm_op0_tru.hide()
         btnx_main_var[0].setIcon(QIcon(img_var[0]))
         info_label_1_var[0].setText('aborted.')
         self.terminate()
@@ -2367,10 +2360,9 @@ class ThreadClass0(QThread):
 
 # Sector 1 Class: Main Function Button Thread 1
 class ThreadClass1(QThread):
-    def __init__(self, confirm_op1_tru, confirm_op1_fal, tb_1):
+    def __init__(self, confirm_op1_tru, tb_1):
         QThread.__init__(self)
         self.confirm_op1_tru = confirm_op1_tru
-        self.confirm_op1_fal = confirm_op1_fal
         self.tb_1 = tb_1
 
     def run(self):
@@ -2399,14 +2391,12 @@ class ThreadClass1(QThread):
             btnx_main_var[1].setIcon(QIcon('./image/img_document_amber.png'))
             info_label_1_var[1].hide()
             self.confirm_op1_tru.show()
-            self.confirm_op1_fal.show()
             while confirm_op1_wait is True:
                 time.sleep(0.3)
             confirm_op1_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op1_tru.hide()
-            self.confirm_op1_fal.hide()
             btnx_main_var[1].setIcon(QIcon(img_var[1]))
             info_label_1_var[1].show()
 
@@ -2431,17 +2421,18 @@ class ThreadClass1(QThread):
                             fullpath = os.path.join(dirname, fname)
                             t_path = fullpath.replace(path, '')
                             t_path = dest + t_path
+                            #
                             if not fullpath.endswith('.ini'):
 
                                 # Write 0: If File Not Exists In Destination
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
-                                        shutil.copy2(fullpath, t_path)
+                                        shutil.copy(fullpath, t_path)
                                     except IOError:
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy2(fullpath, t_path)
+                                            shutil.copy(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
                                             self.tb_1.append(output_str)
@@ -2489,12 +2480,19 @@ class ThreadClass1(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb > ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb > ma:
+                                            ma_str = str(ma)
+                                            mb_str = str(mb)
+                                            print('ma:'+ ma_str)
+                                            print('mb:'+ mb_str)
+
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_1.append(output_str)
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
                                                 output_str = str('failed to update file: ' + t_path)
                                                 self.tb_1.append(output_str)
+
+                                            cp_var += 1
 
                     if change_var is False:
                         info_label_1_var[1].setText('unnecessary.')
@@ -2507,6 +2505,12 @@ class ThreadClass1(QThread):
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
+        global confirm_op1_bool, confirm_op1_wait
+        
+        confirm_op1_bool = False
+        confirm_op1_wait = True
+        print('-- confirm_op1 declined: (confirm_op1_bool)', confirm_op1_bool)
+        self.confirm_op1_tru.hide()
         btnx_main_var[1].setIcon(QIcon(img_var[1]))
         info_label_1_var[1].setText('aborted.')
         self.terminate()
@@ -2514,10 +2518,9 @@ class ThreadClass1(QThread):
 
 # Sector 1 Class: Main Function Button Thread 2
 class ThreadClass2(QThread):
-    def __init__(self, confirm_op2_tru, confirm_op2_fal, tb_2):
+    def __init__(self, confirm_op2_tru, tb_2):
         QThread.__init__(self)
         self.confirm_op2_tru = confirm_op2_tru
-        self.confirm_op2_fal = confirm_op2_fal
         self.tb_2 = tb_2
 
     def run(self):
@@ -2546,14 +2549,12 @@ class ThreadClass2(QThread):
             btnx_main_var[2].setIcon(QIcon('./image/img_music_amber.png'))
             info_label_1_var[2].hide()
             self.confirm_op2_tru.show()
-            self.confirm_op2_fal.show()
             while confirm_op2_wait is True:
                 time.sleep(0.3)
             confirm_op2_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op2_tru.hide()
-            self.confirm_op2_fal.hide()
             btnx_main_var[2].setIcon(QIcon(img_var[2]))
             info_label_1_var[2].show()
 
@@ -2636,7 +2637,7 @@ class ThreadClass2(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb > ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb > ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_2.append(output_str)
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
@@ -2653,6 +2654,13 @@ class ThreadClass2(QThread):
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
+        global confirm_op2_bool, confirm_op2_wait
+        
+        confirm_op2_bool = False
+        confirm_op2_wait = True
+        print('-- confirm_op2 declined: (confirm_op2_bool)', confirm_op2_bool)
+        self.confirm_op2_tru.hide()
+
         btnx_main_var[2].setIcon(QIcon(img_var[2]))
         info_label_1_var[2].setText('aborted.')
         self.terminate()
@@ -2660,10 +2668,9 @@ class ThreadClass2(QThread):
 
 # Sector 1 Class: Main Function Button Thread 3
 class ThreadClass3(QThread):
-    def __init__(self, confirm_op3_tru, confirm_op3_fal, tb_3):
+    def __init__(self, confirm_op3_tru, tb_3):
         QThread.__init__(self)
         self.confirm_op3_tru = confirm_op3_tru
-        self.confirm_op3_fal = confirm_op3_fal
         self.tb_3 = tb_3
 
     def run(self):
@@ -2692,14 +2699,12 @@ class ThreadClass3(QThread):
             btnx_main_var[3].setIcon(QIcon('./image/img_pictures_amber.png'))
             info_label_1_var[3].hide()
             self.confirm_op3_tru.show()
-            self.confirm_op3_fal.show()
             while confirm_op3_wait is True:
                 time.sleep(0.3)
             confirm_op3_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op3_tru.hide()
-            self.confirm_op3_fal.hide()
             btnx_main_var[3].setIcon(QIcon(img_var[3]))
             info_label_1_var[3].show()
 
@@ -2782,7 +2787,7 @@ class ThreadClass3(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb > ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb > ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_3.append(output_str)
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
@@ -2800,6 +2805,13 @@ class ThreadClass3(QThread):
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
+        global confirm_op3_bool, confirm_op3_wait
+        
+        confirm_op3_bool = False
+        confirm_op3_wait = True
+        print('-- confirm_op3 declined: (confirm_op3_bool)', confirm_op3_bool)
+        self.confirm_op3_tru.hide()
+
         btnx_main_var[3].setIcon(QIcon(img_var[3]))
         info_label_1_var[3].setText('aborted.')
         self.terminate()
@@ -2807,10 +2819,9 @@ class ThreadClass3(QThread):
 
 # Sector 1 Class: Main Function Button Thread 4
 class ThreadClass4(QThread):
-    def __init__(self, confirm_op4_tru, confirm_op4_fal, tb_4):
+    def __init__(self, confirm_op4_tru, tb_4):
         QThread.__init__(self)
         self.confirm_op4_tru = confirm_op4_tru
-        self.confirm_op4_fal = confirm_op4_fal
         self.tb_4 = tb_4
 
     def run(self):
@@ -2839,14 +2850,12 @@ class ThreadClass4(QThread):
             btnx_main_var[4].setIcon(QIcon('./image/img_program_amber.png'))
             info_label_1_var[4].hide()
             self.confirm_op4_tru.show()
-            self.confirm_op4_fal.show()
             while confirm_op4_wait is True:
                 time.sleep(0.3)
             confirm_op4_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op4_tru.hide()
-            self.confirm_op4_fal.hide()
             btnx_main_var[4].setIcon(QIcon(img_var[4]))
             info_label_1_var[4].show()
 
@@ -2929,7 +2938,7 @@ class ThreadClass4(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb > ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb > ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_4.append(output_str)
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
@@ -2947,6 +2956,13 @@ class ThreadClass4(QThread):
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
+        global confirm_op4_bool, confirm_op4_wait
+        
+        confirm_op4_bool = False
+        confirm_op4_wait = True
+        print('-- confirm_op4 declined: (confirm_op4_bool)', confirm_op4_bool)
+        self.confirm_op4_tru.hide()
+
         btnx_main_var[4].setIcon(QIcon(img_var[4]))
         info_label_1_var[4].setText('aborted.')
         self.terminate()
@@ -2954,10 +2970,9 @@ class ThreadClass4(QThread):
 
 # Sector 1 Class: Main Function Button Thread 5
 class ThreadClass5(QThread):
-    def __init__(self, confirm_op5_tru, confirm_op5_fal, tb_5):
+    def __init__(self, confirm_op5_tru, tb_5):
         QThread.__init__(self)
         self.confirm_op5_tru = confirm_op5_tru
-        self.confirm_op5_fal = confirm_op5_fal
         self.tb_5 = tb_5
 
     def run(self):
@@ -2986,14 +3001,12 @@ class ThreadClass5(QThread):
             btnx_main_var[5].setIcon(QIcon('./image/img_video_amber.png'))
             info_label_1_var[5].hide()
             self.confirm_op5_tru.show()
-            self.confirm_op5_fal.show()
             while confirm_op5_wait is True:
                 time.sleep(0.3)
             confirm_op5_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op5_tru.hide()
-            self.confirm_op5_fal.hide()
             btnx_main_var[5].setIcon(QIcon(img_var[5]))
             info_label_1_var[5].show()
 
@@ -3076,7 +3089,7 @@ class ThreadClass5(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb > ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb > ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_5.append(output_str)
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
@@ -3094,6 +3107,13 @@ class ThreadClass5(QThread):
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
+        global confirm_op5_bool, confirm_op5_wait
+        
+        confirm_op5_bool = False
+        confirm_op5_wait = True
+        print('-- confirm_op5 declined: (confirm_op5_bool)', confirm_op5_bool)
+        self.confirm_op5_tru.hide()
+
         btnx_main_var[5].setIcon(QIcon(img_var[5]))
         info_label_1_var[5].setText('aborted.')
         self.terminate()
