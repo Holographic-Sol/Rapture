@@ -2296,11 +2296,14 @@ class ThreadClass0(QThread):
 
                                     # Check File Now Exists In Destination
                                     siz_src = os.path.getsize(fullpath)
-                                    siz_dest = os.path.getsize(t_path)
+                                    siz_dest = ()
+                                    if os.path.exists(t_path):
+                                        siz_dest = os.path.getsize(t_path)
 
-                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0:
-                                        output_str = str('copied new: ' + t_path)
-                                        self.tb_0.append(output_str)
+                                        if siz_src == siz_dest or siz_dest is 0:
+                                            output_str = str('copied new: ' + t_path)
+                                            self.tb_0.append(output_str)
+
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
@@ -2441,15 +2444,17 @@ class ThreadClass1(QThread):
                                             shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path)
-                                            self.tb_2.append(output_str)
+                                            self.tb_1.append(output_str)
 
                                     # Check File Now Exists In Destination
                                     siz_src = os.path.getsize(fullpath)
-                                    siz_dest = os.path.getsize(t_path)
+                                    siz_dest = ()
+                                    if os.path.exists(t_path):
+                                        siz_dest = os.path.getsize(t_path)
 
-                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0:
-                                        output_str = str('copied new: ' + t_path)
-                                        self.tb_1.append(output_str)
+                                        if siz_src == siz_dest or siz_dest is 0:
+                                            output_str = str('copied new: ' + t_path)
+                                            self.tb_1.append(output_str)
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
@@ -2590,11 +2595,14 @@ class ThreadClass2(QThread):
 
                                     # Check File Now Exists In Destination
                                     siz_src = os.path.getsize(fullpath)
-                                    siz_dest = os.path.getsize(t_path)
+                                    siz_dest = ()
+                                    if os.path.exists(t_path):
+                                        siz_dest = os.path.getsize(t_path)
 
-                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0:
-                                        output_str = str('copied new: ' + t_path)
-                                        self.tb_2.append(output_str)
+                                        if siz_src == siz_dest or siz_dest is 0:
+                                            output_str = str('copied new: ' + t_path)
+                                            self.tb_2.append(output_str)
+
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
@@ -2602,6 +2610,7 @@ class ThreadClass2(QThread):
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (bytes difference): ' + t_path)
                                             self.tb_2.append(output_str)
+
                                     cp_var += 1
 
                                 # Write 1: If File Exists In Destination But Needs Updating
@@ -2732,11 +2741,14 @@ class ThreadClass3(QThread):
 
                                     # Check File Now Exists In Destination
                                     siz_src = os.path.getsize(fullpath)
-                                    siz_dest = os.path.getsize(t_path)
+                                    siz_dest = ()
+                                    if os.path.exists(t_path):
+                                        siz_dest = os.path.getsize(t_path)
 
-                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0:
-                                        output_str = str('copied new: ' + t_path)
-                                        self.tb_3.append(output_str)
+                                        if siz_src == siz_dest or siz_dest is 0:
+                                            output_str = str('copied new: ' + t_path)
+                                            self.tb_3.append(output_str)
+
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
@@ -2876,11 +2888,14 @@ class ThreadClass4(QThread):
 
                                     # Check File Now Exists In Destination
                                     siz_src = os.path.getsize(fullpath)
-                                    siz_dest = os.path.getsize(t_path)
+                                    siz_dest = ()
+                                    if os.path.exists(t_path):
+                                        siz_dest = os.path.getsize(t_path)
 
-                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0:
-                                        output_str = str('copied new: ' + t_path)
-                                        self.tb_4.append(output_str)
+                                        if siz_src == siz_dest or siz_dest is 0:
+                                            output_str = str('copied new: ' + t_path)
+                                            self.tb_4.append(output_str)
+
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
@@ -3020,20 +3035,14 @@ class ThreadClass5(QThread):
 
                                     # Check File Now Exists In Destination
                                     siz_src = os.path.getsize(fullpath)
-                                    siz_dest = os.path.getsize(t_path)
+                                    siz_dest = ()
+                                    if os.path.exists(t_path):
+                                        siz_dest = os.path.getsize(t_path)
 
-                                    siz_src_str = str(siz_src)
-                                    siz_dest_str = str(siz_dest)
+                                        if siz_src == siz_dest or siz_dest is 0:
+                                            output_str = str('copied new: ' + t_path)
+                                            self.tb_5.append(output_str)
 
-                                    output_str = str(fullpath + ' ' + siz_src_str)
-                                    self.tb_5.append(output_str)
-
-                                    output_str = str(t_path + ' ' + siz_dest_str)
-                                    self.tb_5.append(output_str)
-
-                                    if os.path.exists(t_path) and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0:
-                                        output_str = str('copied new: ' + t_path)
-                                        self.tb_5.append(output_str)
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
