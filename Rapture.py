@@ -1494,11 +1494,12 @@ class App(QMainWindow):
         btnx_settings_var[4].setIcon(QIcon(small_image[0]))
         btnx_settings_var[5].setIcon(QIcon(small_image[0]))
 
-    # Sector 2 Funtion: Calls hide_settings_funk Then Hides Settings Page By Resizing Window
+    # Sector 2: Funtion: Calls hide_settings_funk Then Hides Settings Page By Resizing Window
     def hide_settings_page_funk(self):
         self.hide_settings_funk()
         self.setFixedSize(self.width, 110)
 
+    # Sector 1: Focus In Settings When Priming To Write 0
     def btnx_set_focus_funk_0(self):
         global settings_active_int
 
@@ -1520,6 +1521,7 @@ class App(QMainWindow):
         self.settings_dest0.show()
         self.tb_0.show()
 
+    # Sector 1: Focus In Settings When Priming To Write 1
     def btnx_set_focus_funk_1(self):
         global settings_active_int
 
@@ -1540,6 +1542,7 @@ class App(QMainWindow):
         self.settings_dest1.show()
         self.tb_1.show()
 
+    # Sector 1: Focus In Settings When Priming To Write 2
     def btnx_set_focus_funk_2(self):
         global settings_active_int
 
@@ -1560,6 +1563,7 @@ class App(QMainWindow):
         self.settings_dest2.show()
         self.tb_2.show()
 
+    # Sector 1: Focus In Settings When Priming To Write 3
     def btnx_set_focus_funk_3(self):
         global settings_active_int
 
@@ -1580,6 +1584,7 @@ class App(QMainWindow):
         self.settings_dest3.show()
         self.tb_3.show()
 
+    # Sector 1: Focus In Settings When Priming To Write 4
     def btnx_set_focus_funk_4(self):
         global settings_active_int
 
@@ -1600,6 +1605,7 @@ class App(QMainWindow):
         self.settings_dest4.show()
         self.tb_4.show()
 
+    # Sector 1: Focus In Settings When Priming To Write 5
     def btnx_set_focus_funk_5(self):
         global settings_active_int
 
@@ -1876,7 +1882,7 @@ class App(QMainWindow):
 
     # Sector 1 Function: Uses Integer To Switch Main Function Mode Relative To Mode Button Clicked
     def set_comp_bool_funk(self):
-        global compare_bool_var, compare_clicked, btnx_main_var, thread_engaged_var 
+        global compare_bool_var, compare_clicked, thread_engaged_var 
 
         if thread_engaged_var[compare_clicked] is False:
             if compare_bool_var[compare_clicked] is False:
@@ -1949,8 +1955,7 @@ class SettingsInputResponse(QThread):
 
     def run(self):
         global settings_input_response_source_bool, settings_input_response_dest_bool
-        global settings_source_edit_var, settings_dest_edit_var, settings_input_response_label
-        global source_selected, dest_selected
+        global settings_input_response_label
 
         if settings_input_response_source_bool is True:
             settings_input_response_label[0].setStyleSheet(
@@ -2105,19 +2110,11 @@ class ThreadClass0(QThread):
         self.tb_0 = tb_0
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
-        # Allow To Run Only When Source & Destination Configuration Is Disengaged
-        zero = '0'
-        centillionth_str = str('0.' + zero * 303 + '1')
-        centillionth = float(centillionth_str)
-        if configuration_engaged is True:
-            while configuration_engaged is True:
-                time.sleep(centillionth)
-
         # If Source & Destination Configuration Is Disengaged Then Continue
-        elif configuration_engaged is False:
+        if configuration_engaged is False:
 
             thread_engaged_var[0] = True
 
@@ -2251,7 +2248,7 @@ class ThreadClass0(QThread):
         print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
         btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op0_tru.setEnabled(False)
-        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        #self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[0] = False
 
         self.terminate()
@@ -2265,16 +2262,8 @@ class ThreadClass1(QThread):
         self.tb_1 = tb_1
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
-
-        #Allow To Run Only When Source & Destination Configuration Is Disengaged
-        zero = '0'
-        centillionth_str = str('0.' + zero * 303 + '1')
-        centillionth = float(centillionth_str)
-        if configuration_engaged is True:
-            while configuration_engaged is True:
-                time.sleep(centillionth)
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2430,19 +2419,11 @@ class ThreadClass2(QThread):
         self.tb_2 = tb_2
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
-        # Allow To Run Only When Source & Destination Configuration Is Disengaged
-        zero = '0'
-        centillionth_str = str('0.' + zero * 303 + '1')
-        centillionth = float(centillionth_str)
-        if configuration_engaged is True:
-            while configuration_engaged is True:
-                time.sleep(centillionth)
-
         # If Source & Destination Configuration Is Disengaged Then Continue
-        elif configuration_engaged is False:
+        if configuration_engaged is False:
 
             thread_engaged_var[2] = True
 
@@ -2596,19 +2577,11 @@ class ThreadClass3(QThread):
         self.tb_3 = tb_3
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
-        # Allow To Run Only When Source & Destination Configuration Is Disengaged
-        zero = '0'
-        centillionth_str = str('0.' + zero * 303 + '1')
-        centillionth = float(centillionth_str)
-        if configuration_engaged is True:
-            while configuration_engaged is True:
-                time.sleep(centillionth)
-
         # If Source & Destination Configuration Is Disengaged Then Continue
-        elif configuration_engaged is False:
+        if configuration_engaged is False:
 
             thread_engaged_var[3] = True
 
@@ -2762,19 +2735,11 @@ class ThreadClass4(QThread):
         self.tb_4 = tb_4
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
-        # Allow To Run Only When Source & Destination Configuration Is Disengaged
-        zero = '0'
-        centillionth_str = str('0.' + zero * 303 + '1')
-        centillionth = float(centillionth_str)
-        if configuration_engaged is True:
-            while configuration_engaged is True:
-                time.sleep(centillionth)
-
         # If Source & Destination Configuration Is Disengaged Then Continue
-        elif configuration_engaged is False:
+        if configuration_engaged is False:
 
             thread_engaged_var[4] = True
 
@@ -2928,19 +2893,11 @@ class ThreadClass5(QThread):
         self.tb_5 = tb_5
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
-        # Allow To Run Only When Source & Destination Configuration Is Disengaged
-        zero = '0'
-        centillionth_str = str('0.' + zero * 303 + '1')
-        centillionth = float(centillionth_str)
-        if configuration_engaged is True:
-            while configuration_engaged is True:
-                time.sleep(centillionth)
-
         # If Source & Destination Configuration Is Disengaged Then Continue
-        elif configuration_engaged is False:
+        if configuration_engaged is False:
 
             thread_engaged_var[5] = True
 
