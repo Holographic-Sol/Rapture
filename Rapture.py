@@ -2248,7 +2248,7 @@ class ThreadClass0(QThread):
         print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
         btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op0_tru.setEnabled(False)
-        #self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[0] = False
 
         self.terminate()
