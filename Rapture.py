@@ -87,26 +87,17 @@ config_src_var = ['ARCHIVE_SOURCE',
                   'PICTURE_SOURCE',
                   'PROGRAMS_SOURCE',
                   'VIDEO_SOURCE']
+
 config_dst_var = ['ARCHIVE_DESTINATION',
                   'DOCUMENT_DESTINATION',
                   'MUSIC_DESTINATION',
                   'PICTURE_DESTINATION',
                   'PROGRAMS_DESTINATION',
                   'VIDEO_DESTINATION']
+
 background_img = ['./image/background_img_black_label_0.png',
                   './image/background_img_black_label_1.png']
-img_var = ['./image/img_archives.png',
-           './image/img_document.png',
-           './image/img_music.png',
-           './image/img_pictures.png',
-           './image/img_program.png',
-           './image/img_video.png']
-img_active_var = ['./image/img_archives_active.png',
-                  './image/img_document_active.png',
-                  './image/img_music_active.png',
-                  './image/img_pictures_active.png',
-                  './image/img_program_active.png',
-                  './image/img_video_active.png']
+
 small_image = ['./image/small_img_menu_down.png',
                './image/small_img_menu_up.png',
                './image/small_img_menu_left.png',
@@ -116,6 +107,10 @@ small_image = ['./image/small_img_menu_down.png',
                './image/small_img_read_ony_false.png',
                './image/small_img_read_ony_true.png',
                './image/small_img_stop_thread.png']
+
+btnx_img_led_var = ['./image/btnx_img_led_red.png',
+                './image/btnx_img_led_amber.png',
+                './image/btnx_img_led_green.png']
 
 # Read Configuration File
 def get_conf_funk():
@@ -391,11 +386,11 @@ class App(QMainWindow):
 
     def initUI(self):
         global thread_var, btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, info_label_1_var
-        global img_var, img_active_var, img_settings, timer_thread_var, settings_input_response_thread
+        global img_settings, timer_thread_var, settings_input_response_thread
         global path_var, dest_path_var, back_label_var, pressed_int, settings_source_edit_var, settings_dest_edit_var
         global settings_input_response_label, update_settings_window_thread, confirm_op0_bool, confirm_op0_wait
         global confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait, confirm_op3_bool, confirm_op3_wait
-        global confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait, btnx_primed_0
+        global confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait, btnx_primed_0, btnx_img_led_var
 
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
@@ -500,11 +495,10 @@ class App(QMainWindow):
             btnx_name = 'btnx_main' + str(i)
             self.btnx_main = QPushButton(self)
             self.btnx_main.resize(54, 54)
-            self.btnx_main.setIcon(QIcon(img_var[i]))
             self.btnx_main.setIconSize(QSize(54, 54))
             self.btnx_main.setStyleSheet(
                     """QPushButton{background-color: rgb(0, 0, 0);
-                   border:0px solid rgb(0, 0, 0);}"""
+                   border:2px solid rgb(30, 30, 30);}"""
                    )
             btnx_main_var.append(self.btnx_main)
 
@@ -559,6 +553,13 @@ class App(QMainWindow):
             info_label_1_var[i].hide()
 
             i += 1
+
+        btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
 
         # Sector 2: Hide Drop Down Settings
         self.hide_settings_button = QPushButton(self)
@@ -2220,7 +2221,7 @@ class ThreadClass0(QThread):
         self.tb_0 = tb_0
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2244,7 +2245,7 @@ class ThreadClass0(QThread):
             compare_bool = compare_bool_var[0]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[0].setIcon(QIcon('./image/img_archives_amber.png'))
+            btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op0_tru.setEnabled(True)
 
@@ -2255,12 +2256,12 @@ class ThreadClass0(QThread):
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op0_tru.setEnabled(False)
-            btnx_main_var[0].setIcon(QIcon(img_var[0]))
+            btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
 
             # If Confirmed Run Main Function
             if confirm_op0_bool is True:
                 print('-- ThreadClass0: confirm_op0_bool: accepted')
-                btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
+                btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2366,7 +2367,7 @@ class ThreadClass0(QThread):
 
             # Disengage
             timer_thread_var[0].start()
-            btnx_main_var[0].setIcon(QIcon(img_var[0]))
+            btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[0] = False
 
     def stop_thr(self):
@@ -2376,7 +2377,7 @@ class ThreadClass0(QThread):
         confirm_op0_bool = False
         confirm_op0_wait = True
         print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
-        btnx_main_var[0].setIcon(QIcon(img_var[0]))
+        btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op0_tru.setEnabled(False)
         self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[0] = False
@@ -2392,7 +2393,7 @@ class ThreadClass1(QThread):
         self.tb_1 = tb_1
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         #Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2416,7 +2417,7 @@ class ThreadClass1(QThread):
             compare_bool = compare_bool_var[1]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[1].setIcon(QIcon('./image/img_document_amber.png'))
+            btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op1_tru.setEnabled(True)
 
@@ -2425,14 +2426,14 @@ class ThreadClass1(QThread):
             confirm_op1_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[1].setIcon(QIcon(img_var[1]))
+            btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op1_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op1_bool is True:
                 print('-- ThreadClass1: confirm_op1_bool: accepted')
-                btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
+                btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2541,17 +2542,17 @@ class ThreadClass1(QThread):
 
             # Disengage
             timer_thread_var[1].start()
-            btnx_main_var[1].setIcon(QIcon(img_var[1]))
+            btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[1] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var
+        global btnx_main_var, info_label_1_var, btnx_img_led_var
         global confirm_op1_bool, confirm_op1_wait
         
         confirm_op1_bool = False
         confirm_op1_wait = True
         print('-- confirm_op1 declined: (confirm_op1_bool)', confirm_op1_bool)
-        btnx_main_var[1].setIcon(QIcon(img_var[1]))
+        btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op1_tru.setEnabled(False)
         self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[1] = False
@@ -2567,7 +2568,7 @@ class ThreadClass2(QThread):
         self.tb_2 = tb_2
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2591,7 +2592,7 @@ class ThreadClass2(QThread):
             compare_bool = compare_bool_var[2]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[2].setIcon(QIcon('./image/img_music_amber.png'))
+            btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op2_tru.setEnabled(True)
 
@@ -2600,14 +2601,14 @@ class ThreadClass2(QThread):
             confirm_op2_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[2].setIcon(QIcon(img_var[2]))
+            btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op2_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op2_bool is True:
                 print('-- ThreadClass2: confirm_op2_bool: accepted')
-                btnx_main_var[2].setIcon(QIcon(img_active_var[2]))
+                btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
                 
                 # Time Stamp Output
@@ -2716,17 +2717,17 @@ class ThreadClass2(QThread):
 
             # Disengage
             timer_thread_var[2].start()
-            btnx_main_var[2].setIcon(QIcon(img_var[2]))
+            btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[2] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var
+        global btnx_main_var, info_label_1_var, btnx_img_led_var
         global confirm_op2_bool, confirm_op2_wait
         
         confirm_op2_bool = False
         confirm_op2_wait = True
         print('-- confirm_op2 declined: (confirm_op2_bool)', confirm_op2_bool)
-        btnx_main_var[2].setIcon(QIcon(img_var[2]))
+        btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op2_tru.setEnabled(False)
         self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[2] = False
@@ -2742,7 +2743,7 @@ class ThreadClass3(QThread):
         self.tb_3 = tb_3
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2766,7 +2767,7 @@ class ThreadClass3(QThread):
             compare_bool = compare_bool_var[3]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[3].setIcon(QIcon('./image/img_pictures_amber.png'))
+            btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op3_tru.setEnabled(True)
 
@@ -2775,14 +2776,14 @@ class ThreadClass3(QThread):
             confirm_op3_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[3].setIcon(QIcon(img_var[3]))
+            btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op3_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op3_bool is True:
                 print('-- ThreadClass3: confirm_op3_bool: accepted')
-                btnx_main_var[3].setIcon(QIcon(img_active_var[3]))
+                btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
                 
                 # Time Stamp Output
@@ -2892,17 +2893,17 @@ class ThreadClass3(QThread):
 
             # Disengage
             timer_thread_var[3].start()
-            btnx_main_var[3].setIcon(QIcon(img_var[3]))
+            btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[3] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var
+        global btnx_main_var, info_label_1_var, btnx_img_led_var
         global confirm_op3_bool, confirm_op3_wait
         
         confirm_op3_bool = False
         confirm_op3_wait = True
         print('-- confirm_op3 declined: (confirm_op3_bool)', confirm_op3_bool)
-        btnx_main_var[3].setIcon(QIcon(img_var[3]))
+        btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op3_tru.setEnabled(False)
         self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[3] = False
@@ -2918,7 +2919,7 @@ class ThreadClass4(QThread):
         self.tb_4 = tb_4
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2942,7 +2943,7 @@ class ThreadClass4(QThread):
             compare_bool = compare_bool_var[4]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[4].setIcon(QIcon('./image/img_program_amber.png'))
+            btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op4_tru.setEnabled(True)
 
@@ -2951,14 +2952,14 @@ class ThreadClass4(QThread):
             confirm_op4_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[4].setIcon(QIcon(img_var[4]))
+            btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op4_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op4_bool is True:
                 print('-- ThreadClass4: confirm_op4_bool: accepted')
-                btnx_main_var[4].setIcon(QIcon(img_active_var[4]))
+                btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
                 
                 # Time Stamp Output
@@ -3068,17 +3069,17 @@ class ThreadClass4(QThread):
 
             # Disengage
             timer_thread_var[4].start()
-            btnx_main_var[4].setIcon(QIcon(img_var[4]))
+            btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[4] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var
+        global btnx_main_var, info_label_1_var, btnx_img_led_var
         global confirm_op4_bool, confirm_op4_wait
         
         confirm_op4_bool = False
         confirm_op4_wait = True
         print('-- confirm_op4 declined: (confirm_op4_bool)', confirm_op4_bool)
-        btnx_main_var[4].setIcon(QIcon(img_var[4]))
+        btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op4_tru.setEnabled(False)
         self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[4] = False
@@ -3094,7 +3095,7 @@ class ThreadClass5(QThread):
         self.tb_5 = tb_5
 
     def run(self):
-        global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
+        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -3118,7 +3119,7 @@ class ThreadClass5(QThread):
             compare_bool = compare_bool_var[5]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[5].setIcon(QIcon('./image/img_video_amber.png'))
+            btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op5_tru.setEnabled(True)
 
@@ -3127,14 +3128,14 @@ class ThreadClass5(QThread):
             confirm_op5_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[5].setIcon(QIcon(img_var[5]))
+            btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op5_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op5_bool is True:
                 print('-- ThreadClass5: confirm_op5_bool: accepted')
-                btnx_main_var[5].setIcon(QIcon(img_active_var[5]))
+                btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
                 
                 # Time Stamp Output
@@ -3244,17 +3245,17 @@ class ThreadClass5(QThread):
 
             # Disengage
             timer_thread_var[5].start()
-            btnx_main_var[5].setIcon(QIcon(img_var[5]))
+            btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[5] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var
+        global btnx_main_var, info_label_1_var, btnx_img_led_var
         global confirm_op5_bool, confirm_op5_wait
         
         confirm_op5_bool = False
         confirm_op5_wait = True
         print('-- confirm_op5 declined: (confirm_op5_bool)', confirm_op5_bool)
-        btnx_main_var[5].setIcon(QIcon(img_var[5]))
+        btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op5_tru.setEnabled(False)
         self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         thread_engaged_var[5] = False
