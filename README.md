@@ -8,7 +8,3 @@ NOTE:
 Please take the time to understand how each backup mode works before using it to back up.
 
 That is all.
-
-
-Known Bugs:
-Int32 error
