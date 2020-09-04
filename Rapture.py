@@ -11,9 +11,6 @@ from PyQt5.QtCore import Qt, QThread, QSize, QTimer, QPoint, QCoreApplication
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit, QDesktopWidget, QTextBrowser
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 
-# Encoding
-encode = u'\u5E73\u621015\u200e'
-
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
