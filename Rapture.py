@@ -33,7 +33,6 @@ win32process.SetPriorityClass(handle, priority_classes[4])
 settings_input_response_thread = ()
 update_settings_window_thread = ()
 thread_var = [(), (), (), (), (), ()]
-timer_thread_var = [(), (), (), (), (), ()]
 
 source_path_entered = ''
 dest_path_entered = ''
@@ -55,7 +54,6 @@ confirm_op4_bool = False
 confirm_op4_wait = True
 confirm_op5_bool = False
 confirm_op5_wait = True
-btnx_primed_0 = False
 thread_engaged_var = [False, False, False, False, False, False]
 
 source_selected = ()
@@ -72,7 +70,6 @@ dest_path_var = []
 path_bool_var = []
 dest_path_bool_var = []
 btnx_main_var = []
-info_label_1_var = []
 stop_thr_button_var = []
 comp_cont_button_var = []
 back_label_var = []
@@ -385,12 +382,13 @@ class App(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        global thread_var, btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, info_label_1_var
-        global img_settings, timer_thread_var, settings_input_response_thread
-        global path_var, dest_path_var, back_label_var, pressed_int, settings_source_edit_var, settings_dest_edit_var
-        global settings_input_response_label, update_settings_window_thread, confirm_op0_bool, confirm_op0_wait
-        global confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait, confirm_op3_bool, confirm_op3_wait
-        global confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait, btnx_primed_0, btnx_img_led_var
+        global pressed_int
+        global thread_var, settings_input_response_thread, update_settings_window_thread
+        global btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, back_label_var, btnx_img_led_var
+        global settings_source_edit_var, settings_dest_edit_var, settings_input_response_label
+        global path_var, dest_path_var
+        global confirm_op0_bool, confirm_op0_wait, confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait
+        global confirm_op3_bool, confirm_op3_wait, confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait
 
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
@@ -537,20 +535,6 @@ class App(QMainWindow):
                border:0px solid rgb(35, 35, 35);}"""
                )
             stop_thr_button_var.append(self.stop_thr_button)
-
-            # Sector 1: Main Function(s) Output Label(s)
-            info_label_1 = 'info_label_1' + str(i)
-            self.info_label_1 = QLabel(self)
-            self.info_label_1.resize(87, 13)
-            self.info_label_1.setFont(self.font_s5)
-            self.info_label_1.setText("")
-            self.info_label_1.setStyleSheet(
-                """QLabel {background-color: rgb(0, 0, 0);
-               color: green;
-               border:2px solid rgb(30, 30, 30);}"""
-               )
-            info_label_1_var.append(self.info_label_1)
-            info_label_1_var[i].hide()
 
             i += 1
 
@@ -1046,14 +1030,6 @@ class App(QMainWindow):
         stop_thr_button_var[4].move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 5))
         stop_thr_button_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 5))
 
-        # Sector 1: Attatch Main Function Information Output Labels To Background Tiles Position
-        info_label_1_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 63))
-        info_label_1_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 63))
-        info_label_1_var[2].move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 63))
-        info_label_1_var[3].move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 63))
-        info_label_1_var[4].move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 63))
-        info_label_1_var[5].move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 63))
-
         # Sector 1: Plug Main Function Mode Buttons Into Functions
         comp_cont_button_var[0].clicked.connect(self.set_comp_bool_pre_funk0)
         comp_cont_button_var[1].clicked.connect(self.set_comp_bool_pre_funk1)
@@ -1102,14 +1078,6 @@ class App(QMainWindow):
         # Thread: Checks The Validity Of Directory Paths Set In Sector 2 As Source & Destination And Updates GUI Accordingly
         update_settings_window_thread = UpdateSettingsWindow()
         update_settings_window_thread.start()
-
-        # Threads: Clears Sector 1 Information Output Label(s) After X Amount Of Time
-        timer_thread_var[0] = TimerClass0()
-        timer_thread_var[1] = TimerClass1()
-        timer_thread_var[2] = TimerClass2()
-        timer_thread_var[3] = TimerClass3()
-        timer_thread_var[4] = TimerClass4()
-        timer_thread_var[5] = TimerClass5()
 
         # Threads: Main Function Threads. Read/Write Operations & Time Stamp Comparing
         thread_var[0] = ThreadClass0(self.confirm_op0_tru, self.tb_0)
@@ -1931,37 +1899,31 @@ class App(QMainWindow):
     # Sector 1 Function: Stops Sector 1 Main Function Thread 0
     def stop_thr_funk0(self):
         global thread_var
-        timer_thread_var[0].start()
         thread_var[0].stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 1
     def stop_thr_funk1(self):
         global thread_var
-        timer_thread_var[1].start()
         thread_var[1].stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 2
     def stop_thr_funk2(self):
         global thread_var
-        timer_thread_var[2].start()
         thread_var[2].stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 3
     def stop_thr_funk3(self):
         global thread_var
-        timer_thread_var[3].start()
         thread_var[3].stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 4
     def stop_thr_funk4(self):
         global thread_var
-        timer_thread_var[4].start()
         thread_var[4].stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 5
     def stop_thr_funk5(self):
         global thread_var
-        timer_thread_var[5].start()
         thread_var[5].stop_thr()
 
 
@@ -2134,84 +2096,6 @@ class UpdateSettingsWindow(QThread):
 
         configuration_engaged = False
 
-# Sector 1 Class: Clears Information Output Label 0
-class TimerClass0(QThread):
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global info_label_1_var
-        i = 2
-        while i > 0:
-            time.sleep(1)
-            i -= 1
-        info_label_1_var[0].setText('')
-
-# Sector 1 Class: Clears Information Output Label 1
-class TimerClass1(QThread):
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global info_label_1_var
-        i = 2
-        while i > 0:
-            time.sleep(1)
-            i -= 1
-        info_label_1_var[1].setText('')
-
-# Sector 1 Class: Clears Information Output Label 2
-class TimerClass2(QThread):
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global info_label_1_var
-        i = 2
-        while i > 0:
-            time.sleep(1)
-            i -= 1
-        info_label_1_var[2].setText('')
-
-# Sector 1 Class: Clears Information Output Label 3
-class TimerClass3(QThread):
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global info_label_1_var
-        i = 2
-        while i > 0:
-            time.sleep(1)
-            i -= 1
-        info_label_1_var[3].setText('')
-
-# Sector 1 Class: Clears Information Output Label 4
-class TimerClass4(QThread):
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global info_label_1_var
-        i = 2
-        while i > 0:
-            time.sleep(1)
-            i -= 1
-        info_label_1_var[4].setText('')
-
-# Sector 1 Class: Clears Information Output Label 5
-class TimerClass5(QThread):
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global info_label_1_var
-        i = 2
-        while i > 0:
-            time.sleep(1)
-            i -= 1
-        info_label_1_var[5].setText('')
-
 
 # Sector 1 Class: Main Function Button Thread 0
 class ThreadClass0(QThread):
@@ -2221,7 +2105,7 @@ class ThreadClass0(QThread):
         self.tb_0 = tb_0
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2256,7 +2140,6 @@ class ThreadClass0(QThread):
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
             self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op0_tru.setEnabled(False)
-            btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
 
             # If Confirmed Run Main Function
             if confirm_op0_bool is True:
@@ -2271,7 +2154,6 @@ class ThreadClass0(QThread):
                 cp1_fail_count = 0
 
                 if path_bool == 'ARCHIVE_SOURCE_True' and dest_bool == 'ARCHIVE_DESTINATION_True':
-                    info_label_1_var[0].setText('working...')
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
 
@@ -2346,15 +2228,6 @@ class ThreadClass0(QThread):
                                                 self.tb_0.append(output_str)
                                                 cp1_fail_count += 1
 
-                    if change_var is False:
-                        info_label_1_var[0].setText('unnecessary.')
-                    elif change_var is True:
-                        info_label_1_var[0].setText('amended.')
-                else:
-                    info_label_1_var[0].setText('path error!')
-            elif confirm_op0_bool is False:
-                print('-- ThreadClass0: confirm_op0_bool: declined')
-
             # Output Summary
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
@@ -2366,12 +2239,11 @@ class ThreadClass0(QThread):
             self.tb_0.append(output_sum)
 
             # Disengage
-            timer_thread_var[0].start()
             btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[0] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var
+        global btnx_main_var
         global confirm_op0_bool, confirm_op0_wait
         
         confirm_op0_bool = False
@@ -2393,7 +2265,7 @@ class ThreadClass1(QThread):
         self.tb_1 = tb_1
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         #Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2426,7 +2298,6 @@ class ThreadClass1(QThread):
             confirm_op1_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op1_tru.setEnabled(False)
 
@@ -2443,7 +2314,6 @@ class ThreadClass1(QThread):
                 cp1_fail_count = 0
 
                 if path_bool == 'DOCUMENT_SOURCE_True' and dest_bool == 'DOCUMENT_DESTINATION_True':
-                    info_label_1_var[1].setText('working...')
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2523,13 +2393,6 @@ class ThreadClass1(QThread):
                                                 self.tb_1.append(output_str)
                                                 cp1_fail_count += 1
 
-                    if change_var is False:
-                        info_label_1_var[1].setText('unnecessary.')
-                    elif change_var is True:
-                        info_label_1_var[1].setText('amended.')
-                else:
-                    info_label_1_var[1].setText('path error!')
-
             # Output Summary
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
@@ -2541,12 +2404,11 @@ class ThreadClass1(QThread):
             self.tb_1.append(output_sum)
 
             # Disengage
-            timer_thread_var[1].start()
             btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[1] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var, btnx_img_led_var
+        global btnx_main_var, btnx_img_led_var
         global confirm_op1_bool, confirm_op1_wait
         
         confirm_op1_bool = False
@@ -2568,7 +2430,7 @@ class ThreadClass2(QThread):
         self.tb_2 = tb_2
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2601,7 +2463,6 @@ class ThreadClass2(QThread):
             confirm_op2_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op2_tru.setEnabled(False)
 
@@ -2625,7 +2486,6 @@ class ThreadClass2(QThread):
                 cp1_fail_count = 0
 
                 if path_bool == 'MUSIC_SOURCE_True' and dest_bool == 'MUSIC_DESTINATION_True':
-                    info_label_1_var[2].setText('working...')
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2698,12 +2558,6 @@ class ThreadClass2(QThread):
                                                 output_str = str('failed to update file: ' + t_path).strip()
                                                 self.tb_2.append(output_str)
                                                 cp1_fail_count += 1
-                    if change_var is False:
-                        info_label_1_var[2].setText('unnecessary.')
-                    elif change_var is True:
-                        info_label_1_var[2].setText('amended.')
-                else:
-                    info_label_1_var[2].setText('path error!')
 
             # Output Summary
             cp0_count_str = str(cp0_count)
@@ -2716,12 +2570,11 @@ class ThreadClass2(QThread):
             self.tb_2.append(output_sum)
 
             # Disengage
-            timer_thread_var[2].start()
             btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[2] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var, btnx_img_led_var
+        global btnx_main_var, btnx_img_led_var
         global confirm_op2_bool, confirm_op2_wait
         
         confirm_op2_bool = False
@@ -2743,7 +2596,7 @@ class ThreadClass3(QThread):
         self.tb_3 = tb_3
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2776,7 +2629,6 @@ class ThreadClass3(QThread):
             confirm_op3_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op3_tru.setEnabled(False)
 
@@ -2800,7 +2652,6 @@ class ThreadClass3(QThread):
                 cp1_fail_count = 0
 
                 if path_bool == 'PICTURE_SOURCE_True' and dest_bool == 'PICTURE_DESTINATION_True':
-                    info_label_1_var[3].setText('working...')
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2874,13 +2725,6 @@ class ThreadClass3(QThread):
                                                 self.tb_3.append(output_str)
                                                 cp1_fail_count += 1
 
-                    if change_var is False:
-                        info_label_1_var[3].setText('unnecessary.')
-                    elif change_var is True:
-                        info_label_1_var[3].setText('amended.')
-                else:
-                    info_label_1_var[3].setText('path error!')
-
             # Output Summary
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
@@ -2892,12 +2736,11 @@ class ThreadClass3(QThread):
             self.tb_3.append(output_sum)
 
             # Disengage
-            timer_thread_var[3].start()
             btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[3] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var, btnx_img_led_var
+        global btnx_main_var, btnx_img_led_var
         global confirm_op3_bool, confirm_op3_wait
         
         confirm_op3_bool = False
@@ -2919,7 +2762,7 @@ class ThreadClass4(QThread):
         self.tb_4 = tb_4
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -2952,7 +2795,6 @@ class ThreadClass4(QThread):
             confirm_op4_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op4_tru.setEnabled(False)
 
@@ -2976,7 +2818,6 @@ class ThreadClass4(QThread):
                 cp1_fail_count = 0
 
                 if path_bool == 'PROGRAMS_SOURCE_True' and dest_bool == 'PROGRAMS_DESTINATION_True':
-                    info_label_1_var[4].setText('working...')
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -3050,13 +2891,6 @@ class ThreadClass4(QThread):
                                                 self.tb_4.append(output_str)
                                                 cp1_fail_count += 1
 
-                    if change_var is False:
-                        info_label_1_var[4].setText('unnecessary.')
-                    elif change_var is True:
-                        info_label_1_var[4].setText('amended.')
-                else:
-                    info_label_1_var[4].setText('path error!')
-
             # Output Summary
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
@@ -3068,12 +2902,11 @@ class ThreadClass4(QThread):
             self.tb_4.append(output_sum)
 
             # Disengage
-            timer_thread_var[4].start()
             btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[4] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var, btnx_img_led_var
+        global btnx_main_var, btnx_img_led_var
         global confirm_op4_bool, confirm_op4_wait
         
         confirm_op4_bool = False
@@ -3095,7 +2928,7 @@ class ThreadClass5(QThread):
         self.tb_5 = tb_5
 
     def run(self):
-        global btnx_main_var, path_var, thread_var, info_label_1_var, timer_thread_var, btnx_img_led_var
+        global btnx_main_var, path_var, thread_var, btnx_img_led_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
@@ -3128,7 +2961,6 @@ class ThreadClass5(QThread):
             confirm_op5_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
             self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
             self.confirm_op5_tru.setEnabled(False)
 
@@ -3152,7 +2984,6 @@ class ThreadClass5(QThread):
                 cp1_fail_count = 0
 
                 if path_bool == 'VIDEO_SOURCE_True' and dest_bool == 'VIDEO_DESTINATION_True':
-                    info_label_1_var[5].setText('working...')
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -3226,13 +3057,6 @@ class ThreadClass5(QThread):
                                                 self.tb_5.append(output_str)
                                                 cp1_fail_count += 1
 
-                    if change_var is False:
-                        info_label_1_var[5].setText('unnecessary.')
-                    elif change_var is True:
-                        info_label_1_var[5].setText('amended.')
-                else:
-                    info_label_1_var[5].setText('path error!')
-
             # Output Summary
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
@@ -3244,12 +3068,11 @@ class ThreadClass5(QThread):
             self.tb_5.append(output_sum)
 
             # Disengage
-            timer_thread_var[5].start()
             btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
             thread_engaged_var[5] = False
 
     def stop_thr(self):
-        global btnx_main_var, info_label_1_var, btnx_img_led_var
+        global btnx_main_var, btnx_img_led_var
         global confirm_op5_bool, confirm_op5_wait
         
         confirm_op5_bool = False
