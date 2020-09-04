@@ -2,11 +2,7 @@ import os
 import sys
 import time
 import shutil
-import codecs
 import datetime
-import filecmp
-from pathlib import Path
-import distutils.dir_util
 import win32api
 import win32process
 import win32con
@@ -2267,13 +2263,6 @@ class ThreadClass0(QThread):
                 btnx_main_var[0].setIcon(QIcon(img_active_var[0]))
                 change_var = False
 
-                # Time Stamp Output
-                time_now = str(datetime.datetime.now())
-                out_str = str('\n' + time_now + ' ' + path + ' --> ' + dest)
-                self.tb_0.append(out_str)
-                self.tb_0.hide()
-                self.tb_0.show()
-
                 # Set Counters For Output Summary
                 cp0_count = 0
                 cp0_fail_count = 0
@@ -2282,7 +2271,6 @@ class ThreadClass0(QThread):
 
                 if path_bool == 'ARCHIVE_SOURCE_True' and dest_bool == 'ARCHIVE_DESTINATION_True':
                     info_label_1_var[0].setText('working...')
-
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
 
@@ -2301,7 +2289,7 @@ class ThreadClass0(QThread):
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy(fullpath, t_path)
                                         except:
-                                            output_str = str('error: ' + t_path)
+                                            output_str = str('error: ' + t_path).strip()
                                             self.tb_0.append(output_str)
 
                                     # Check File Now Exists In Destination
@@ -2311,17 +2299,17 @@ class ThreadClass0(QThread):
                                         siz_dest = os.path.getsize(t_path)
 
                                         if siz_src == siz_dest or siz_dest is 0:
-                                            output_str = str('copied new: ' + t_path)
+                                            output_str = str('copied new: ' + t_path).strip()
                                             self.tb_0.append(output_str)
                                             cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
+                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
                                             self.tb_0.append(output_str)
                                             cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path)
+                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
                                             self.tb_0.append(output_str)
                                             cp0_fail_count += 1
 
@@ -2339,7 +2327,7 @@ class ThreadClass0(QThread):
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except:
-                                                    output_str = str('error: ' + t_path)
+                                                    output_str = str('error: ' + t_path).strip()
                                                     self.tb_0.append(output_str)
 
                                             # Check File Now Exists In Destination
@@ -2349,11 +2337,11 @@ class ThreadClass0(QThread):
                                             siz_dest = os.path.getsize(t_path)
 
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
-                                                output_str = str('updated file: ' + t_path)
+                                                output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_0.append(output_str)
                                                 cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path)
+                                                output_str = str('failed to update file: ' + t_path).strip()
                                                 self.tb_0.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -2367,12 +2355,12 @@ class ThreadClass0(QThread):
                 print('-- ThreadClass0: confirm_op0_bool: declined')
 
             # Output Summary
-            time_now = str(datetime.datetime.now())
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
             cp1_count_str = str(cp1_count)
             cp1_fail_count_str = str(cp1_fail_count)
-            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
+
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
             print('-- ThreadClass0: ' + output_sum)
             self.tb_0.append(output_sum)
 
@@ -2447,13 +2435,6 @@ class ThreadClass1(QThread):
                 btnx_main_var[1].setIcon(QIcon(img_active_var[1]))
                 change_var = False
 
-                # Time Stamp Output
-                time_now = str(datetime.datetime.now())
-                out_str = str('\n' + time_now + ' ' + path + ' --> ' + dest)
-                self.tb_1.append(out_str)
-                self.tb_1.hide()
-                self.tb_1.show()
-
                 # Set Counters For Output Summary
                 cp0_count = 0
                 cp0_fail_count = 0
@@ -2480,7 +2461,7 @@ class ThreadClass1(QThread):
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy(fullpath, t_path)
                                         except:
-                                            output_str = str('error: ' + t_path)
+                                            output_str = str('error: ' + t_path).strip()
                                             self.tb_1.append(output_str)
 
                                     # Check File Now Exists In Destination
@@ -2490,17 +2471,17 @@ class ThreadClass1(QThread):
                                         siz_dest = os.path.getsize(t_path)
 
                                         if siz_src == siz_dest or siz_dest is 0:
-                                            output_str = str('copied new: ' + t_path)
+                                            output_str = str('copied new: ' + t_path).strip()
                                             self.tb_1.append(output_str)
                                             cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
+                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
                                             self.tb_1.append(output_str)
                                             cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path)
+                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
                                             cp0_fail_count += 1
                                             self.tb_1.append(output_str)
 
@@ -2518,7 +2499,7 @@ class ThreadClass1(QThread):
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except:
-                                                    output_str = str('error: ' + t_path)
+                                                    output_str = str('error: ' + t_path).strip()
                                                     self.tb_1.append(output_str)
 
                                             # Check File Now Exists In Destination
@@ -2533,11 +2514,11 @@ class ThreadClass1(QThread):
                                             print('mb:'+ mb_str)
 
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
-                                                output_str = str('updated file: ' + t_path)
+                                                output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_1.append(output_str)
                                                 cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path)
+                                                output_str = str('failed to update file: ' + t_path).strip()
                                                 self.tb_1.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -2549,13 +2530,13 @@ class ThreadClass1(QThread):
                     info_label_1_var[1].setText('path error!')
 
             # Output Summary
-            time_now = str(datetime.datetime.now())
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
             cp1_count_str = str(cp1_count)
             cp1_fail_count_str = str(cp1_fail_count)
-            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
-            print('-- ThreadClass0: ' + output_sum)
+
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            print('-- ThreadClass1: ' + output_sum)
             self.tb_1.append(output_sum)
 
             # Disengage
@@ -2661,7 +2642,7 @@ class ThreadClass2(QThread):
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
-                                            output_str = str('error: ' + t_path)
+                                            output_str = str('error: ' + t_path).strip()
                                             self.tb_2.append(output_str)
 
                                     # Check File Now Exists In Destination
@@ -2671,17 +2652,17 @@ class ThreadClass2(QThread):
                                         siz_dest = os.path.getsize(t_path)
 
                                         if siz_src == siz_dest or siz_dest is 0:
-                                            output_str = str('copied new: ' + t_path)
+                                            output_str = str('copied new: ' + t_path).strip()
                                             self.tb_2.append(output_str)
                                             cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
+                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
                                             self.tb_2.append(output_str)
                                             cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path)
+                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
                                             self.tb_2.append(output_str)
                                             cp0_fail_count += 1
 
@@ -2699,7 +2680,7 @@ class ThreadClass2(QThread):
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except:
-                                                    output_str = str('error: ' + t_path)
+                                                    output_str = str('error: ' + t_path).strip()
                                                     self.tb_2.append(output_str)
 
                                             # Check File Now Exists In Destination
@@ -2709,11 +2690,11 @@ class ThreadClass2(QThread):
                                             siz_dest = os.path.getsize(t_path)
 
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
-                                                output_str = str('updated file: ' + t_path)
+                                                output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_2.append(output_str)
                                                 cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path)
+                                                output_str = str('failed to update file: ' + t_path).strip()
                                                 self.tb_2.append(output_str)
                                                 cp1_fail_count += 1
                     if change_var is False:
@@ -2724,13 +2705,13 @@ class ThreadClass2(QThread):
                     info_label_1_var[2].setText('path error!')
 
             # Output Summary
-            time_now = str(datetime.datetime.now())
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
             cp1_count_str = str(cp1_count)
             cp1_fail_count_str = str(cp1_fail_count)
-            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
-            print('-- ThreadClass0: ' + output_sum)
+
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            print('-- ThreadClass2: ' + output_sum)
             self.tb_2.append(output_sum)
 
             # Disengage
@@ -2836,7 +2817,7 @@ class ThreadClass3(QThread):
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
-                                            output_str = str('error: ' + t_path)
+                                            output_str = str('error: ' + t_path).strip()
                                             self.tb_3.append(output_str)
 
                                     # Check File Now Exists In Destination
@@ -2846,17 +2827,17 @@ class ThreadClass3(QThread):
                                         siz_dest = os.path.getsize(t_path)
 
                                         if siz_src == siz_dest or siz_dest is 0:
-                                            output_str = str('copied new: ' + t_path)
+                                            output_str = str('copied new: ' + t_path).strip()
                                             self.tb_3.append(output_str)
                                             cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
+                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
                                             self.tb_3.append(output_str)
                                             cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path)
+                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
                                             self.tb_3.append(output_str)
                                             cp0_fail_count += 1
 
@@ -2874,7 +2855,7 @@ class ThreadClass3(QThread):
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except:
-                                                    output_str = str('error: ' + t_path)
+                                                    output_str = str('error: ' + t_path).strip()
                                                     self.tb_3.append(output_str)
 
                                             # Check File Now Exists In Destination
@@ -2884,11 +2865,11 @@ class ThreadClass3(QThread):
                                             siz_dest = os.path.getsize(t_path)
 
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
-                                                output_str = str('updated file: ' + t_path)
+                                                output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_3.append(output_str)
                                                 cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path)
+                                                output_str = str('failed to update file: ' + t_path).strip()
                                                 self.tb_3.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -2900,13 +2881,13 @@ class ThreadClass3(QThread):
                     info_label_1_var[3].setText('path error!')
 
             # Output Summary
-            time_now = str(datetime.datetime.now())
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
             cp1_count_str = str(cp1_count)
             cp1_fail_count_str = str(cp1_fail_count)
-            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
-            print('-- ThreadClass0: ' + output_sum)
+
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            print('-- ThreadClass3: ' + output_sum)
             self.tb_3.append(output_sum)
 
             # Disengage
@@ -3012,7 +2993,7 @@ class ThreadClass4(QThread):
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
-                                            output_str = str('error: ' + t_path)
+                                            output_str = str('error: ' + t_path).strip()
                                             self.tb_4.append(output_str)
 
                                     # Check File Now Exists In Destination
@@ -3022,17 +3003,17 @@ class ThreadClass4(QThread):
                                         siz_dest = os.path.getsize(t_path)
 
                                         if siz_src == siz_dest or siz_dest is 0:
-                                            output_str = str('copied new: ' + t_path)
+                                            output_str = str('copied new: ' + t_path).strip()
                                             self.tb_4.append(output_str)
                                             cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
+                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
                                             self.tb_4.append(output_str)
                                             cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path)
+                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
                                             self.tb_4.append(output_str)
                                             cp0_fail_count += 1
 
@@ -3050,7 +3031,7 @@ class ThreadClass4(QThread):
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except:
-                                                    output_str = str('error: ' + t_path)
+                                                    output_str = str('error: ' + t_path).strip()
                                                     self.tb_4.append(output_str)
 
                                             # Check File Now Exists In Destination
@@ -3060,11 +3041,11 @@ class ThreadClass4(QThread):
                                             siz_dest = os.path.getsize(t_path)
 
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
-                                                output_str = str('updated file: ' + t_path)
+                                                output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_4.append(output_str)
                                                 cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path)
+                                                output_str = str('failed to update file: ' + t_path).strip()
                                                 self.tb_4.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -3076,13 +3057,13 @@ class ThreadClass4(QThread):
                     info_label_1_var[4].setText('path error!')
 
             # Output Summary
-            time_now = str(datetime.datetime.now())
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
             cp1_count_str = str(cp1_count)
             cp1_fail_count_str = str(cp1_fail_count)
-            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
-            print('-- ThreadClass0: ' + output_sum)
+
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            print('-- ThreadClass4: ' + output_sum)
             self.tb_4.append(output_sum)
 
             # Disengage
@@ -3188,7 +3169,7 @@ class ThreadClass5(QThread):
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except:
-                                            output_str = str('error: ' + t_path)
+                                            output_str = str('error: ' + t_path).strip()
                                             self.tb_5.append(output_str)
 
                                     # Check File Now Exists In Destination
@@ -3198,17 +3179,17 @@ class ThreadClass5(QThread):
                                         siz_dest = os.path.getsize(t_path)
 
                                         if siz_src == siz_dest or siz_dest is 0:
-                                            output_str = str('copied new: ' + t_path)
+                                            output_str = str('copied new: ' + t_path).strip()
                                             self.tb_5.append(output_str)
                                             cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
+                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
                                             self.tb_5.append(output_str)
                                             cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path)
+                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
                                             self.tb_5.append(output_str)
                                             cp0_fail_count += 1
 
@@ -3226,7 +3207,7 @@ class ThreadClass5(QThread):
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except:
-                                                    output_str = str('error: ' + t_path)
+                                                    output_str = str('error: ' + t_path).strip()
                                                     self.tb_5.append(output_str)
 
                                             # Check File Now Exists In Destination
@@ -3236,11 +3217,11 @@ class ThreadClass5(QThread):
                                             siz_dest = os.path.getsize(t_path)
 
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
-                                                output_str = str('updated file: ' + t_path)
+                                                output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_5.append(output_str)
                                                 cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path)
+                                                output_str = str('failed to update file: ' + t_path).strip()
                                                 self.tb_5.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -3252,13 +3233,13 @@ class ThreadClass5(QThread):
                     info_label_1_var[5].setText('path error!')
 
             # Output Summary
-            time_now = str(datetime.datetime.now())
             cp0_count_str = str(cp0_count)
             cp0_fail_count_str = str(cp0_fail_count)
             cp1_count_str = str(cp1_count)
             cp1_fail_count_str = str(cp1_fail_count)
-            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
-            print('-- ThreadClass0: ' + output_sum)
+
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            print('-- ThreadClass5: ' + output_sum)
             self.tb_5.append(output_sum)
 
             # Disengage
