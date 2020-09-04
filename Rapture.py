@@ -60,6 +60,7 @@ confirm_op4_wait = True
 confirm_op5_bool = False
 confirm_op5_wait = True
 btnx_primed_0 = False
+thread_engaged_var = [False, False, False, False, False, False]
 
 source_selected = ()
 dest_selected = ()
@@ -268,14 +269,19 @@ class App(QMainWindow):
                     }
                     """)
         # Font Setup. Cambria Math, Candara, Consolas, Corbel, Segoe UI
-        font_s6 = QFont("Segoe UI", 6, QFont.Normal)
-        font_s8 = QFont("Segoe UI", 8, QFont.Normal)
+        self.font_s5 = QFont("Segoe UI", 5, QFont.Normal)
+        self.font_s6 = QFont("Segoe UI", 6, QFont.Normal)
+        self.font_s8 = QFont("Segoe UI", 8, QFont.Normal)
+
+        # Sector 3: Output Text Browser Dimensions
+        self.tb_w = self.width - 10
+        self.tb_h = 115
 
         # Sector 3: Output Text Browser 0
         self.tb_0 = QTextBrowser(self)
         self.tb_0.move(5, 185)
-        self.tb_0.resize((self.width - 10), 300)
-        self.tb_0.setFont(font_s6)
+        self.tb_0.resize(self.tb_w, self.tb_h)
+        self.tb_0.setFont(self.font_s6)
         self.tb_0.setObjectName("tb_0")
         self.tb_0.setStyleSheet(
             """QTextBrowser {background-color: black;
@@ -293,8 +299,8 @@ class App(QMainWindow):
         # Sector 3: Output Text Browser 1
         self.tb_1 = QTextBrowser(self)
         self.tb_1.move(5, 185)
-        self.tb_1.resize((self.width - 10), 300)
-        self.tb_1.setFont(font_s6)
+        self.tb_1.resize(self.tb_w, self.tb_h)
+        self.tb_1.setFont(self.font_s6)
         self.tb_1.setObjectName("tb_1")
         self.tb_1.setStyleSheet(
             """QTextBrowser {background-color: black;
@@ -312,8 +318,8 @@ class App(QMainWindow):
         # Sector 3: Output Text Browser 2
         self.tb_2 = QTextBrowser(self)
         self.tb_2.move(5, 185)
-        self.tb_2.resize((self.width - 10), 300)
-        self.tb_2.setFont(font_s6)
+        self.tb_2.resize(self.tb_w, self.tb_h)
+        self.tb_2.setFont(self.font_s6)
         self.tb_2.setObjectName("tb_2")
         self.tb_2.setStyleSheet(
             """QTextBrowser {background-color: black;
@@ -331,8 +337,8 @@ class App(QMainWindow):
         # Sector 3: Output Text Browser 3
         self.tb_3 = QTextBrowser(self)
         self.tb_3.move(5, 185)
-        self.tb_3.resize((self.width - 10), 300)
-        self.tb_3.setFont(font_s6)
+        self.tb_3.resize(self.tb_w, self.tb_h)
+        self.tb_3.setFont(self.font_s6)
         self.tb_3.setObjectName("tb_3")
         self.tb_3.setStyleSheet(
             """QTextBrowser {background-color: black;
@@ -350,8 +356,8 @@ class App(QMainWindow):
         # Sector 3: Output Text Browser 4
         self.tb_4 = QTextBrowser(self)
         self.tb_4.move(5, 185)
-        self.tb_4.resize((self.width - 10), 300)
-        self.tb_4.setFont(font_s6)
+        self.tb_4.resize(self.tb_w, self.tb_h)
+        self.tb_4.setFont(self.font_s6)
         self.tb_4.setObjectName("tb_4")
         self.tb_4.setStyleSheet(
             """QTextBrowser {background-color: black;
@@ -369,8 +375,8 @@ class App(QMainWindow):
         # Sector 3: Output Text Browser 5
         self.tb_5 = QTextBrowser(self)
         self.tb_5.move(5, 185)
-        self.tb_5.resize((self.width - 10), 300)
-        self.tb_5.setFont(font_s6)
+        self.tb_5.resize(self.tb_w, self.tb_h)
+        self.tb_5.setFont(self.font_s6)
         self.tb_5.setObjectName("tb_5")
         self.tb_5.setStyleSheet(
             """QTextBrowser {background-color: black;
@@ -397,10 +403,6 @@ class App(QMainWindow):
 
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
-
-        # Font Setup. Cambria Math, Candara, Consolas, Corbel, Segoe UI
-        font_s6 = QFont("Segoe UI", 6, QFont.Normal)
-        font_s8 = QFont("Segoe UI", 8, QFont.Normal)
 
         # Title Bar: Close
         self.close_button = QPushButton(self)
@@ -549,22 +551,23 @@ class App(QMainWindow):
             # Sector 1: Main Function(s) Output Label(s)
             info_label_1 = 'info_label_1' + str(i)
             self.info_label_1 = QLabel(self)
-            self.info_label_1.resize(85, 15)
-            self.info_label_1.setFont(font_s6)
+            self.info_label_1.resize(87, 13)
+            self.info_label_1.setFont(self.font_s5)
             self.info_label_1.setText("")
             self.info_label_1.setStyleSheet(
                 """QLabel {background-color: rgb(0, 0, 0);
                color: green;
-               border:0px solid rgb(35, 35, 35);}"""
+               border:2px solid rgb(30, 30, 30);}"""
                )
             info_label_1_var.append(self.info_label_1)
+            info_label_1_var[i].hide()
 
             i += 1
 
         # Sector 2: Hide Drop Down Settings
         self.hide_settings_button = QPushButton(self)
         self.hide_settings_button.resize(self.width, 10)
-        self.hide_settings_button.move(0, 490)
+        self.hide_settings_button.move(0, 310)
         self.hide_settings_button.setIcon(QIcon(small_image[1]))
         self.hide_settings_button.clicked.connect(self.hide_settings_page_funk)
         self.hide_settings_button.setIconSize(QSize(15, 15))
@@ -613,7 +616,7 @@ class App(QMainWindow):
         self.settings_source_label = QLabel(self)
         self.settings_source_label.move(30, 135)
         self.settings_source_label.resize(60, 15)
-        self.settings_source_label.setFont(font_s6)
+        self.settings_source_label.setFont(self.font_s6)
         self.settings_source_label.setText('Source:')
         self.settings_source_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -625,7 +628,7 @@ class App(QMainWindow):
         self.settings_dest_label = QLabel(self)
         self.settings_dest_label.move(30, 155)
         self.settings_dest_label.resize(60, 15)
-        self.settings_dest_label.setFont(font_s6)
+        self.settings_dest_label.setFont(self.font_s6)
         self.settings_dest_label.setText('Destination:')
         self.settings_dest_label.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -637,7 +640,7 @@ class App(QMainWindow):
         self.setting_title0 = QLabel(self)
         self.setting_title0.resize(605, 15)
         self.setting_title0.move(back_label_ankor_w0, 115)
-        self.setting_title0.setFont(font_s6)
+        self.setting_title0.setFont(self.font_s6)
         self.setting_title0.setText("Archive")
         self.setting_title0.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -650,7 +653,7 @@ class App(QMainWindow):
         self.setting_title1 = QLabel(self)
         self.setting_title1.resize(605, 15)
         self.setting_title1.move(back_label_ankor_w1, 115)
-        self.setting_title1.setFont(font_s6)
+        self.setting_title1.setFont(self.font_s6)
         self.setting_title1.setText("Document")
         self.setting_title1.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -663,7 +666,7 @@ class App(QMainWindow):
         self.setting_title2 = QLabel(self)
         self.setting_title2.resize(605, 15)
         self.setting_title2.move(back_label_ankor_w2, 115)
-        self.setting_title2.setFont(font_s6)
+        self.setting_title2.setFont(self.font_s6)
         self.setting_title2.setText("Music")
         self.setting_title2.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -676,7 +679,7 @@ class App(QMainWindow):
         self.setting_title3 = QLabel(self)
         self.setting_title3.resize(605, 15)
         self.setting_title3.move(back_label_ankor_w3, 115)
-        self.setting_title3.setFont(font_s6)
+        self.setting_title3.setFont(self.font_s6)
         self.setting_title3.setText("Picture")
         self.setting_title3.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -689,7 +692,7 @@ class App(QMainWindow):
         self.setting_title4 = QLabel(self)
         self.setting_title4.resize(605, 15)
         self.setting_title4.move(back_label_ankor_w4, 115)
-        self.setting_title4.setFont(font_s6)
+        self.setting_title4.setFont(self.font_s6)
         self.setting_title4.setText("Program")
         self.setting_title4.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -702,7 +705,7 @@ class App(QMainWindow):
         self.setting_title5 = QLabel(self)
         self.setting_title5.resize(605, 15)
         self.setting_title5.move(back_label_ankor_w5, 115)
-        self.setting_title5.setFont(font_s6)
+        self.setting_title5.setFont(self.font_s6)
         self.setting_title5.setText("Video")
         self.setting_title5.setStyleSheet(
             """QLabel {background-color: rgb(0, 0, 0);
@@ -718,7 +721,7 @@ class App(QMainWindow):
         self.settings_source0 = QLineEdit(self)
         self.settings_source0.move(set_src_dst_pos_w, 135)
         self.settings_source0.resize(set_src_dst_w, 15)
-        self.settings_source0.setFont(font_s6)
+        self.settings_source0.setFont(self.font_s6)
         self.settings_source0.setText(path_var[0])
         self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
@@ -736,7 +739,7 @@ class App(QMainWindow):
         self.settings_source1 = QLineEdit(self)
         self.settings_source1.move(set_src_dst_pos_w, 135)
         self.settings_source1.resize(set_src_dst_w, 15)
-        self.settings_source1.setFont(font_s6)
+        self.settings_source1.setFont(self.font_s6)
         self.settings_source1.setText(path_var[1])
         self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
@@ -754,7 +757,7 @@ class App(QMainWindow):
         self.settings_source2 = QLineEdit(self)
         self.settings_source2.move(set_src_dst_pos_w, 135)
         self.settings_source2.resize(set_src_dst_w, 15)
-        self.settings_source2.setFont(font_s6)
+        self.settings_source2.setFont(self.font_s6)
         self.settings_source2.setText(path_var[2])
         self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
@@ -772,7 +775,7 @@ class App(QMainWindow):
         self.settings_source3 = QLineEdit(self)
         self.settings_source3.move(set_src_dst_pos_w, 135)
         self.settings_source3.resize(set_src_dst_w, 15)
-        self.settings_source3.setFont(font_s6)
+        self.settings_source3.setFont(self.font_s6)
         self.settings_source3.setText(path_var[3])
         self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
@@ -790,7 +793,7 @@ class App(QMainWindow):
         self.settings_source4 = QLineEdit(self)
         self.settings_source4.move(set_src_dst_pos_w, 135)
         self.settings_source4.resize(set_src_dst_w, 15)
-        self.settings_source4.setFont(font_s6)
+        self.settings_source4.setFont(self.font_s6)
         self.settings_source4.setText(path_var[4])
         self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
@@ -808,7 +811,7 @@ class App(QMainWindow):
         self.settings_source5 = QLineEdit(self)
         self.settings_source5.move(set_src_dst_pos_w, 135)
         self.settings_source5.resize(set_src_dst_w, 15)
-        self.settings_source5.setFont(font_s6)
+        self.settings_source5.setFont(self.font_s6)
         self.settings_source5.setText(path_var[5])
         self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
@@ -826,7 +829,7 @@ class App(QMainWindow):
         self.settings_dest0 = QLineEdit(self)
         self.settings_dest0.move(set_src_dst_pos_w, 155)
         self.settings_dest0.resize(set_src_dst_w, 15)
-        self.settings_dest0.setFont(font_s6)
+        self.settings_dest0.setFont(self.font_s6)
         self.settings_dest0.setText(dest_path_var[0])
         self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
@@ -844,7 +847,7 @@ class App(QMainWindow):
         self.settings_dest1 = QLineEdit(self)
         self.settings_dest1.move(set_src_dst_pos_w, 155)
         self.settings_dest1.resize(set_src_dst_w, 15)
-        self.settings_dest1.setFont(font_s6)
+        self.settings_dest1.setFont(self.font_s6)
         self.settings_dest1.setText(dest_path_var[1])
         self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
@@ -862,7 +865,7 @@ class App(QMainWindow):
         self.settings_dest2 = QLineEdit(self)
         self.settings_dest2.move(set_src_dst_pos_w, 155)
         self.settings_dest2.resize(set_src_dst_w, 15)
-        self.settings_dest2.setFont(font_s6)
+        self.settings_dest2.setFont(self.font_s6)
         self.settings_dest2.setText(dest_path_var[2])
         self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
@@ -880,7 +883,7 @@ class App(QMainWindow):
         self.settings_dest3 = QLineEdit(self)
         self.settings_dest3.move(set_src_dst_pos_w, 155)
         self.settings_dest3.resize(set_src_dst_w, 15)
-        self.settings_dest3.setFont(font_s6)
+        self.settings_dest3.setFont(self.font_s6)
         self.settings_dest3.setText(dest_path_var[3])
         self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
@@ -898,7 +901,7 @@ class App(QMainWindow):
         self.settings_dest4 = QLineEdit(self)
         self.settings_dest4.move(set_src_dst_pos_w, 155)
         self.settings_dest4.resize(set_src_dst_w, 15)
-        self.settings_dest4.setFont(font_s6)
+        self.settings_dest4.setFont(self.font_s6)
         self.settings_dest4.setText(dest_path_var[4])
         self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
@@ -916,7 +919,7 @@ class App(QMainWindow):
         self.settings_dest5 = QLineEdit(self)
         self.settings_dest5.move(set_src_dst_pos_w, 155)
         self.settings_dest5.resize(set_src_dst_w, 15)
-        self.settings_dest5.setFont(font_s6)
+        self.settings_dest5.setFont(self.font_s6)
         self.settings_dest5.setText(dest_path_var[5])
         self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
@@ -933,7 +936,7 @@ class App(QMainWindow):
          # Sector 1: Main Function Confirmation 0
         self.confirm_op0_tru = QPushButton(self)
         self.confirm_op0_tru.resize(87, 13)
-        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         self.confirm_op0_tru.setIconSize(QSize(45, 10))
         self.confirm_op0_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(30, 30, 30);
@@ -941,12 +944,13 @@ class App(QMainWindow):
                 )
         self.confirm_op0_tru.move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 63))
         self.confirm_op0_tru.clicked.connect(self.confirm_op0_funk0)
-        self.confirm_op0_tru.hide()
+        self.confirm_op0_tru.setEnabled(False)
+        self.confirm_op0_tru.show()
 
         # Sector 1: Main Function Confirmation 1
         self.confirm_op1_tru = QPushButton(self)
         self.confirm_op1_tru.resize(87, 13)
-        self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         self.confirm_op1_tru.setIconSize(QSize(45, 10))
         self.confirm_op1_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(30, 30, 30);
@@ -954,12 +958,13 @@ class App(QMainWindow):
                 )
         self.confirm_op1_tru.move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 63))
         self.confirm_op1_tru.clicked.connect(self.confirm_op1_funk0)
-        self.confirm_op1_tru.hide()
+        self.confirm_op1_tru.setEnabled(False)
+        self.confirm_op1_tru.show()
 
         # Sector 1: Main Function Confirmation 2
         self.confirm_op2_tru = QPushButton(self)
         self.confirm_op2_tru.resize(87, 13)
-        self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         self.confirm_op2_tru.setIconSize(QSize(45, 10))
         self.confirm_op2_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(30, 30, 30);
@@ -967,12 +972,13 @@ class App(QMainWindow):
                 )
         self.confirm_op2_tru.move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 63))
         self.confirm_op2_tru.clicked.connect(self.confirm_op2_funk0)
-        self.confirm_op2_tru.hide()
+        self.confirm_op2_tru.setEnabled(False)
+        self.confirm_op2_tru.show()
 
         # Sector 1: Main Function Confirmation 3
         self.confirm_op3_tru = QPushButton(self)
         self.confirm_op3_tru.resize(87, 13)
-        self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         self.confirm_op3_tru.setIconSize(QSize(45, 10))
         self.confirm_op3_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(30, 30, 30);
@@ -980,12 +986,13 @@ class App(QMainWindow):
                 )
         self.confirm_op3_tru.move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 63))
         self.confirm_op3_tru.clicked.connect(self.confirm_op3_funk0)
-        self.confirm_op3_tru.hide()
+        self.confirm_op3_tru.setEnabled(False)
+        self.confirm_op3_tru.show()
 
         # Sector 1: Main Function Confirmation 4
         self.confirm_op4_tru = QPushButton(self)
         self.confirm_op4_tru.resize(87, 13)
-        self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         self.confirm_op4_tru.setIconSize(QSize(45, 10))
         self.confirm_op4_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(30, 30, 30);
@@ -993,12 +1000,13 @@ class App(QMainWindow):
                 )
         self.confirm_op4_tru.move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 63))
         self.confirm_op4_tru.clicked.connect(self.confirm_op4_funk0)
-        self.confirm_op4_tru.hide()
+        self.confirm_op4_tru.setEnabled(False)
+        self.confirm_op4_tru.show()
 
         # Sector 1: Main Function Confirmation 5
         self.confirm_op5_tru = QPushButton(self)
         self.confirm_op5_tru.resize(87, 13)
-        self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right.png'))
+        self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
         self.confirm_op5_tru.setIconSize(QSize(45, 10))
         self.confirm_op5_tru.setStyleSheet(
                 """QPushButton{background-color: rgb(30, 30, 30);
@@ -1006,7 +1014,8 @@ class App(QMainWindow):
                 )
         self.confirm_op5_tru.move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 63))
         self.confirm_op5_tru.clicked.connect(self.confirm_op5_funk0)
-        self.confirm_op5_tru.hide()
+        self.confirm_op5_tru.setEnabled(False)
+        self.confirm_op5_tru.show()
 
         # Sector 1: Attatch Main Function Buttons To Background Tiles Position
         btnx_main_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
@@ -1041,12 +1050,12 @@ class App(QMainWindow):
         stop_thr_button_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 5))
 
         # Sector 1: Attatch Main Function Information Output Labels To Background Tiles Position
-        info_label_1_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 61))
-        info_label_1_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 61))
-        info_label_1_var[2].move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 61))
-        info_label_1_var[3].move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 61))
-        info_label_1_var[4].move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 61))
-        info_label_1_var[5].move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 61))
+        info_label_1_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 63))
+        info_label_1_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 63))
+        info_label_1_var[2].move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 63))
+        info_label_1_var[3].move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 63))
+        info_label_1_var[4].move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 63))
+        info_label_1_var[5].move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 63))
 
         # Sector 1: Plug Main Function Mode Buttons Into Functions
         comp_cont_button_var[0].clicked.connect(self.set_comp_bool_pre_funk0)
@@ -1526,11 +1535,11 @@ class App(QMainWindow):
         self.setFixedSize(self.width, 110)
 
     def btnx_set_focus_funk_0(self):
-        global settings_active_int, btnx_primed_0
+        global settings_active_int
 
         settings_active_int = 0
         self.hide_settings_funk()
-        self.setFixedSize(self.width, 500)
+        self.setFixedSize(self.width, 320)
 
         btnx_settings_var[0].setIcon(QIcon(small_image[1]))
         back_label_var[0].resize(95, 85)
@@ -1552,7 +1561,7 @@ class App(QMainWindow):
         settings_active_int = 1
         self.hide_settings_funk()
 
-        self.setFixedSize(self.width, 500)
+        self.setFixedSize(self.width, 320)
         btnx_settings_var[1].setIcon(QIcon(small_image[1]))
         back_label_var[1].resize(95, 85)
         pixmap = QPixmap(background_img[0])
@@ -1572,7 +1581,7 @@ class App(QMainWindow):
         settings_active_int = 2
         self.hide_settings_funk()
 
-        self.setFixedSize(self.width, 500)
+        self.setFixedSize(self.width, 320)
         btnx_settings_var[2].setIcon(QIcon(small_image[1]))
         back_label_var[2].resize(95, 85)
         pixmap = QPixmap(background_img[0])
@@ -1592,7 +1601,7 @@ class App(QMainWindow):
         settings_active_int = 3
         self.hide_settings_funk()
 
-        self.setFixedSize(self.width, 500)
+        self.setFixedSize(self.width, 320)
         btnx_settings_var[3].setIcon(QIcon(small_image[1]))
         back_label_var[3].resize(95, 85)
         pixmap = QPixmap(background_img[0])
@@ -1612,7 +1621,7 @@ class App(QMainWindow):
         settings_active_int = 4
         self.hide_settings_funk()
 
-        self.setFixedSize(self.width, 500)
+        self.setFixedSize(self.width, 320)
         btnx_settings_var[4].setIcon(QIcon(small_image[1]))
         back_label_var[4].resize(95, 85)
         pixmap = QPixmap(background_img[0])
@@ -1632,7 +1641,7 @@ class App(QMainWindow):
         settings_active_int = 5
         self.hide_settings_funk()
 
-        self.setFixedSize(self.width, 500)
+        self.setFixedSize(self.width, 320)
         btnx_settings_var[5].setIcon(QIcon(small_image[1]))
         back_label_var[5].resize(95, 85)
         pixmap = QPixmap(background_img[0])
@@ -1654,7 +1663,7 @@ class App(QMainWindow):
         self.hide_settings_funk()
         if settings_active is False:
             if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 500)
+                self.setFixedSize(self.width, 320)
 
                 btnx_settings_var[0].setIcon(QIcon(small_image[1]))
 
@@ -1686,7 +1695,7 @@ class App(QMainWindow):
         self.hide_settings_funk()
         if settings_active is False:
             if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 500)
+                self.setFixedSize(self.width, 320)
 
                 btnx_settings_var[1].setIcon(QIcon(small_image[1]))
 
@@ -1718,7 +1727,7 @@ class App(QMainWindow):
         self.hide_settings_funk()
         if settings_active is False:
             if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 500)
+                self.setFixedSize(self.width, 320)
 
                 btnx_settings_var[2].setIcon(QIcon(small_image[1]))
 
@@ -1750,7 +1759,7 @@ class App(QMainWindow):
         self.hide_settings_funk()
         if settings_active is False:
             if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 500)
+                self.setFixedSize(self.width, 320)
 
                 btnx_settings_var[3].setIcon(QIcon(small_image[1]))
 
@@ -1782,7 +1791,7 @@ class App(QMainWindow):
         self.hide_settings_funk()
         if settings_active is False:
             if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 500)
+                self.setFixedSize(self.width, 320)
 
                 btnx_settings_var[4].setIcon(QIcon(small_image[1]))
 
@@ -1814,7 +1823,7 @@ class App(QMainWindow):
         self.hide_settings_funk()
         if settings_active is False:
             if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 500)
+                self.setFixedSize(self.width, 320)
 
                 btnx_settings_var[5].setIcon(QIcon(small_image[1]))
 
@@ -1902,21 +1911,25 @@ class App(QMainWindow):
 
     # Sector 1 Function: Uses Integer To Switch Main Function Mode Relative To Mode Button Clicked
     def set_comp_bool_funk(self):
-        global compare_bool_var, compare_clicked, btnx_main_var
-        if compare_bool_var[compare_clicked] is False:
-            compare_bool_var[compare_clicked] = True
-            comp_cont_button_var[compare_clicked].setIcon(QIcon(small_image[5]))
-            comp_cont_button_var[compare_clicked].setStyleSheet(
-                """QPushButton{background-color: rgb(0, 0, 0);
-               border:0px solid rgb(30, 30, 30);}"""
-               )
-        elif compare_bool_var[compare_clicked] is True:
-            compare_bool_var[compare_clicked] = False
-            comp_cont_button_var[compare_clicked].setIcon(QIcon(small_image[4]))
-            comp_cont_button_var[compare_clicked].setStyleSheet(
-                """QPushButton{background-color: rgb(35, 35, 35);
-               border:0px solid rgb(30, 30, 30);}"""
-               )
+        global compare_bool_var, compare_clicked, btnx_main_var, thread_engaged_var 
+
+        if thread_engaged_var[compare_clicked] is False:
+            if compare_bool_var[compare_clicked] is False:
+                compare_bool_var[compare_clicked] = True
+                comp_cont_button_var[compare_clicked].setIcon(QIcon(small_image[5]))
+                comp_cont_button_var[compare_clicked].setStyleSheet(
+                    """QPushButton{background-color: rgb(0, 0, 0);
+                   border:0px solid rgb(30, 30, 30);}"""
+                   )
+            elif compare_bool_var[compare_clicked] is True:
+                compare_bool_var[compare_clicked] = False
+                comp_cont_button_var[compare_clicked].setIcon(QIcon(small_image[4]))
+                comp_cont_button_var[compare_clicked].setStyleSheet(
+                    """QPushButton{background-color: rgb(35, 35, 35);
+                   border:0px solid rgb(30, 30, 30);}"""
+                   )
+        if thread_engaged_var[compare_clicked] is True:
+            print('-- thread engaged: setting mode unavailable')
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 0
     def stop_thr_funk0(self):
@@ -2212,7 +2225,7 @@ class ThreadClass0(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
         zero = '0'
@@ -2225,6 +2238,8 @@ class ThreadClass0(QThread):
         # If Source & Destination Configuration Is Disengaged Then Continue
         elif configuration_engaged is False:
 
+            thread_engaged_var[0] = True
+
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[0]
             dest = dest_path_var[0]
@@ -2234,16 +2249,17 @@ class ThreadClass0(QThread):
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
             btnx_main_var[0].setIcon(QIcon('./image/img_archives_amber.png'))
-            info_label_1_var[0].hide()
-            self.confirm_op0_tru.show()
+            self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right.png'))
+            self.confirm_op0_tru.setEnabled(True)
+
             while confirm_op0_wait is True:
                 time.sleep(0.3)
             confirm_op0_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op0_tru.hide()
+            self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op0_tru.setEnabled(False)
             btnx_main_var[0].setIcon(QIcon(img_var[0]))
-            info_label_1_var[0].show()
 
             # If Confirmed Run Main Function
             if confirm_op0_bool is True:
@@ -2258,9 +2274,15 @@ class ThreadClass0(QThread):
                 self.tb_0.hide()
                 self.tb_0.show()
 
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
+
                 if path_bool == 'ARCHIVE_SOURCE_True' and dest_bool == 'ARCHIVE_DESTINATION_True':
                     info_label_1_var[0].setText('working...')
-                    cp_var = 0
+
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
 
@@ -2291,16 +2313,17 @@ class ThreadClass0(QThread):
                                         if siz_src == siz_dest or siz_dest is 0:
                                             output_str = str('copied new: ' + t_path)
                                             self.tb_0.append(output_str)
+                                            cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
                                             self.tb_0.append(output_str)
+                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (bytes difference): ' + t_path)
                                             self.tb_0.append(output_str)
-
-                                    cp_var += 1
+                                            cp0_fail_count += 1
 
                                 # Write 1: If File Exists In Destination But Needs Updating
                                 elif os.path.exists(t_path):
@@ -2328,22 +2351,35 @@ class ThreadClass0(QThread):
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_0.append(output_str)
+                                                cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
                                                 output_str = str('failed to update file: ' + t_path)
                                                 self.tb_0.append(output_str)
-
-                                            cp_var += 1
+                                                cp1_fail_count += 1
 
                     if change_var is False:
                         info_label_1_var[0].setText('unnecessary.')
                     elif change_var is True:
-                        info_label_1_var[0].seText('amended.')
+                        info_label_1_var[0].setText('amended.')
                 else:
                     info_label_1_var[0].setText('path error!')
             elif confirm_op0_bool is False:
                 print('-- ThreadClass0: confirm_op0_bool: declined')
+
+            # Output Summary
+            time_now = str(datetime.datetime.now())
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
+            print('-- ThreadClass0: ' + output_sum)
+            self.tb_0.append(output_sum)
+
+            # Disengage
             timer_thread_var[0].start()
             btnx_main_var[0].setIcon(QIcon(img_var[0]))
+            thread_engaged_var[0] = False
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -2352,9 +2388,11 @@ class ThreadClass0(QThread):
         confirm_op0_bool = False
         confirm_op0_wait = True
         print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
-        self.confirm_op0_tru.hide()
         btnx_main_var[0].setIcon(QIcon(img_var[0]))
-        info_label_1_var[0].setText('aborted.')
+        self.confirm_op0_tru.setEnabled(False)
+        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        thread_engaged_var[0] = False
+
         self.terminate()
 
 
@@ -2367,7 +2405,7 @@ class ThreadClass1(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         #Allow To Run Only When Source & Destination Configuration Is Disengaged
         zero = '0'
@@ -2380,6 +2418,8 @@ class ThreadClass1(QThread):
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
 
+            thread_engaged_var[1] = True
+
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[1]
             dest = dest_path_var[1]
@@ -2389,16 +2429,17 @@ class ThreadClass1(QThread):
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
             btnx_main_var[1].setIcon(QIcon('./image/img_document_amber.png'))
-            info_label_1_var[1].hide()
-            self.confirm_op1_tru.show()
+            self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right.png'))
+            self.confirm_op1_tru.setEnabled(True)
+
             while confirm_op1_wait is True:
                 time.sleep(0.3)
             confirm_op1_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op1_tru.hide()
             btnx_main_var[1].setIcon(QIcon(img_var[1]))
-            info_label_1_var[1].show()
+            self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op1_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op1_bool is True:
@@ -2413,9 +2454,14 @@ class ThreadClass1(QThread):
                 self.tb_1.hide()
                 self.tb_1.show()
 
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
+
                 if path_bool == 'DOCUMENT_SOURCE_True' and dest_bool == 'DOCUMENT_DESTINATION_True':
                     info_label_1_var[1].setText('working...')
-                    cp_var = 0
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2446,16 +2492,17 @@ class ThreadClass1(QThread):
                                         if siz_src == siz_dest or siz_dest is 0:
                                             output_str = str('copied new: ' + t_path)
                                             self.tb_1.append(output_str)
+                                            cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
                                             self.tb_1.append(output_str)
+                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (bytes difference): ' + t_path)
+                                            cp0_fail_count += 1
                                             self.tb_1.append(output_str)
-
-                                    cp_var += 1
 
                                 # Write 1: If File Exists In Destination But Needs Updating
                                 elif os.path.exists(t_path):
@@ -2488,11 +2535,11 @@ class ThreadClass1(QThread):
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_1.append(output_str)
+                                                cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
                                                 output_str = str('failed to update file: ' + t_path)
                                                 self.tb_1.append(output_str)
-
-                                            cp_var += 1
+                                                cp1_fail_count += 1
 
                     if change_var is False:
                         info_label_1_var[1].setText('unnecessary.')
@@ -2500,8 +2547,21 @@ class ThreadClass1(QThread):
                         info_label_1_var[1].setText('amended.')
                 else:
                     info_label_1_var[1].setText('path error!')
+
+            # Output Summary
+            time_now = str(datetime.datetime.now())
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
+            print('-- ThreadClass0: ' + output_sum)
+            self.tb_1.append(output_sum)
+
+            # Disengage
             timer_thread_var[1].start()
             btnx_main_var[1].setIcon(QIcon(img_var[1]))
+            thread_engaged_var[1] = False
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -2510,9 +2570,11 @@ class ThreadClass1(QThread):
         confirm_op1_bool = False
         confirm_op1_wait = True
         print('-- confirm_op1 declined: (confirm_op1_bool)', confirm_op1_bool)
-        self.confirm_op1_tru.hide()
         btnx_main_var[1].setIcon(QIcon(img_var[1]))
-        info_label_1_var[1].setText('aborted.')
+        self.confirm_op1_tru.setEnabled(False)
+        self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        thread_engaged_var[1] = False
+
         self.terminate()
 
 
@@ -2525,7 +2587,7 @@ class ThreadClass2(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
         zero = '0'
@@ -2538,6 +2600,8 @@ class ThreadClass2(QThread):
         # If Source & Destination Configuration Is Disengaged Then Continue
         elif configuration_engaged is False:
 
+            thread_engaged_var[2] = True
+
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[2]
             dest = dest_path_var[2]
@@ -2547,16 +2611,17 @@ class ThreadClass2(QThread):
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
             btnx_main_var[2].setIcon(QIcon('./image/img_music_amber.png'))
-            info_label_1_var[2].hide()
-            self.confirm_op2_tru.show()
+            self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right.png'))
+            self.confirm_op2_tru.setEnabled(True)
+
             while confirm_op2_wait is True:
                 time.sleep(0.3)
             confirm_op2_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op2_tru.hide()
             btnx_main_var[2].setIcon(QIcon(img_var[2]))
-            info_label_1_var[2].show()
+            self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op2_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op2_bool is True:
@@ -2571,9 +2636,14 @@ class ThreadClass2(QThread):
                 self.tb_2.hide()
                 self.tb_2.show()
 
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
+
                 if path_bool == 'MUSIC_SOURCE_True' and dest_bool == 'MUSIC_DESTINATION_True':
                     info_label_1_var[2].setText('working...')
-                    cp_var = 0
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2603,16 +2673,17 @@ class ThreadClass2(QThread):
                                         if siz_src == siz_dest or siz_dest is 0:
                                             output_str = str('copied new: ' + t_path)
                                             self.tb_2.append(output_str)
+                                            cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
                                             self.tb_2.append(output_str)
+                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (bytes difference): ' + t_path)
                                             self.tb_2.append(output_str)
-
-                                    cp_var += 1
+                                            cp0_fail_count += 1
 
                                 # Write 1: If File Exists In Destination But Needs Updating
                                 elif os.path.exists(t_path):
@@ -2640,17 +2711,32 @@ class ThreadClass2(QThread):
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_2.append(output_str)
+                                                cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
                                                 output_str = str('failed to update file: ' + t_path)
                                                 self.tb_2.append(output_str)
+                                                cp1_fail_count += 1
                     if change_var is False:
                         info_label_1_var[2].setText('unnecessary.')
                     elif change_var is True:
                         info_label_1_var[2].setText('amended.')
                 else:
                     info_label_1_var[2].setText('path error!')
+
+            # Output Summary
+            time_now = str(datetime.datetime.now())
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
+            print('-- ThreadClass0: ' + output_sum)
+            self.tb_2.append(output_sum)
+
+            # Disengage
             timer_thread_var[2].start()
             btnx_main_var[2].setIcon(QIcon(img_var[2]))
+            thread_engaged_var[2] = False
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -2659,10 +2745,11 @@ class ThreadClass2(QThread):
         confirm_op2_bool = False
         confirm_op2_wait = True
         print('-- confirm_op2 declined: (confirm_op2_bool)', confirm_op2_bool)
-        self.confirm_op2_tru.hide()
-
         btnx_main_var[2].setIcon(QIcon(img_var[2]))
-        info_label_1_var[2].setText('aborted.')
+        self.confirm_op2_tru.setEnabled(False)
+        self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        thread_engaged_var[2] = False
+
         self.terminate()
 
 
@@ -2675,7 +2762,7 @@ class ThreadClass3(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
         zero = '0'
@@ -2688,6 +2775,8 @@ class ThreadClass3(QThread):
         # If Source & Destination Configuration Is Disengaged Then Continue
         elif configuration_engaged is False:
 
+            thread_engaged_var[3] = True
+
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[3]
             dest = dest_path_var[3]
@@ -2697,16 +2786,17 @@ class ThreadClass3(QThread):
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
             btnx_main_var[3].setIcon(QIcon('./image/img_pictures_amber.png'))
-            info_label_1_var[3].hide()
-            self.confirm_op3_tru.show()
+            self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right.png'))
+            self.confirm_op3_tru.setEnabled(True)
+
             while confirm_op3_wait is True:
                 time.sleep(0.3)
             confirm_op3_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op3_tru.hide()
             btnx_main_var[3].setIcon(QIcon(img_var[3]))
-            info_label_1_var[3].show()
+            self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op3_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op3_bool is True:
@@ -2721,9 +2811,14 @@ class ThreadClass3(QThread):
                 self.tb_3.hide()
                 self.tb_3.show()
 
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
+
                 if path_bool == 'PICTURE_SOURCE_True' and dest_bool == 'PICTURE_DESTINATION_True':
                     info_label_1_var[3].setText('working...')
-                    cp_var = 0
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2753,16 +2848,17 @@ class ThreadClass3(QThread):
                                         if siz_src == siz_dest or siz_dest is 0:
                                             output_str = str('copied new: ' + t_path)
                                             self.tb_3.append(output_str)
+                                            cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
                                             self.tb_3.append(output_str)
+                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (bytes difference): ' + t_path)
                                             self.tb_3.append(output_str)
-
-                                    cp_var += 1
+                                            cp0_fail_count += 1
 
                                 # Write 1: If File Exists In Destination But Needs Updating
                                 elif os.path.exists(t_path):
@@ -2790,9 +2886,11 @@ class ThreadClass3(QThread):
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_3.append(output_str)
+                                                cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
                                                 output_str = str('failed to update file: ' + t_path)
                                                 self.tb_3.append(output_str)
+                                                cp1_fail_count += 1
 
                     if change_var is False:
                         info_label_1_var[3].setText('unnecessary.')
@@ -2800,8 +2898,21 @@ class ThreadClass3(QThread):
                         info_label_1_var[3].setText('amended.')
                 else:
                     info_label_1_var[3].setText('path error!')
+
+            # Output Summary
+            time_now = str(datetime.datetime.now())
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
+            print('-- ThreadClass0: ' + output_sum)
+            self.tb_3.append(output_sum)
+
+            # Disengage
             timer_thread_var[3].start()
             btnx_main_var[3].setIcon(QIcon(img_var[3]))
+            thread_engaged_var[3] = False
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -2810,10 +2921,11 @@ class ThreadClass3(QThread):
         confirm_op3_bool = False
         confirm_op3_wait = True
         print('-- confirm_op3 declined: (confirm_op3_bool)', confirm_op3_bool)
-        self.confirm_op3_tru.hide()
-
         btnx_main_var[3].setIcon(QIcon(img_var[3]))
-        info_label_1_var[3].setText('aborted.')
+        self.confirm_op3_tru.setEnabled(False)
+        self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        thread_engaged_var[3] = False
+
         self.terminate()
 
 
@@ -2826,7 +2938,7 @@ class ThreadClass4(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
         zero = '0'
@@ -2839,6 +2951,8 @@ class ThreadClass4(QThread):
         # If Source & Destination Configuration Is Disengaged Then Continue
         elif configuration_engaged is False:
 
+            thread_engaged_var[4] = True
+
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[4]
             dest = dest_path_var[4]
@@ -2848,16 +2962,17 @@ class ThreadClass4(QThread):
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
             btnx_main_var[4].setIcon(QIcon('./image/img_program_amber.png'))
-            info_label_1_var[4].hide()
-            self.confirm_op4_tru.show()
+            self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right.png'))
+            self.confirm_op4_tru.setEnabled(True)
+
             while confirm_op4_wait is True:
                 time.sleep(0.3)
             confirm_op4_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op4_tru.hide()
             btnx_main_var[4].setIcon(QIcon(img_var[4]))
-            info_label_1_var[4].show()
+            self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op4_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op4_bool is True:
@@ -2872,9 +2987,14 @@ class ThreadClass4(QThread):
                 self.tb_4.hide()
                 self.tb_4.show()
 
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
+
                 if path_bool == 'PROGRAMS_SOURCE_True' and dest_bool == 'PROGRAMS_DESTINATION_True':
                     info_label_1_var[4].setText('working...')
-                    cp_var = 0
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2904,16 +3024,17 @@ class ThreadClass4(QThread):
                                         if siz_src == siz_dest or siz_dest is 0:
                                             output_str = str('copied new: ' + t_path)
                                             self.tb_4.append(output_str)
+                                            cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
                                             self.tb_4.append(output_str)
+                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (bytes difference): ' + t_path)
                                             self.tb_4.append(output_str)
-
-                                    cp_var += 1
+                                            cp0_fail_count += 1
 
                                 # Write 1: If File Exists In Destination But Needs Updating
                                 elif os.path.exists(t_path):
@@ -2941,9 +3062,11 @@ class ThreadClass4(QThread):
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_4.append(output_str)
+                                                cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
                                                 output_str = str('failed to update file: ' + t_path)
                                                 self.tb_4.append(output_str)
+                                                cp1_fail_count += 1
 
                     if change_var is False:
                         info_label_1_var[4].setText('unnecessary.')
@@ -2951,8 +3074,21 @@ class ThreadClass4(QThread):
                         info_label_1_var[4].setText('amended.')
                 else:
                     info_label_1_var[4].setText('path error!')
+
+            # Output Summary
+            time_now = str(datetime.datetime.now())
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
+            print('-- ThreadClass0: ' + output_sum)
+            self.tb_4.append(output_sum)
+
+            # Disengage
             timer_thread_var[4].start()
             btnx_main_var[4].setIcon(QIcon(img_var[4]))
+            thread_engaged_var[4] = False
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -2961,10 +3097,11 @@ class ThreadClass4(QThread):
         confirm_op4_bool = False
         confirm_op4_wait = True
         print('-- confirm_op4 declined: (confirm_op4_bool)', confirm_op4_bool)
-        self.confirm_op4_tru.hide()
-
         btnx_main_var[4].setIcon(QIcon(img_var[4]))
-        info_label_1_var[4].setText('aborted.')
+        self.confirm_op4_tru.setEnabled(False)
+        self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        thread_engaged_var[4] = False
+
         self.terminate()
 
 
@@ -2977,7 +3114,7 @@ class ThreadClass5(QThread):
 
     def run(self):
         global btnx_main_var, img_active_var, img_var, path_var, thread_var, info_label_1_var, timer_thread_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # Allow To Run Only When Source & Destination Configuration Is Disengaged
         zero = '0'
@@ -2990,6 +3127,8 @@ class ThreadClass5(QThread):
         # If Source & Destination Configuration Is Disengaged Then Continue
         elif configuration_engaged is False:
 
+            thread_engaged_var[5] = True
+
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[5]
             dest = dest_path_var[5]
@@ -2999,16 +3138,17 @@ class ThreadClass5(QThread):
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
             btnx_main_var[5].setIcon(QIcon('./image/img_video_amber.png'))
-            info_label_1_var[5].hide()
-            self.confirm_op5_tru.show()
+            self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right.png'))
+            self.confirm_op5_tru.setEnabled(True)
+
             while confirm_op5_wait is True:
                 time.sleep(0.3)
             confirm_op5_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op5_tru.hide()
             btnx_main_var[5].setIcon(QIcon(img_var[5]))
-            info_label_1_var[5].show()
+            self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op5_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op5_bool is True:
@@ -3023,9 +3163,14 @@ class ThreadClass5(QThread):
                 self.tb_5.hide()
                 self.tb_5.show()
 
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
+
                 if path_bool == 'VIDEO_SOURCE_True' and dest_bool == 'VIDEO_DESTINATION_True':
                     info_label_1_var[5].setText('working...')
-                    cp_var = 0
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -3055,16 +3200,17 @@ class ThreadClass5(QThread):
                                         if siz_src == siz_dest or siz_dest is 0:
                                             output_str = str('copied new: ' + t_path)
                                             self.tb_5.append(output_str)
+                                            cp0_count += 1
 
                                     elif not os.path.exists(t_path) or siz_src != siz_dest:
                                         if not os.path.exists(t_path):
                                             output_str = str('failed to copy new (file does no exist in destination): ' + t_path)
                                             self.tb_5.append(output_str)
+                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (bytes difference): ' + t_path)
                                             self.tb_5.append(output_str)
-
-                                    cp_var += 1
+                                            cp0_fail_count += 1
 
                                 # Write 1: If File Exists In Destination But Needs Updating
                                 elif os.path.exists(t_path):
@@ -3092,9 +3238,11 @@ class ThreadClass5(QThread):
                                             if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
                                                 output_str = str('updated file: ' + t_path)
                                                 self.tb_5.append(output_str)
+                                                cp1_count += 1
                                             elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
                                                 output_str = str('failed to update file: ' + t_path)
                                                 self.tb_5.append(output_str)
+                                                cp1_fail_count += 1
 
                     if change_var is False:
                         info_label_1_var[5].setText('unnecessary.')
@@ -3102,8 +3250,21 @@ class ThreadClass5(QThread):
                         info_label_1_var[5].setText('amended.')
                 else:
                     info_label_1_var[5].setText('path error!')
+
+            # Output Summary
+            time_now = str(datetime.datetime.now())
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum = time_now + ' copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')'
+            print('-- ThreadClass0: ' + output_sum)
+            self.tb_5.append(output_sum)
+
+            # Disengage
             timer_thread_var[5].start()
             btnx_main_var[5].setIcon(QIcon(img_var[5]))
+            thread_engaged_var[5] = False
 
     def stop_thr(self):
         global btnx_main_var, info_label_1_var
@@ -3112,10 +3273,11 @@ class ThreadClass5(QThread):
         confirm_op5_bool = False
         confirm_op5_wait = True
         print('-- confirm_op5 declined: (confirm_op5_bool)', confirm_op5_bool)
-        self.confirm_op5_tru.hide()
-
         btnx_main_var[5].setIcon(QIcon(img_var[5]))
-        info_label_1_var[5].setText('aborted.')
+        self.confirm_op5_tru.setEnabled(False)
+        self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        thread_engaged_var[5] = False
+
         self.terminate()
 
 
