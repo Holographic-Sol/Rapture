@@ -100,7 +100,8 @@ small_image = ['./image/small_img_menu_down.png',
                './image/small_img_mode_1.png',
                './image/small_img_read_ony_false.png',
                './image/small_img_read_ony_true.png',
-               './image/small_img_stop_thread.png']
+               './image/small_img_stop_thread_grey.png',
+               './image/small_img_stop_thread_green.png']
 
 btnx_img_led_var = ['./image/btnx_img_led_red.png',
                 './image/btnx_img_led_amber.png',
@@ -532,6 +533,7 @@ class App(QMainWindow):
                border:0px solid rgb(35, 35, 35);}"""
                )
             stop_thr_button_var.append(self.stop_thr_button)
+            self.stop_thr_button.setEnabled(False)
 
             i += 1
 
@@ -2099,7 +2101,7 @@ class UpdateSettingsWindow(QThread):
         configuration_engaged = False
 
 
-# Sector 1 Class: Main Function Button Thread 0
+# Sector 1 Class: Main Function Button Thread 0  self.stop_thr_button.setIcon(QIcon(small_image[8]))
 class ThreadClass0(QThread):
     def __init__(self, confirm_op0_tru, tb_0):
         QThread.__init__(self)
@@ -2107,7 +2109,7 @@ class ThreadClass0(QThread):
         self.tb_0 = tb_0
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2126,6 +2128,10 @@ class ThreadClass0(QThread):
             btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op0_tru.setEnabled(True)
+
+            # Enable Stop thread Button
+            stop_thr_button_var[0].setEnabled(True)
+            stop_thr_button_var[0].setIcon(QIcon(small_image[9]))
 
             while confirm_op0_wait is True:
                 time.sleep(0.3)
@@ -2234,6 +2240,8 @@ class ThreadClass0(QThread):
 
             # Disengage
             btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
+            stop_thr_button_var[0].setIcon(QIcon(small_image[8]))
+            stop_thr_button_var[0].setEnabled(False)
             thread_engaged_var[0] = False
 
     def stop_thr(self):
@@ -2246,6 +2254,8 @@ class ThreadClass0(QThread):
         btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op0_tru.setEnabled(False)
         self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        stop_thr_button_var[0].setIcon(QIcon(small_image[8]))
+        stop_thr_button_var[0].setEnabled(False)
         thread_engaged_var[0] = False
 
         self.terminate()
@@ -2259,7 +2269,7 @@ class ThreadClass1(QThread):
         self.tb_1 = tb_1
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2278,6 +2288,10 @@ class ThreadClass1(QThread):
             btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[1]))
             self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op1_tru.setEnabled(True)
+
+            # Enable Stop thread Button
+            stop_thr_button_var[1].setEnabled(True)
+            stop_thr_button_var[1].setIcon(QIcon(small_image[9]))
 
             while confirm_op1_wait is True:
                 time.sleep(0.3)
@@ -2391,6 +2405,8 @@ class ThreadClass1(QThread):
 
             # Disengage
             btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
+            stop_thr_button_var[1].setIcon(QIcon(small_image[8]))
+            stop_thr_button_var[1].setEnabled(False)
             thread_engaged_var[1] = False
 
     def stop_thr(self):
@@ -2403,6 +2419,8 @@ class ThreadClass1(QThread):
         btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op1_tru.setEnabled(False)
         self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        stop_thr_button_var[1].setIcon(QIcon(small_image[8]))
+        stop_thr_button_var[1].setEnabled(False)
         thread_engaged_var[1] = False
 
         self.terminate()
@@ -2416,7 +2434,7 @@ class ThreadClass2(QThread):
         self.tb_2 = tb_2
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2436,6 +2454,10 @@ class ThreadClass2(QThread):
             self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op2_tru.setEnabled(True)
 
+            # Enable Stop thread Button
+            stop_thr_button_var[2].setEnabled(True)
+            stop_thr_button_var[2].setIcon(QIcon(small_image[9]))
+
             while confirm_op2_wait is True:
                 time.sleep(0.3)
             confirm_op2_wait = True
@@ -2449,13 +2471,6 @@ class ThreadClass2(QThread):
                 print('-- ThreadClass2: confirm_op2_bool: accepted')
                 btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
-                
-                # Time Stamp Output
-                time_now = str(datetime.datetime.now())
-                out_str = str('\n' + time_now + ' ' + path + ' --> ' + dest)
-                self.tb_2.append(out_str)
-                self.tb_2.hide()
-                self.tb_2.show()
 
                 # Set Counters For Output Summary
                 cp0_count = 0
@@ -2549,6 +2564,8 @@ class ThreadClass2(QThread):
 
             # Disengage
             btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
+            stop_thr_button_var[2].setIcon(QIcon(small_image[8]))
+            stop_thr_button_var[2].setEnabled(False)
             thread_engaged_var[2] = False
 
     def stop_thr(self):
@@ -2561,6 +2578,8 @@ class ThreadClass2(QThread):
         btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op2_tru.setEnabled(False)
         self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        stop_thr_button_var[2].setIcon(QIcon(small_image[8]))
+        stop_thr_button_var[2].setEnabled(False)
         thread_engaged_var[2] = False
 
         self.terminate()
@@ -2574,7 +2593,7 @@ class ThreadClass3(QThread):
         self.tb_3 = tb_3
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2594,6 +2613,10 @@ class ThreadClass3(QThread):
             self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op3_tru.setEnabled(True)
 
+            # Enable Stop thread Button
+            stop_thr_button_var[3].setEnabled(True)
+            stop_thr_button_var[3].setIcon(QIcon(small_image[9]))
+
             while confirm_op3_wait is True:
                 time.sleep(0.3)
             confirm_op3_wait = True
@@ -2607,13 +2630,6 @@ class ThreadClass3(QThread):
                 print('-- ThreadClass3: confirm_op3_bool: accepted')
                 btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
-                
-                # Time Stamp Output
-                time_now = str(datetime.datetime.now())
-                out_str = str('\n' + time_now + ' ' + path + ' --> ' + dest)
-                self.tb_3.append(out_str)
-                self.tb_3.hide()
-                self.tb_3.show()
 
                 # Set Counters For Output Summary
                 cp0_count = 0
@@ -2707,6 +2723,8 @@ class ThreadClass3(QThread):
 
             # Disengage
             btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
+            stop_thr_button_var[3].setIcon(QIcon(small_image[8]))
+            stop_thr_button_var[3].setEnabled(False)
             thread_engaged_var[3] = False
 
     def stop_thr(self):
@@ -2719,6 +2737,8 @@ class ThreadClass3(QThread):
         btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op3_tru.setEnabled(False)
         self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        stop_thr_button_var[3].setIcon(QIcon(small_image[8]))
+        stop_thr_button_var[3].setEnabled(False)
         thread_engaged_var[3] = False
 
         self.terminate()
@@ -2732,7 +2752,7 @@ class ThreadClass4(QThread):
         self.tb_4 = tb_4
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2752,6 +2772,10 @@ class ThreadClass4(QThread):
             self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op4_tru.setEnabled(True)
 
+            # Enable Stop thread Button
+            stop_thr_button_var[4].setEnabled(True)
+            stop_thr_button_var[4].setIcon(QIcon(small_image[9]))
+
             while confirm_op4_wait is True:
                 time.sleep(0.3)
             confirm_op4_wait = True
@@ -2765,13 +2789,6 @@ class ThreadClass4(QThread):
                 print('-- ThreadClass4: confirm_op4_bool: accepted')
                 btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
-                
-                # Time Stamp Output
-                time_now = str(datetime.datetime.now())
-                out_str = str('\n' + time_now + ' ' + path + ' --> ' + dest)
-                self.tb_4.append(out_str)
-                self.tb_4.hide()
-                self.tb_4.show()
 
                 # Set Counters For Output Summary
                 cp0_count = 0
@@ -2865,6 +2882,8 @@ class ThreadClass4(QThread):
 
             # Disengage
             btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
+            stop_thr_button_var[4].setIcon(QIcon(small_image[8]))
+            stop_thr_button_var[4].setEnabled(False)
             thread_engaged_var[4] = False
 
     def stop_thr(self):
@@ -2877,6 +2896,8 @@ class ThreadClass4(QThread):
         btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op4_tru.setEnabled(False)
         self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        stop_thr_button_var[4].setIcon(QIcon(small_image[8]))
+        stop_thr_button_var[4].setEnabled(False)
         thread_engaged_var[4] = False
 
         self.terminate()
@@ -2890,7 +2911,7 @@ class ThreadClass5(QThread):
         self.tb_5 = tb_5
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var
+        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
         global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2910,6 +2931,10 @@ class ThreadClass5(QThread):
             self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right.png'))
             self.confirm_op5_tru.setEnabled(True)
 
+            # Enable Stop thread Button
+            stop_thr_button_var[5].setEnabled(True)
+            stop_thr_button_var[5].setIcon(QIcon(small_image[9]))
+
             while confirm_op5_wait is True:
                 time.sleep(0.3)
             confirm_op5_wait = True
@@ -2923,13 +2948,6 @@ class ThreadClass5(QThread):
                 print('-- ThreadClass5: confirm_op5_bool: accepted')
                 btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[2]))
                 change_var = False
-                
-                # Time Stamp Output
-                time_now = str(datetime.datetime.now())
-                out_str = str('\n' + time_now + ' ' + path + ' --> ' + dest)
-                self.tb_5.append(out_str)
-                self.tb_5.hide()
-                self.tb_5.show()
 
                 # Set Counters For Output Summary
                 cp0_count = 0
@@ -3023,6 +3041,8 @@ class ThreadClass5(QThread):
 
             # Disengage
             btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
+            stop_thr_button_var[5].setIcon(QIcon(small_image[8]))
+            stop_thr_button_var[5].setEnabled(False)
             thread_engaged_var[5] = False
 
     def stop_thr(self):
@@ -3035,6 +3055,8 @@ class ThreadClass5(QThread):
         btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
         self.confirm_op5_tru.setEnabled(False)
         self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        stop_thr_button_var[5].setIcon(QIcon(small_image[8]))
+        stop_thr_button_var[5].setEnabled(False)
         thread_engaged_var[5] = False
 
         self.terminate()
