@@ -31,6 +31,7 @@ settings_input_response_thread = ()
 update_settings_window_thread = ()
 thread_var = [(), (), (), (), (), ()]
 
+cfg_f = './config.txt'
 source_path_entered = ''
 dest_path_entered = ''
 
@@ -119,9 +120,9 @@ def get_conf_funk():
     dest_path_var = []
     dest_path_bool_var = []
 
-    if os.path.exists('config.txt'):
+    if os.path.exists(cfg_f):
         print('-- found configuration file')
-        with open('config.txt', 'r') as fo:
+        with open(cfg_f, 'r') as fo:
 
             for line in fo:
                 line = line.strip()
@@ -236,10 +237,10 @@ def get_conf_funk():
                         print('config destination path does not exist', line)
                         dest_path_var.append('')
         fo.close()
-    elif not os.path.exists('config.txt'):
+    elif not os.path.exists(cfg_f):
         print('-- creating new configuration file')
-        open('config.txt', 'w').close()
-        with open('config.txt', 'a') as fo:
+        open(cfg_f, 'w').close()
+        with open(cfg_f, 'a') as fo:
             i = 0
             for config_src_vars in config_src_var:
                 fo.writelines(config_src_var[i] + ' x' + '\n')
@@ -1354,7 +1355,7 @@ class App(QMainWindow):
         if os.path.exists(source_path_entered):
             settings_input_response_source_bool = True
             path_item = []
-            with open('config.txt', 'r') as fo:
+            with open(cfg_f, 'r') as fo:
                 for line in fo:
                     line = line.strip()
                     if not line.startswith(config_src_var[source_selected]):
@@ -1362,8 +1363,8 @@ class App(QMainWindow):
                     elif line.startswith(config_src_var[source_selected]):
                         new_line = config_src_var[source_selected]+' '+source_path_entered
                         path_item.append(new_line)
-            open('config.txt', 'w').close()
-            with open('config.txt', 'a') as fo:
+            open(cfg_f, 'w').close()
+            with open(cfg_f, 'a') as fo:
                 i = 0
                 for path_items in path_item:
                     fo.writelines(path_item[i]+'\n')
@@ -1383,7 +1384,7 @@ class App(QMainWindow):
         if os.path.exists(dest_path_entered):
             settings_input_response_dest_bool = True
             path_item = []
-            with open('config.txt', 'r') as fo:
+            with open(cfg_f, 'r') as fo:
                 for line in fo:
                     line = line.strip()
                     if not line.startswith(config_dst_var[dest_selected]):
@@ -1391,8 +1392,8 @@ class App(QMainWindow):
                     elif line.startswith(config_dst_var[dest_selected]):
                         new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
                         path_item.append(new_line)
-            open('config.txt', 'w').close()
-            with open('config.txt', 'a') as fo:
+            open(cfg_f, 'w').close()
+            with open(cfg_f, 'a') as fo:
                 i = 0
                 for path_items in path_item:
                     fo.writelines(path_item[i] + '\n')
@@ -2120,8 +2121,8 @@ class UpdateSettingsWindow(QThread):
             path_bool_var = []
             dest_path_var = []
             dest_path_bool_var = []
-            if os.path.exists('config.txt'):
-                with open('config.txt', 'r') as fo:
+            if os.path.exists(cfg_f):
+                with open(cfg_f, 'r') as fo:
 
                     for line in fo:
                         line = line.strip()
