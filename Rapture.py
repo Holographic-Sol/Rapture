@@ -349,124 +349,6 @@ class App(QMainWindow):
         self.font_s6b = QFont("Segoe UI", 6, QFont.Bold)
         self.font_s8b = QFont("Segoe UI", 8, QFont.Bold)
 
-        # Sector 3: Output Text Browser Dimensions
-        self.tb_w = self.width - 10
-        self.tb_h = 115
-
-        # Sector 3: Output Text Browser 0
-        self.tb_0 = QTextBrowser(self)
-        self.tb_0.move(5, 185)
-        self.tb_0.resize(self.tb_w, self.tb_h)
-        self.tb_0.setFont(self.font_s6)
-        self.tb_0.setObjectName("tb_0")
-        self.tb_0.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
-        self.tb_0.setLineWrapMode(QTextBrowser.NoWrap)
-        self.tb_0.horizontalScrollBar().setValue(0)
-
-        # Sector 3: Output Text Browser 1
-        self.tb_1 = QTextBrowser(self)
-        self.tb_1.move(5, 185)
-        self.tb_1.resize(self.tb_w, self.tb_h)
-        self.tb_1.setFont(self.font_s6)
-        self.tb_1.setObjectName("tb_1")
-        self.tb_1.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
-        self.tb_1.setLineWrapMode(QTextBrowser.NoWrap)
-        self.tb_1.horizontalScrollBar().setValue(0)
-
-        # Sector 3: Output Text Browser 2
-        self.tb_2 = QTextBrowser(self)
-        self.tb_2.move(5, 185)
-        self.tb_2.resize(self.tb_w, self.tb_h)
-        self.tb_2.setFont(self.font_s6)
-        self.tb_2.setObjectName("tb_2")
-        self.tb_2.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
-        self.tb_2.setLineWrapMode(QTextBrowser.NoWrap)
-        self.tb_2.horizontalScrollBar().setValue(0)
-
-        # Sector 3: Output Text Browser 3
-        self.tb_3 = QTextBrowser(self)
-        self.tb_3.move(5, 185)
-        self.tb_3.resize(self.tb_w, self.tb_h)
-        self.tb_3.setFont(self.font_s6)
-        self.tb_3.setObjectName("tb_3")
-        self.tb_3.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
-        self.tb_3.setLineWrapMode(QTextBrowser.NoWrap)
-        self.tb_3.horizontalScrollBar().setValue(0)
-
-        # Sector 3: Output Text Browser 4
-        self.tb_4 = QTextBrowser(self)
-        self.tb_4.move(5, 185)
-        self.tb_4.resize(self.tb_w, self.tb_h)
-        self.tb_4.setFont(self.font_s6)
-        self.tb_4.setObjectName("tb_4")
-        self.tb_4.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
-        self.tb_4.setLineWrapMode(QTextBrowser.NoWrap)
-        self.tb_4.horizontalScrollBar().setValue(0)
-
-        # Sector 3: Output Text Browser 5
-        self.tb_5 = QTextBrowser(self)
-        self.tb_5.move(5, 185)
-        self.tb_5.resize(self.tb_w, self.tb_h)
-        self.tb_5.setFont(self.font_s6)
-        self.tb_5.setObjectName("tb_5")
-        self.tb_5.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
-        self.tb_5.setLineWrapMode(QTextBrowser.NoWrap)
-        self.tb_5.horizontalScrollBar().setValue(0)
-
         self.initUI()
 
     def initUI(self):
@@ -504,26 +386,6 @@ class App(QMainWindow):
             """QPushButton{background-color: rgb(0, 0, 0);
                border:0px solid rgb(0, 0, 0);}"""
                )
-
-        ## Sector 2: File Path Validation LED Source
-        #self.settings_input_response_label_src = QLabel(self)
-        #self.settings_input_response_label_src.move(550, 126)
-        #self.settings_input_response_label_src.resize(5, 15)
-        #self.settings_input_response_label_src.setStyleSheet(
-        #    """QLabel {background-color: rgb(15, 15, 15);
-        #   border:1px solid rgb(15, 15, 15);}"""
-        #   )
-        #settings_input_response_label[0] = self.settings_input_response_label_src
-
-        ## Sector 2: File Path Validation LED Destination
-        #self.settings_input_response_label_dst = QLabel(self)
-        #self.settings_input_response_label_dst.move(550, 145)
-        #self.settings_input_response_label_dst.resize(5, 15)
-        #self.settings_input_response_label_dst.setStyleSheet(
-        #    """QLabel {background-color: rgb(15, 15, 15);
-        #   border:1px solid rgb(15, 15, 15);}"""
-        #   )
-        #settings_input_response_label[1] = self.settings_input_response_label_dst
 
         # Sector 1: Background Colour
         self.back_label_main = QLabel(self)
@@ -1115,6 +977,139 @@ class App(QMainWindow):
         self.confirm_op5_tru.setEnabled(False)
         self.confirm_op5_tru.show()
 
+        # Sector 3: Output Text Browser Dimensions
+        self.tb_w = self.width - 10
+        self.tb_h = 115
+        self.tb_pos_w = 5
+        self.tb_pos_h = 185
+
+        # Sector 3: Output Text Browser Label 0
+        self.tb_label_0 = QLabel(self)
+        self.tb_label_0.move(5, (self.tb_pos_h - 14))
+        self.tb_label_0.resize(87, 14)
+        self.tb_label_0.setFont(self.font_s6b)
+        self.tb_label_0.setStyleSheet(
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
+           border:0px solid rgb(35, 35, 35);}"""
+           )
+        self.tb_label_0.setAlignment(Qt.AlignCenter)
+        self.tb_label_0.hide()
+
+        # Sector 3: Output Text Browser 0
+        self.tb_0 = QTextBrowser(self)
+        self.tb_0.move(self.tb_pos_w, self.tb_pos_h)
+        self.tb_0.resize(self.tb_w, self.tb_h)
+        self.tb_0.setFont(self.font_s6b)
+        self.tb_0.setObjectName("tb_0")
+        self.tb_0.setStyleSheet(
+            """QTextBrowser {background-color: black;
+            border-top:2px solid rgb(35, 35, 35);
+            border-bottom:2px solid rgb(35, 35, 35);
+            border-left:2px solid rgb(35, 35, 35);
+            border-right:2px solid rgb(35, 35, 35);
+            selection-color: black;
+            selection-background-color: rgb(0, 180, 0);
+            color: rgb(0, 180, 0);}"""
+        )
+        self.tb_0.setLineWrapMode(QTextBrowser.NoWrap)
+        self.tb_0.horizontalScrollBar().setValue(0)
+
+        # Sector 3: Output Text Browser 1
+        self.tb_1 = QTextBrowser(self)
+        self.tb_1.move(self.tb_pos_w, self.tb_pos_h)
+        self.tb_1.resize(self.tb_w, self.tb_h)
+        self.tb_1.setFont(self.font_s6b)
+        self.tb_1.setObjectName("tb_1")
+        self.tb_1.setStyleSheet(
+            """QTextBrowser {background-color: black;
+            border-top:2px solid rgb(35, 35, 35);
+            border-bottom:2px solid rgb(35, 35, 35);
+            border-left:2px solid rgb(35, 35, 35);
+            border-right:2px solid rgb(35, 35, 35);
+            selection-color: black;
+            selection-background-color: rgb(0, 180, 0);
+            color: rgb(0, 180, 0);}"""
+        )
+        self.tb_1.setLineWrapMode(QTextBrowser.NoWrap)
+        self.tb_1.horizontalScrollBar().setValue(0)
+
+        # Sector 3: Output Text Browser 2
+        self.tb_2 = QTextBrowser(self)
+        self.tb_2.move(self.tb_pos_w, self.tb_pos_h)
+        self.tb_2.resize(self.tb_w, self.tb_h)
+        self.tb_2.setFont(self.font_s6b)
+        self.tb_2.setObjectName("tb_2")
+        self.tb_2.setStyleSheet(
+            """QTextBrowser {background-color: black;
+            border-top:2px solid rgb(35, 35, 35);
+            border-bottom:2px solid rgb(35, 35, 35);
+            border-left:2px solid rgb(35, 35, 35);
+            border-right:2px solid rgb(35, 35, 35);
+            selection-color: black;
+            selection-background-color: rgb(0, 180, 0);
+            color: rgb(0, 180, 0);}"""
+        )
+        self.tb_2.setLineWrapMode(QTextBrowser.NoWrap)
+        self.tb_2.horizontalScrollBar().setValue(0)
+
+        # Sector 3: Output Text Browser 3
+        self.tb_3 = QTextBrowser(self)
+        self.tb_3.move(self.tb_pos_w, self.tb_pos_h)
+        self.tb_3.resize(self.tb_w, self.tb_h)
+        self.tb_3.setFont(self.font_s6b)
+        self.tb_3.setObjectName("tb_3")
+        self.tb_3.setStyleSheet(
+            """QTextBrowser {background-color: black;
+            border-top:2px solid rgb(35, 35, 35);
+            border-bottom:2px solid rgb(35, 35, 35);
+            border-left:2px solid rgb(35, 35, 35);
+            border-right:2px solid rgb(35, 35, 35);
+            selection-color: black;
+            selection-background-color: rgb(0, 180, 0);
+            color: rgb(0, 180, 0);}"""
+        )
+        self.tb_3.setLineWrapMode(QTextBrowser.NoWrap)
+        self.tb_3.horizontalScrollBar().setValue(0)
+
+        # Sector 3: Output Text Browser 4
+        self.tb_4 = QTextBrowser(self)
+        self.tb_4.move(self.tb_pos_w, self.tb_pos_h)
+        self.tb_4.resize(self.tb_w, self.tb_h)
+        self.tb_4.setFont(self.font_s6b)
+        self.tb_4.setObjectName("tb_4")
+        self.tb_4.setStyleSheet(
+            """QTextBrowser {background-color: black;
+            border-top:2px solid rgb(35, 35, 35);
+            border-bottom:2px solid rgb(35, 35, 35);
+            border-left:2px solid rgb(35, 35, 35);
+            border-right:2px solid rgb(35, 35, 35);
+            selection-color: black;
+            selection-background-color: rgb(0, 180, 0);
+            color: rgb(0, 180, 0);}"""
+        )
+        self.tb_4.setLineWrapMode(QTextBrowser.NoWrap)
+        self.tb_4.horizontalScrollBar().setValue(0)
+
+        # Sector 3: Output Text Browser 5
+        self.tb_5 = QTextBrowser(self)
+        self.tb_5.move(self.tb_pos_w, self.tb_pos_h)
+        self.tb_5.resize(self.tb_w, self.tb_h)
+        self.tb_5.setFont(self.font_s6b)
+        self.tb_5.setObjectName("tb_5")
+        self.tb_5.setStyleSheet(
+            """QTextBrowser {background-color: black;
+            border-top:2px solid rgb(35, 35, 35);
+            border-bottom:2px solid rgb(35, 35, 35);
+            border-left:2px solid rgb(35, 35, 35);
+            border-right:2px solid rgb(35, 35, 35);
+            selection-color: black;
+            selection-background-color: rgb(0, 180, 0);
+            color: rgb(0, 180, 0);}"""
+        )
+        self.tb_5.setLineWrapMode(QTextBrowser.NoWrap)
+        self.tb_5.horizontalScrollBar().setValue(0)
+
         # Sector 1: Attatch Main Function Buttons To Background Tiles Position
         btnx_main_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
         btnx_main_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 5))
@@ -1546,6 +1541,8 @@ class App(QMainWindow):
         self.tb_4.hide()
         self.tb_5.hide()
 
+        self.tb_label_0.hide()
+
         back_label_var[0].resize(95, 80)
         pixmap = QPixmap(background_img[0])
         back_label_var[0].setPixmap(pixmap)
@@ -1639,6 +1636,8 @@ class App(QMainWindow):
         self.settings_source0.show()
         self.settings_dest0.show()
         self.tb_0.show()
+        self.tb_label_0.setText('Archives Output')
+        self.tb_label_0.show()
 
     # Sector 1: Focus In Settings When Priming To Write 1
     def btnx_set_focus_funk_1(self):
@@ -1660,6 +1659,8 @@ class App(QMainWindow):
         self.settings_source1.show()
         self.settings_dest1.show()
         self.tb_1.show()
+        self.tb_label_0.setText('Documents Output')
+        self.tb_label_0.show()
 
     # Sector 1: Focus In Settings When Priming To Write 2
     def btnx_set_focus_funk_2(self):
@@ -1681,6 +1682,8 @@ class App(QMainWindow):
         self.settings_source2.show()
         self.settings_dest2.show()
         self.tb_2.show()
+        self.tb_label_0.setText('Music Output')
+        self.tb_label_0.show()
 
     # Sector 1: Focus In Settings When Priming To Write 3
     def btnx_set_focus_funk_3(self):
@@ -1702,6 +1705,8 @@ class App(QMainWindow):
         self.settings_source3.show()
         self.settings_dest3.show()
         self.tb_3.show()
+        self.tb_label_0.setText('Pictures Output')
+        self.tb_label_0.show()
 
     # Sector 1: Focus In Settings When Priming To Write 4
     def btnx_set_focus_funk_4(self):
@@ -1723,6 +1728,8 @@ class App(QMainWindow):
         self.settings_source4.show()
         self.settings_dest4.show()
         self.tb_4.show()
+        self.tb_label_0.setText('Video Output')
+        self.tb_label_0.show()
 
     # Sector 1: Focus In Settings When Priming To Write 5
     def btnx_set_focus_funk_5(self):
@@ -1744,6 +1751,8 @@ class App(QMainWindow):
         self.settings_source5.show()
         self.settings_dest5.show()
         self.tb_5.show()
+        self.tb_label_0.setText('Programs Output')
+        self.tb_label_0.show()
 
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 0
@@ -1771,6 +1780,8 @@ class App(QMainWindow):
                 self.settings_dest0.show()
 
                 self.tb_0.show()
+                self.tb_label_0.setText('Archives Output')
+                self.tb_label_0.show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1803,6 +1814,8 @@ class App(QMainWindow):
                 self.settings_dest1.show()
 
                 self.tb_1.show()
+                self.tb_label_0.setText('Documents Output')
+                self.tb_label_0.show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1835,6 +1848,8 @@ class App(QMainWindow):
                 self.settings_dest2.show()
 
                 self.tb_2.show()
+                self.tb_label_0.setText('Music Output')
+                self.tb_label_0.show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1867,6 +1882,8 @@ class App(QMainWindow):
                 self.settings_dest3.show()
 
                 self.tb_3.show()
+                self.tb_label_0.setText('Pictures Output')
+                self.tb_label_0.show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1899,6 +1916,8 @@ class App(QMainWindow):
                 self.settings_dest4.show()
 
                 self.tb_4.show()
+                self.tb_label_0.setText('Videos Output')
+                self.tb_label_0.show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1932,6 +1951,8 @@ class App(QMainWindow):
                 self.settings_dest5.show()
 
                 self.tb_5.show()
+                self.tb_label_0.setText('Programs Output')
+                self.tb_label_0.show()
 
                 settings_active_int_prev = settings_active_int
 
