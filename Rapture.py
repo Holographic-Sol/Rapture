@@ -646,18 +646,6 @@ class App(QMainWindow):
            border:0px solid rgb(0, 0, 0);}"""
            )
 
-        # Sector 2: Enable/Disable ReadOnly Path Settings
-        #self.paths_readonly_button = QPushButton(self)
-        #self.paths_readonly_button.resize(15, 35)
-        #self.paths_readonly_button.move(, 126)
-        #self.paths_readonly_button.setIcon(QIcon(small_image[7]))
-        #self.paths_readonly_button.setIconSize(QSize(15, 35))
-        #self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
-        #self.paths_readonly_button.setStyleSheet(
-        #    """QPushButton{background-color: rgb(35, 35, 35);
-        #   border:0px solid rgb(0, 0, 0);}"""
-        #   )
-
         # Sector 2: Settings Page Left
         self.scr_left = QPushButton(self)
         self.scr_left.resize(10, 35)
@@ -1036,7 +1024,7 @@ class App(QMainWindow):
         self.paths_readonly_button.resize(15, 35)
         self.paths_readonly_button.move((set_src_dst_pos_w + set_src_dst_w + 15), 126)
         self.paths_readonly_button.setIcon(QIcon(small_image[7]))
-        self.paths_readonly_button.setIconSize(QSize(15, 35))
+        self.paths_readonly_button.setIconSize(QSize(8, 8))
         self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
         self.paths_readonly_button.setStyleSheet(
             """QPushButton{background-color: rgb(35, 35, 35);
@@ -1314,6 +1302,7 @@ class App(QMainWindow):
                     )
                 i += 1
             self.paths_readonly_button.setIcon(QIcon(small_image[6]))
+            self.paths_readonly_button.setIconSize(QSize(8, 21))
 
         elif read_only is False:
             i = 0
@@ -1339,6 +1328,7 @@ class App(QMainWindow):
                     )
                 i += 1
             self.paths_readonly_button.setIcon(QIcon(small_image[7]))
+            self.paths_readonly_button.setIconSize(QSize(8, 8))
 
     # Sector 2 Funtion: Moves To Next Settings Page Left
     def scr_left_funk(self):
