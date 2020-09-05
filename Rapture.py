@@ -345,6 +345,9 @@ class App(QMainWindow):
         self.font_s5 = QFont("Segoe UI", 5, QFont.Normal)
         self.font_s6 = QFont("Segoe UI", 6, QFont.Normal)
         self.font_s8 = QFont("Segoe UI", 8, QFont.Normal)
+        self.font_s5b = QFont("Segoe UI", 5, QFont.Bold)
+        self.font_s6b = QFont("Segoe UI", 6, QFont.Bold)
+        self.font_s8b = QFont("Segoe UI", 8, QFont.Bold)
 
         # Sector 3: Output Text Browser Dimensions
         self.tb_w = self.width - 10
@@ -502,25 +505,25 @@ class App(QMainWindow):
                border:0px solid rgb(0, 0, 0);}"""
                )
 
-        # Sector 2: File Path Validation LED Source
-        self.settings_input_response_label_src = QLabel(self)
-        self.settings_input_response_label_src.move(550, 135)
-        self.settings_input_response_label_src.resize(5, 15)
-        self.settings_input_response_label_src.setStyleSheet(
-            """QLabel {background-color: rgb(15, 15, 15);
-           border:1px solid rgb(15, 15, 15);}"""
-           )
-        settings_input_response_label[0] = self.settings_input_response_label_src
+        ## Sector 2: File Path Validation LED Source
+        #self.settings_input_response_label_src = QLabel(self)
+        #self.settings_input_response_label_src.move(550, 126)
+        #self.settings_input_response_label_src.resize(5, 15)
+        #self.settings_input_response_label_src.setStyleSheet(
+        #    """QLabel {background-color: rgb(15, 15, 15);
+        #   border:1px solid rgb(15, 15, 15);}"""
+        #   )
+        #settings_input_response_label[0] = self.settings_input_response_label_src
 
-        # Sector 2: File Path Validation LED Destination
-        self.settings_input_response_label_dst = QLabel(self)
-        self.settings_input_response_label_dst.move(550, 155)
-        self.settings_input_response_label_dst.resize(5, 15)
-        self.settings_input_response_label_dst.setStyleSheet(
-            """QLabel {background-color: rgb(15, 15, 15);
-           border:1px solid rgb(15, 15, 15);}"""
-           )
-        settings_input_response_label[1] = self.settings_input_response_label_dst
+        ## Sector 2: File Path Validation LED Destination
+        #self.settings_input_response_label_dst = QLabel(self)
+        #self.settings_input_response_label_dst.move(550, 145)
+        #self.settings_input_response_label_dst.resize(5, 15)
+        #self.settings_input_response_label_dst.setStyleSheet(
+        #    """QLabel {background-color: rgb(15, 15, 15);
+        #   border:1px solid rgb(15, 15, 15);}"""
+        #   )
+        #settings_input_response_label[1] = self.settings_input_response_label_dst
 
         # Sector 1: Background Colour
         self.back_label_main = QLabel(self)
@@ -644,21 +647,21 @@ class App(QMainWindow):
            )
 
         # Sector 2: Enable/Disable ReadOnly Path Settings
-        self.paths_readonly_button = QPushButton(self)
-        self.paths_readonly_button.resize(15, 35)
-        self.paths_readonly_button.move(560, 135)
-        self.paths_readonly_button.setIcon(QIcon(small_image[7]))
-        self.paths_readonly_button.setIconSize(QSize(15, 35))
-        self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
-        self.paths_readonly_button.setStyleSheet(
-            """QPushButton{background-color: rgb(35, 35, 35);
-           border:0px solid rgb(0, 0, 0);}"""
-           )
+        #self.paths_readonly_button = QPushButton(self)
+        #self.paths_readonly_button.resize(15, 35)
+        #self.paths_readonly_button.move(, 126)
+        #self.paths_readonly_button.setIcon(QIcon(small_image[7]))
+        #self.paths_readonly_button.setIconSize(QSize(15, 35))
+        #self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
+        #self.paths_readonly_button.setStyleSheet(
+        #    """QPushButton{background-color: rgb(35, 35, 35);
+        #   border:0px solid rgb(0, 0, 0);}"""
+        #   )
 
         # Sector 2: Settings Page Left
         self.scr_left = QPushButton(self)
         self.scr_left.resize(10, 35)
-        self.scr_left.move(0, 135)
+        self.scr_left.move(0, 126)
         self.scr_left.setIcon(QIcon(small_image[2]))
         self.scr_left.setIconSize(QSize(15, 35))
         self.scr_left.clicked.connect(self.scr_left_funk)
@@ -670,7 +673,7 @@ class App(QMainWindow):
         # Sector 2: Settings Page Right
         self.scr_right = QPushButton(self)
         self.scr_right.resize(10, 35)
-        self.scr_right.move((self.width - 10), 135)
+        self.scr_right.move((self.width - 10), 126)
         self.scr_right.setIcon(QIcon(small_image[3]))
         self.scr_right.setIconSize(QSize(15, 35))
         self.scr_right.clicked.connect(self.scr_right_funk)
@@ -681,119 +684,127 @@ class App(QMainWindow):
 
         # Sector 2: A Label To Signify Source Path Configuration
         self.settings_source_label = QLabel(self)
-        self.settings_source_label.move(30, 135)
-        self.settings_source_label.resize(60, 15)
-        self.settings_source_label.setFont(self.font_s6)
+        self.settings_source_label.move(15, 126)
+        self.settings_source_label.resize(87, 15)
+        self.settings_source_label.setFont(self.font_s6b)
         self.settings_source_label.setText('Source:')
         self.settings_source_label.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.settings_source_label.setAlignment(Qt.AlignCenter) 
 
         # Sector 2: A Label To Signify Destination Path Configuration
         self.settings_dest_label = QLabel(self)
-        self.settings_dest_label.move(30, 155)
-        self.settings_dest_label.resize(60, 15)
-        self.settings_dest_label.setFont(self.font_s6)
+        self.settings_dest_label.move(15, 145)
+        self.settings_dest_label.resize(87, 15)
+        self.settings_dest_label.setFont(self.font_s6b)
         self.settings_dest_label.setText('Destination:')
         self.settings_dest_label.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.settings_dest_label.setAlignment(Qt.AlignCenter) 
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 0
         self.setting_title0 = QLabel(self)
-        self.setting_title0.resize(605, 15)
-        self.setting_title0.move(back_label_ankor_w0, 115)
-        self.setting_title0.setFont(self.font_s6)
-        self.setting_title0.setText("Archive")
+        self.setting_title0.resize(87, 14)
+        self.setting_title0.move((back_label_ankor_w0 + 5), 105)
+        self.setting_title0.setFont(self.font_s6b)
+        self.setting_title0.setText("Archives")
         self.setting_title0.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.setting_title0.setAlignment(Qt.AlignCenter) 
         self.setting_title0.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 1
         self.setting_title1 = QLabel(self)
-        self.setting_title1.resize(605, 15)
-        self.setting_title1.move(back_label_ankor_w1, 115)
-        self.setting_title1.setFont(self.font_s6)
-        self.setting_title1.setText("Document")
+        self.setting_title1.resize(87, 14)
+        self.setting_title1.move((back_label_ankor_w1 + 5), 105)
+        self.setting_title1.setFont(self.font_s6b)
+        self.setting_title1.setText("Documents")
         self.setting_title1.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.setting_title1.setAlignment(Qt.AlignCenter)
+        self.setting_title1.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 2
-        self.setting_title1.hide()
         self.setting_title2 = QLabel(self)
-        self.setting_title2.resize(605, 15)
-        self.setting_title2.move(back_label_ankor_w2, 115)
-        self.setting_title2.setFont(self.font_s6)
+        self.setting_title2.resize(87, 14)
+        self.setting_title2.move((back_label_ankor_w2 + 5), 105)
+        self.setting_title2.setFont(self.font_s6b)
         self.setting_title2.setText("Music")
         self.setting_title2.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.setting_title2.setAlignment(Qt.AlignCenter)
+        self.setting_title2.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 3
-        self.setting_title2.hide()
         self.setting_title3 = QLabel(self)
-        self.setting_title3.resize(605, 15)
-        self.setting_title3.move(back_label_ankor_w3, 115)
-        self.setting_title3.setFont(self.font_s6)
-        self.setting_title3.setText("Picture")
+        self.setting_title3.resize(87, 14)
+        self.setting_title3.move((back_label_ankor_w3 + 5), 105)
+        self.setting_title3.setFont(self.font_s6b)
+        self.setting_title3.setText("Pictures")
         self.setting_title3.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.setting_title3.setAlignment(Qt.AlignCenter)
+        self.setting_title3.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 4
-        self.setting_title3.hide()
         self.setting_title4 = QLabel(self)
-        self.setting_title4.resize(605, 15)
-        self.setting_title4.move(back_label_ankor_w4, 115)
-        self.setting_title4.setFont(self.font_s6)
-        self.setting_title4.setText("Program")
+        self.setting_title4.resize(87, 14)
+        self.setting_title4.move((back_label_ankor_w4 + 5), 105)
+        self.setting_title4.setFont(self.font_s6b)
+        self.setting_title4.setText("Videos")
         self.setting_title4.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.setting_title4.setAlignment(Qt.AlignCenter)
+        self.setting_title4.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 5
-        self.setting_title4.hide()
         self.setting_title5 = QLabel(self)
-        self.setting_title5.resize(605, 15)
-        self.setting_title5.move(back_label_ankor_w5, 115)
-        self.setting_title5.setFont(self.font_s6)
-        self.setting_title5.setText("Video")
+        self.setting_title5.resize(87, 14)
+        self.setting_title5.move((back_label_ankor_w5 + 5), 105)
+        self.setting_title5.setFont(self.font_s6b)
+        self.setting_title5.setText("Programs")
         self.setting_title5.setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-           color: green;
+            """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
            border:0px solid rgb(35, 35, 35);}"""
            )
+        self.setting_title5.setAlignment(Qt.AlignCenter) 
         self.setting_title5.hide()
 
-        set_src_dst_w = 450
-        set_src_dst_pos_w = 95
+        set_src_dst_w = (self.width - 152)
+        set_src_dst_pos_w = 107
 
         # Sector 2: Source Path Configuration Edit 0
         self.settings_source0 = QLineEdit(self)
-        self.settings_source0.move(set_src_dst_pos_w, 135)
+        self.settings_source0.move(set_src_dst_pos_w, 126)
         self.settings_source0.resize(set_src_dst_w, 15)
-        self.settings_source0.setFont(self.font_s6)
+        self.settings_source0.setFont(self.font_s6b)
         self.settings_source0.setText(path_var[0])
         self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
         self.settings_source0.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -804,14 +815,14 @@ class App(QMainWindow):
 
         # Sector 2: Source Path Configuration Edit 1
         self.settings_source1 = QLineEdit(self)
-        self.settings_source1.move(set_src_dst_pos_w, 135)
+        self.settings_source1.move(set_src_dst_pos_w, 126)
         self.settings_source1.resize(set_src_dst_w, 15)
-        self.settings_source1.setFont(self.font_s6)
+        self.settings_source1.setFont(self.font_s6b)
         self.settings_source1.setText(path_var[1])
         self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
         self.settings_source1.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -822,14 +833,14 @@ class App(QMainWindow):
 
         # Sector 2: Source Path Configuration Edit 2
         self.settings_source2 = QLineEdit(self)
-        self.settings_source2.move(set_src_dst_pos_w, 135)
+        self.settings_source2.move(set_src_dst_pos_w, 126)
         self.settings_source2.resize(set_src_dst_w, 15)
-        self.settings_source2.setFont(self.font_s6)
+        self.settings_source2.setFont(self.font_s6b)
         self.settings_source2.setText(path_var[2])
         self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
         self.settings_source2.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -840,14 +851,14 @@ class App(QMainWindow):
 
         # Sector 2: Source Path Configuration Edit 3
         self.settings_source3 = QLineEdit(self)
-        self.settings_source3.move(set_src_dst_pos_w, 135)
+        self.settings_source3.move(set_src_dst_pos_w, 126)
         self.settings_source3.resize(set_src_dst_w, 15)
-        self.settings_source3.setFont(self.font_s6)
+        self.settings_source3.setFont(self.font_s6b)
         self.settings_source3.setText(path_var[3])
         self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
         self.settings_source3.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -858,14 +869,14 @@ class App(QMainWindow):
 
         # Sector 2: Source Path Configuration Edit 4
         self.settings_source4 = QLineEdit(self)
-        self.settings_source4.move(set_src_dst_pos_w, 135)
+        self.settings_source4.move(set_src_dst_pos_w, 126)
         self.settings_source4.resize(set_src_dst_w, 15)
-        self.settings_source4.setFont(self.font_s6)
+        self.settings_source4.setFont(self.font_s6b)
         self.settings_source4.setText(path_var[4])
         self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
         self.settings_source4.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -876,14 +887,14 @@ class App(QMainWindow):
 
         # Sector 2: Source Path Configuration Edit 5
         self.settings_source5 = QLineEdit(self)
-        self.settings_source5.move(set_src_dst_pos_w, 135)
+        self.settings_source5.move(set_src_dst_pos_w, 126)
         self.settings_source5.resize(set_src_dst_w, 15)
-        self.settings_source5.setFont(self.font_s6)
+        self.settings_source5.setFont(self.font_s6b)
         self.settings_source5.setText(path_var[5])
         self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
         self.settings_source5.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -894,14 +905,14 @@ class App(QMainWindow):
 
         # Sector 2: Destination Path Configuration Edit 0
         self.settings_dest0 = QLineEdit(self)
-        self.settings_dest0.move(set_src_dst_pos_w, 155)
+        self.settings_dest0.move(set_src_dst_pos_w, 145)
         self.settings_dest0.resize(set_src_dst_w, 15)
-        self.settings_dest0.setFont(self.font_s6)
+        self.settings_dest0.setFont(self.font_s6b)
         self.settings_dest0.setText(dest_path_var[0])
         self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
         self.settings_dest0.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -912,14 +923,14 @@ class App(QMainWindow):
 
         # Sector 2: Destination Path Configuration Edit 1
         self.settings_dest1 = QLineEdit(self)
-        self.settings_dest1.move(set_src_dst_pos_w, 155)
+        self.settings_dest1.move(set_src_dst_pos_w, 145)
         self.settings_dest1.resize(set_src_dst_w, 15)
-        self.settings_dest1.setFont(self.font_s6)
+        self.settings_dest1.setFont(self.font_s6b)
         self.settings_dest1.setText(dest_path_var[1])
         self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
         self.settings_dest1.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -930,14 +941,14 @@ class App(QMainWindow):
 
         # Sector 2: Destination Path Configuration Edit 2
         self.settings_dest2 = QLineEdit(self)
-        self.settings_dest2.move(set_src_dst_pos_w, 155)
+        self.settings_dest2.move(set_src_dst_pos_w, 145)
         self.settings_dest2.resize(set_src_dst_w, 15)
-        self.settings_dest2.setFont(self.font_s6)
+        self.settings_dest2.setFont(self.font_s6b)
         self.settings_dest2.setText(dest_path_var[2])
         self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
         self.settings_dest2.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -948,14 +959,14 @@ class App(QMainWindow):
 
         # Sector 2: Destination Path Configuration Edit 3
         self.settings_dest3 = QLineEdit(self)
-        self.settings_dest3.move(set_src_dst_pos_w, 155)
+        self.settings_dest3.move(set_src_dst_pos_w, 145)
         self.settings_dest3.resize(set_src_dst_w, 15)
-        self.settings_dest3.setFont(self.font_s6)
+        self.settings_dest3.setFont(self.font_s6b)
         self.settings_dest3.setText(dest_path_var[3])
         self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
         self.settings_dest3.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -966,14 +977,14 @@ class App(QMainWindow):
 
         # Sector 2: Destination Path Configuration Edit 4
         self.settings_dest4 = QLineEdit(self)
-        self.settings_dest4.move(set_src_dst_pos_w, 155)
+        self.settings_dest4.move(set_src_dst_pos_w, 145)
         self.settings_dest4.resize(set_src_dst_w, 15)
-        self.settings_dest4.setFont(self.font_s6)
+        self.settings_dest4.setFont(self.font_s6b)
         self.settings_dest4.setText(dest_path_var[4])
         self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
         self.settings_dest4.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -984,14 +995,14 @@ class App(QMainWindow):
 
         # Sector 2: Destination Path Configuration Edit 5
         self.settings_dest5 = QLineEdit(self)
-        self.settings_dest5.move(set_src_dst_pos_w, 155)
+        self.settings_dest5.move(set_src_dst_pos_w, 145)
         self.settings_dest5.resize(set_src_dst_w, 15)
-        self.settings_dest5.setFont(self.font_s6)
+        self.settings_dest5.setFont(self.font_s6b)
         self.settings_dest5.setText(dest_path_var[5])
         self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
         self.settings_dest5.setStyleSheet(
-            """QLineEdit {background-color: rgb(10, 10, 10);
+            """QLineEdit {background-color: rgb(30, 30, 30);
             border:0px solid rgb(0, 0, 0);
             selection-color: green;
             selection-background-color: black;
@@ -999,6 +1010,38 @@ class App(QMainWindow):
             )
         settings_dest_edit_var.append(self.settings_dest5)
         self.settings_dest5.hide()
+
+        # Sector 2: File Path Validation LED Source
+        self.settings_input_response_label_src = QLabel(self)
+        self.settings_input_response_label_src.move((set_src_dst_pos_w + set_src_dst_w + 5), 126)
+        self.settings_input_response_label_src.resize(5, 15)
+        self.settings_input_response_label_src.setStyleSheet(
+            """QLabel {background-color: rgb(15, 15, 15);
+           border:1px solid rgb(15, 15, 15);}"""
+           )
+        settings_input_response_label[0] = self.settings_input_response_label_src
+
+        # Sector 2: File Path Validation LED Destination
+        self.settings_input_response_label_dst = QLabel(self)
+        self.settings_input_response_label_dst.move((set_src_dst_pos_w + set_src_dst_w + 5), 145)
+        self.settings_input_response_label_dst.resize(5, 15)
+        self.settings_input_response_label_dst.setStyleSheet(
+            """QLabel {background-color: rgb(15, 15, 15);
+           border:1px solid rgb(15, 15, 15);}"""
+           )
+        settings_input_response_label[1] = self.settings_input_response_label_dst
+
+        # Sector 2: Enable/Disable ReadOnly Path Settings
+        self.paths_readonly_button = QPushButton(self)
+        self.paths_readonly_button.resize(15, 35)
+        self.paths_readonly_button.move((set_src_dst_pos_w + set_src_dst_w + 15), 126)
+        self.paths_readonly_button.setIcon(QIcon(small_image[7]))
+        self.paths_readonly_button.setIconSize(QSize(15, 35))
+        self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
+        self.paths_readonly_button.setStyleSheet(
+            """QPushButton{background-color: rgb(35, 35, 35);
+           border:0px solid rgb(0, 0, 0);}"""
+           )
 
          # Sector 1: Main Function Confirmation 0
         self.confirm_op0_tru = QPushButton(self)
@@ -1252,7 +1295,7 @@ class App(QMainWindow):
             for settings_source_edit_vars in settings_source_edit_var:
                 settings_source_edit_var[i].setReadOnly(False)
                 settings_source_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(20, 20, 20);
+                    """QLineEdit {background-color: rgb(30, 30, 30);
                     border:0px solid rgb(0, 0, 0);
                     selection-color: green;
                     selection-background-color: black;
@@ -1263,7 +1306,7 @@ class App(QMainWindow):
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(False)
                 settings_dest_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(20, 20, 20);
+                    """QLineEdit {background-color: rgb(30, 30, 30);
                     border:0px solid rgb(0, 0, 0);
                     selection-color: green;
                     selection-background-color: black;
@@ -1277,7 +1320,7 @@ class App(QMainWindow):
             for settings_source_edit_vars in settings_source_edit_var:
                 settings_source_edit_var[i].setReadOnly(True)
                 settings_source_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(10, 10, 10);
+                    """QLineEdit {background-color: rgb(30, 30, 30);
                     border:0px solid rgb(0, 0, 0);
                     selection-color: green;
                     selection-background-color: black;
@@ -1288,7 +1331,7 @@ class App(QMainWindow):
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(True)
                 settings_dest_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(10, 10, 10);
+                    """QLineEdit {background-color: rgb(30, 30, 30);
                     border:0px solid rgb(0, 0, 0);
                     selection-color: green;
                     selection-background-color: black;
