@@ -286,12 +286,12 @@ class App(QMainWindow):
                     subcontrol-origin: margin;
                     }
                     QScrollBar::up-arrow:vertical {
-                    image:url('./image/small_img_menu_up.png');
+                    image:url('./image/small_img_scroll_up.png');
                     height: 11px;
                     width: 11px;
                     }
                     QScrollBar::down-arrow:vertical {
-                    image:url('./image/small_img_menu_down.png');
+                    image:url('./image/small_img_scroll_down.png');
                     height: 11px;
                     width: 11px;
                     }
