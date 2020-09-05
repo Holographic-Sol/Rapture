@@ -64,6 +64,8 @@ back_label_ankor_h0 = ()
 
 path_var = []
 dest_path_var = []
+path_bool_var = []
+dest_path_bool_var = []
 btnx_main_var = []
 stop_thr_button_var = []
 comp_cont_button_var = []
@@ -105,14 +107,20 @@ btnx_img_led_var = ['./image/btnx_img_led_red.png',
                 './image/btnx_img_led_amber.png',
                 './image/btnx_img_led_green.png']
 
+src_limit = 7
+dest_limit = 7
+
 
 # Read Configuration File
 def get_conf_funk():
-    global path_var, dest_path_var
+    global path_var, path_bool_var, dest_path_var, dest_path_bool_var, src_limit, dest_limit
     path_var = []
+    path_bool_var = []
     dest_path_var = []
+    dest_path_bool_var = []
 
     if os.path.exists('config.txt'):
+        print('-- found configuration file')
         with open('config.txt', 'r') as fo:
 
             for line in fo:
@@ -228,6 +236,20 @@ def get_conf_funk():
                         print('config destination path does not exist', line)
                         dest_path_var.append('')
         fo.close()
+    elif not os.path.exists('config.txt'):
+        print('-- creating new configuration file')
+        open('config.txt', 'w').close()
+        with open('config.txt', 'a') as fo:
+            i = 0
+            for config_src_vars in config_src_var:
+                fo.writelines(config_src_var[i] + ' x' + '\n')
+                i += 1
+            i = 0
+            for config_dst_vars in config_dst_var:
+                fo.writelines(config_dst_var[i] + ' x' + '\n')
+                i += 1
+        fo.close()
+        get_conf_funk()
 
 
 class App(QMainWindow):
@@ -2088,13 +2110,16 @@ class UpdateSettingsWindow(QThread):
 
     # While Source And Destination Path Configuration Edit ReadOnly, Check Configured Paths Existance And Set Boolean Accordingly
     def get_conf_funk(self):
-        global path_var, dest_path_var, settings_source_edit_var, settings_dest_edit_var, configuration_engaged
+        global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
+            settings_dest_edit_var, configuration_engaged
         configuration_engaged = True
 
         # Only Update Displayed Source & Destination Paths If Source & Destination Paths Not Being Edited
         if settings_source_edit_var[0].isReadOnly() is True:
             path_var = []
+            path_bool_var = []
             dest_path_var = []
+            dest_path_bool_var = []
             if os.path.exists('config.txt'):
                 with open('config.txt', 'r') as fo:
 
@@ -2237,7 +2262,7 @@ class ThreadClass0(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2395,7 +2420,7 @@ class ThreadClass1(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2558,7 +2583,7 @@ class ThreadClass2(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2715,7 +2740,7 @@ class ThreadClass3(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2872,7 +2897,7 @@ class ThreadClass4(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2882,6 +2907,8 @@ class ThreadClass4(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[4]
             dest = dest_path_var[4]
+            #path_bool = path_bool_var[4]
+            dest_bool = dest_path_bool_var[4]
             compare_bool = compare_bool_var[4]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
@@ -3029,7 +3056,7 @@ class ThreadClass5(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
+        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -3039,6 +3066,8 @@ class ThreadClass5(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[5]
             dest = dest_path_var[5]
+            #path_bool = path_bool_var[5]
+            dest_bool = dest_path_bool_var[5]
             compare_bool = compare_bool_var[5]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
