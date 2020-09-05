@@ -64,8 +64,6 @@ back_label_ankor_h0 = ()
 
 path_var = []
 dest_path_var = []
-path_bool_var = []
-dest_path_bool_var = []
 btnx_main_var = []
 stop_thr_button_var = []
 comp_cont_button_var = []
@@ -75,19 +73,19 @@ settings_source_edit_var = []
 settings_dest_edit_var = []
 settings_input_response_label = [(), ()]
 
-config_src_var = ['ARCHIVE_SOURCE',
-                  'DOCUMENT_SOURCE',
-                  'MUSIC_SOURCE',
-                  'PICTURE_SOURCE',
-                  'PROGRAMS_SOURCE',
-                  'VIDEO_SOURCE']
+config_src_var = ['SOURCE 0:',
+                  'SOURCE 1:',
+                  'SOURCE 2:',
+                  'SOURCE 3:',
+                  'SOURCE 4:',
+                  'SOURCE 5:']
 
-config_dst_var = ['ARCHIVE_DESTINATION',
-                  'DOCUMENT_DESTINATION',
-                  'MUSIC_DESTINATION',
-                  'PICTURE_DESTINATION',
-                  'PROGRAMS_DESTINATION',
-                  'VIDEO_DESTINATION']
+config_dst_var = ['DESTINATION 0:',
+                  'DESTINATION 1:',
+                  'DESTINATION 2:',
+                  'DESTINATION 3:',
+                  'DESTINATION 4:',
+                  'DESTINATION 5:']
 
 background_img = ['./image/background_img_black_label_0.png',
                   './image/background_img_black_label_1.png']
@@ -107,55 +105,128 @@ btnx_img_led_var = ['./image/btnx_img_led_red.png',
                 './image/btnx_img_led_amber.png',
                 './image/btnx_img_led_green.png']
 
+
 # Read Configuration File
 def get_conf_funk():
-    global path_var, path_bool_var, dest_path_var, dest_path_bool_var
+    global path_var, dest_path_var
     path_var = []
-    path_bool_var = []
     dest_path_var = []
-    dest_path_bool_var = []
+
     if os.path.exists('config.txt'):
         with open('config.txt', 'r') as fo:
+
             for line in fo:
                 line = line.strip()
-                i = 0
-                for config_src_vars in config_src_var:
-                    if line.startswith(config_src_var[i]):
-                        key_word_length = len(config_src_var[i])
-                        primary_key = line[:key_word_length]
-                        secondary_key = line[key_word_length:]
-                        primary_key = primary_key.strip()
-                        secondary_key = secondary_key.strip()
-                        if primary_key.endswith('_SOURCE'):
-                            if os.path.exists(secondary_key):
-                                if (primary_key + '_True') not in path_bool_var:
-                                    path_var.append(secondary_key)
-                                    path_bool_var.append(primary_key + '_True')
-                                    print(primary_key + '_True')
-                            elif not os.path.exists(secondary_key):
-                                if (primary_key + '_False') not in path_bool_var:
-                                    path_var.append('')
-                                    path_bool_var.append(primary_key + '_False')
-                                    print(primary_key + '_False')
-                    i += 1
-                i = 0
-                for config_dst_vars in config_dst_var:
-                    if line.startswith(config_dst_var[i]):
-                        key_word_length = len(config_dst_var[i])
-                        primary_key = line[:key_word_length]
-                        secondary_key = line[key_word_length:]
-                        primary_key = primary_key.strip()
-                        secondary_key = secondary_key.strip()
-                        if primary_key.endswith('_DESTINATION'):
-                            if os.path.exists(secondary_key):
-                                if (primary_key + '_True') not in dest_path_bool_var:
-                                    dest_path_var.append(secondary_key)
-                                    dest_path_bool_var.append(primary_key + '_True')
-                            elif not os.path.exists(secondary_key):
-                                if (primary_key + '_False') not in dest_path_bool_var:
-                                    dest_path_var.append('')
-                                    dest_path_bool_var.append(primary_key + '_False')
-                    i += 1
+
+                # Read Sources
+                if line.startswith('SOURCE 0: '):
+                    line = line.replace('SOURCE 0: ', '')
+                    if os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path exists:', line)
+                        path_var.append(line)
+                    elif not os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path does not exist', line)
+                        path_var.append('')
+
+                if line.startswith('SOURCE 1: '):
+                    line = line.replace('SOURCE 1: ', '')
+                    if os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path exists:', line)
+                        path_var.append(line)
+                    elif not os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path does not exist', line)
+                        path_var.append('')
+
+                if line.startswith('SOURCE 2: '):
+                    line = line.replace('SOURCE 2: ', '')
+                    if os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path exists:', line)
+                        path_var.append(line)
+                    elif not os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path does not exist', line)
+                        path_var.append('')
+
+                if line.startswith('SOURCE 3: '):
+                    line = line.replace('SOURCE 3: ', '')
+                    if os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path exists:', line)
+                        path_var.append(line)
+                    elif not os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path does not exist', line)
+                        path_var.append('')
+
+                if line.startswith('SOURCE 4: '):
+                    line = line.replace('SOURCE 4: ', '')
+                    if os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path exists:', line)
+                        path_var.append(line)
+                    elif not os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path does not exist', line)
+                        path_var.append('')
+
+                if line.startswith('SOURCE 5: '):
+                    line = line.replace('SOURCE 5: ', '')
+                    if os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path exists:', line)
+                        path_var.append(line)
+                    elif not os.path.exists(line) and len(path_var) <= 6:
+                        print('config source path does not exist', line)
+                        path_var.append('')
+                        
+                # Read Destination
+                if line.startswith('DESTINATION 0: '):
+                    line = line.replace('DESTINATION 0: ', '')
+                    if os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path exists:', line)
+                        dest_path_var.append(line)
+                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path does not exist', line)
+                        dest_path_var.append('')
+
+                if line.startswith('DESTINATION 1: '):
+                    line = line.replace('DESTINATION 1: ', '')
+                    if os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path exists:', line)
+                        dest_path_var.append(line)
+                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path does not exist', line)
+                        dest_path_var.append('')
+
+                if line.startswith('DESTINATION 2: '):
+                    line = line.replace('DESTINATION 2: ', '')
+                    if os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path exists:', line)
+                        dest_path_var.append(line)
+                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path does not exist', line)
+                        dest_path_var.append('')
+
+                if line.startswith('DESTINATION 3: '):
+                    line = line.replace('DESTINATION 3: ', '')
+                    if os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path exists:', line)
+                        dest_path_var.append(line)
+                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path does not exist', line)
+                        dest_path_var.append('')
+
+                if line.startswith('DESTINATION 4: '):
+                    line = line.replace('DESTINATION 4: ', '')
+                    if os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path exists:', line)
+                        dest_path_var.append(line)
+                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path does not exist', line)
+                        dest_path_var.append('')
+
+                if line.startswith('DESTINATION 5: '):
+                    line = line.replace('DESTINATION 5: ', '')
+                    if os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path exists:', line)
+                        dest_path_var.append(line)
+                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                        print('config destination path does not exist', line)
+                        dest_path_var.append('')
         fo.close()
 
 
@@ -2017,71 +2088,127 @@ class UpdateSettingsWindow(QThread):
 
     # While Source And Destination Path Configuration Edit ReadOnly, Check Configured Paths Existance And Set Boolean Accordingly
     def get_conf_funk(self):
-        global path_var, path_bool_var, dest_path_var, dest_path_bool_var, settings_source_edit_var,\
-            settings_dest_edit_var, configuration_engaged
+        global path_var, dest_path_var, settings_source_edit_var, settings_dest_edit_var, configuration_engaged
         configuration_engaged = True
 
         # Only Update Displayed Source & Destination Paths If Source & Destination Paths Not Being Edited
         if settings_source_edit_var[0].isReadOnly() is True:
             path_var = []
-            path_bool_var = []
             dest_path_var = []
-            dest_path_bool_var = []
             if os.path.exists('config.txt'):
                 with open('config.txt', 'r') as fo:
-                    configuration_engaged = True
+
                     for line in fo:
                         line = line.strip()
 
-                        # Check If Source Paths In Configuration File Are Valid 
-                        i = 0
-                        for config_src_vars in config_src_var:
-                            if line.startswith(config_src_var[i]):
-                                key_word_length = len(config_src_var[i])
-                                primary_key = line[:key_word_length]
-                                secondary_key = line[key_word_length:]
-                                primary_key = primary_key.strip()
-                                secondary_key = secondary_key.strip()
-                                if primary_key.endswith('_SOURCE'):
-                                    if os.path.exists(secondary_key):
-                                        if (primary_key + '_True') not in path_bool_var:
+                        if line.startswith('SOURCE 0: '):
+                            line = line.replace('SOURCE 0: ', '')
+                            if os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path exists:', line)
+                                path_var.append(line)
+                            elif not os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path does not exist', line)
+                                path_var.append('')
 
-                                            # Append Source Path To List
-                                            path_var.append(secondary_key)
+                        if line.startswith('SOURCE 1: '):
+                            line = line.replace('SOURCE 1: ', '')
+                            if os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path exists:', line)
+                                path_var.append(line)
+                            elif not os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path does not exist', line)
+                                path_var.append('')
 
-                                            # Set Boolean Value To Compliment Source Path Existance
-                                            path_bool_var.append(primary_key + '_True')
+                        if line.startswith('SOURCE 2: '):
+                            line = line.replace('SOURCE 2: ', '')
+                            if os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path exists:', line)
+                                path_var.append(line)
+                            elif not os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path does not exist', line)
+                                path_var.append('')
 
-                                    elif not os.path.exists(secondary_key):
-                                        if (primary_key + '_False') not in path_bool_var:
-                                            path_var.append('')
-                                            path_bool_var.append(primary_key + '_False')
-                            i += 1
+                        if line.startswith('SOURCE 3: '):
+                            line = line.replace('SOURCE 3: ', '')
+                            if os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path exists:', line)
+                                path_var.append(line)
+                            elif not os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path does not exist', line)
+                                path_var.append('')
 
-                        # Check If Destination Paths In Configuration File Are Valid
-                        i = 0
-                        for config_dst_vars in config_dst_var:
-                            if line.startswith(config_dst_var[i]):
-                                key_word_length = len(config_dst_var[i])
-                                primary_key = line[:key_word_length]
-                                secondary_key = line[key_word_length:]
-                                primary_key = primary_key.strip()
-                                secondary_key = secondary_key.strip()
-                                if primary_key.endswith('_DESTINATION'):
-                                    if os.path.exists(secondary_key):
-                                        if (primary_key + '_True') not in dest_path_bool_var:
+                        if line.startswith('SOURCE 4: '):
+                            line = line.replace('SOURCE 4: ', '')
+                            if os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path exists:', line)
+                                path_var.append(line)
+                            elif not os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path does not exist', line)
+                                path_var.append('')
 
-                                            # Append Destination Path To List
-                                            dest_path_var.append(secondary_key)
+                        if line.startswith('SOURCE 5: '):
+                            line = line.replace('SOURCE 5: ', '')
+                            if os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path exists:', line)
+                                path_var.append(line)
+                            elif not os.path.exists(line) and len(path_var) <= 6:
+                                # print('config source path does not exist', line)
+                                path_var.append('')
 
-                                            # Set Boolean Value To Compliment Destination Path Existance
-                                            dest_path_bool_var.append(primary_key + '_True')
+                        # Read Destination
+                        if line.startswith('DESTINATION 0: '):
+                            line = line.replace('DESTINATION 0: ', '')
+                            if os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path exists:', line)
+                                dest_path_var.append(line)
+                            elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path does not exist', line)
+                                dest_path_var.append('')
 
-                                    elif not os.path.exists(secondary_key):
-                                        if (primary_key + '_False') not in dest_path_bool_var:
-                                            dest_path_var.append('')
-                                            dest_path_bool_var.append(primary_key + '_False')
-                            i += 1
+                        if line.startswith('DESTINATION 1: '):
+                            line = line.replace('DESTINATION 1: ', '')
+                            if os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path exists:', line)
+                                dest_path_var.append(line)
+                            elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path does not exist', line)
+                                dest_path_var.append('')
+
+                        if line.startswith('DESTINATION 2: '):
+                            line = line.replace('DESTINATION 2: ', '')
+                            if os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path exists:', line)
+                                dest_path_var.append(line)
+                            elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path does not exist', line)
+                                dest_path_var.append('')
+
+                        if line.startswith('DESTINATION 3: '):
+                            line = line.replace('DESTINATION 3: ', '')
+                            if os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path exists:', line)
+                                dest_path_var.append(line)
+                            elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path does not exist', line)
+                                dest_path_var.append('')
+
+                        if line.startswith('DESTINATION 4: '):
+                            line = line.replace('DESTINATION 4: ', '')
+                            if os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path exists:', line)
+                                dest_path_var.append(line)
+                            elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path does not exist', line)
+                                dest_path_var.append('')
+
+                        if line.startswith('DESTINATION 5: '):
+                            line = line.replace('DESTINATION 5: ', '')
+                            if os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path exists:', line)
+                                dest_path_var.append(line)
+                            elif not os.path.exists(line) and len(dest_path_var) <= 6:
+                                # print('config destination path does not exist', line)
+                                dest_path_var.append('')
                 fo.close()
 
                 # Set Displayed Source Path(s)
@@ -2110,7 +2237,7 @@ class ThreadClass0(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
+        global configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2120,8 +2247,6 @@ class ThreadClass0(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[0]
             dest = dest_path_var[0]
-            path_bool = path_bool_var[0]
-            dest_bool = dest_path_bool_var[0]
             compare_bool = compare_bool_var[0]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
@@ -2153,7 +2278,7 @@ class ThreadClass0(QThread):
                 cp1_count = 0
                 cp1_fail_count = 0
 
-                if path_bool == 'ARCHIVE_SOURCE_True' and dest_bool == 'ARCHIVE_DESTINATION_True':
+                if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
 
@@ -2270,7 +2395,7 @@ class ThreadClass1(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
+        global configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2280,8 +2405,6 @@ class ThreadClass1(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[1]
             dest = dest_path_var[1]
-            path_bool = path_bool_var[1]
-            dest_bool = dest_path_bool_var[1]
             compare_bool = compare_bool_var[1]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
@@ -2313,7 +2436,7 @@ class ThreadClass1(QThread):
                 cp1_count = 0
                 cp1_fail_count = 0
 
-                if path_bool == 'DOCUMENT_SOURCE_True' and dest_bool == 'DOCUMENT_DESTINATION_True':
+                if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2435,7 +2558,7 @@ class ThreadClass2(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
+        global configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2445,8 +2568,6 @@ class ThreadClass2(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[2]
             dest = dest_path_var[2]
-            path_bool = path_bool_var[2]
-            dest_bool = dest_path_bool_var[2]
             compare_bool = compare_bool_var[2]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
@@ -2478,7 +2599,7 @@ class ThreadClass2(QThread):
                 cp1_count = 0
                 cp1_fail_count = 0
 
-                if path_bool == 'MUSIC_SOURCE_True' and dest_bool == 'MUSIC_DESTINATION_True':
+                if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2594,7 +2715,7 @@ class ThreadClass3(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
+        global configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2604,8 +2725,6 @@ class ThreadClass3(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[3]
             dest = dest_path_var[3]
-            path_bool = path_bool_var[3]
-            dest_bool = dest_path_bool_var[3]
             compare_bool = compare_bool_var[3]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
@@ -2637,7 +2756,7 @@ class ThreadClass3(QThread):
                 cp1_count = 0
                 cp1_fail_count = 0
 
-                if path_bool == 'PICTURE_SOURCE_True' and dest_bool == 'PICTURE_DESTINATION_True':
+                if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2753,7 +2872,7 @@ class ThreadClass4(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
+        global configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2763,8 +2882,6 @@ class ThreadClass4(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[4]
             dest = dest_path_var[4]
-            path_bool = path_bool_var[4]
-            dest_bool = dest_path_bool_var[4]
             compare_bool = compare_bool_var[4]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
@@ -2796,7 +2913,7 @@ class ThreadClass4(QThread):
                 cp1_count = 0
                 cp1_fail_count = 0
 
-                if path_bool == 'PROGRAMS_SOURCE_True' and dest_bool == 'PROGRAMS_DESTINATION_True':
+                if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
@@ -2912,7 +3029,7 @@ class ThreadClass5(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
-        global path_bool_var, dest_path_bool_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
+        global configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2922,8 +3039,6 @@ class ThreadClass5(QThread):
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
             path = path_var[5]
             dest = dest_path_var[5]
-            path_bool = path_bool_var[5]
-            dest_bool = dest_path_bool_var[5]
             compare_bool = compare_bool_var[5]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
@@ -2955,7 +3070,7 @@ class ThreadClass5(QThread):
                 cp1_count = 0
                 cp1_fail_count = 0
 
-                if path_bool == 'VIDEO_SOURCE_True' and dest_bool == 'VIDEO_DESTINATION_True':
+                if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
                             fullpath = os.path.join(dirname, fname)
