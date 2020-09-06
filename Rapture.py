@@ -970,7 +970,9 @@ class App(QMainWindow):
                                      self.img_stop_thread_true)
 
         # Thread: LEDs In Sector 2 Indicate Source & Destination Path Validity
-        settings_input_response_thread = SettingsInputResponse()
+        settings_input_response_thread = SettingsInputResponse(self.default_valid_path_led_green,
+                                                               self.default_valid_path_led_red,
+                                                               self.default_valid_path_led)
 
         # Plugged In & Threaded: Display The Application
         self.show()
@@ -1097,10 +1099,12 @@ class App(QMainWindow):
            border:1px solid rgb(15, 15, 15);}"""
 
         # Default Stylesheet: Valid Source Path LED Green
-        self.default_valid_path_led_green = ""
+        self.default_valid_path_led_green = """QLabel {background-color: rgb(0, 255, 0);
+           border:2px solid rgb(35, 35, 35);}"""
 
         # Default Stylesheet: Valid Source Path LED Red
-        self.default_valid_path_led_red = ""
+        self.default_valid_path_led_red = """QLabel {background-color: rgb(255, 0, 0);
+           border:2px solid rgb(35, 35, 35);}"""
 
         # Default StyleSheet: QLabels
         self.default_qlbl_style = """QLabel {background-color: rgb(30, 30, 30);
@@ -1896,8 +1900,11 @@ class ScalingClass(QThread):
 
 # Input Respons Class: LED's Dsilpay Valid/Invalid Paths Attempted At Being Set In Sector 2 Source & Destination Path Configuration
 class SettingsInputResponse(QThread):
-    def __init__(self):
+    def __init__(self, default_valid_path_led_green, default_valid_path_led_red, default_valid_path_led):
         QThread.__init__(self)
+        self.default_valid_path_led_green = default_valid_path_led_green
+        self.default_valid_path_led_red = default_valid_path_led_red
+        self.default_valid_path_led = default_valid_path_led
 
     def run(self):
         global settings_input_response_source_bool, settings_input_response_dest_bool
@@ -2151,11 +2158,11 @@ class ThreadClass0(QThread):
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
-                                        shutil.copy(fullpath, t_path)
+                                        shutil.copy2(fullpath, t_path)
                                     except IOError:
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
+                                            shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_0.append(output_str)
@@ -2309,18 +2316,18 @@ class ThreadClass1(QThread):
                             fullpath = os.path.join(dirname, fname)
                             t_path = fullpath.replace(path, '')
                             t_path = dest + t_path
-                            #
+
                             if not fullpath.endswith('.ini'):
 
                                 # Write 0: If File Not Exists In Destination
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
-                                        shutil.copy(fullpath, t_path)
+                                        shutil.copy2(fullpath, t_path)
                                     except IOError:
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
-                                            shutil.copy(fullpath, t_path)
+                                            shutil.copy2(fullpath, t_path)
                                         except:
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_1.append(output_str)
