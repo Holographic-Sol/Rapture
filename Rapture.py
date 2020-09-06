@@ -2217,17 +2217,30 @@ class ThreadClass0(QThread):
                                                     self.tb_0.append(output_str)
 
                                             # Mode 1: Check File
-                                            ma = os.path.getmtime(fullpath)
-                                            mb = os.path.getmtime(t_path)
-                                            siz_src = os.path.getsize(fullpath)
-                                            siz_dest = os.path.getsize(t_path)
-
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
-                                                output_str = str('updated file: ' + t_path).strip()
-                                                self.tb_0.append(output_str)
-                                                cp1_count += 1
-                                            elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path).strip()
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    self.tb_0.append(output_str)
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        self.tb_0.append(output_str)
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        self.tb_0.append(output_str)
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 self.tb_0.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -2385,22 +2398,30 @@ class ThreadClass1(QThread):
                                                     self.tb_1.append(output_str)
 
                                             # Mode 1: Check File
-                                            ma = os.path.getmtime(fullpath)
-                                            mb = os.path.getmtime(t_path)
-                                            siz_src = os.path.getsize(fullpath)
-                                            siz_dest = os.path.getsize(t_path)
-
-                                            ma_str = str(ma)
-                                            mb_str = str(mb)
-                                            print('ma:'+ ma_str)
-                                            print('mb:'+ mb_str)
-
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
-                                                output_str = str('updated file: ' + t_path).strip()
-                                                self.tb_1.append(output_str)
-                                                cp1_count += 1
-                                            elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path).strip()
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    self.tb_1.append(output_str)
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        self.tb_1.append(output_str)
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        self.tb_1.append(output_str)
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 self.tb_1.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -2557,17 +2578,30 @@ class ThreadClass2(QThread):
                                                     self.tb_2.append(output_str)
 
                                             # Mode 1: Check File
-                                            ma = os.path.getmtime(fullpath)
-                                            mb = os.path.getmtime(t_path)
-                                            siz_src = os.path.getsize(fullpath)
-                                            siz_dest = os.path.getsize(t_path)
-
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
-                                                output_str = str('updated file: ' + t_path).strip()
-                                                self.tb_2.append(output_str)
-                                                cp1_count += 1
-                                            elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path).strip()
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    self.tb_2.append(output_str)
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        self.tb_2.append(output_str)
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        self.tb_2.append(output_str)
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 self.tb_2.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -2724,17 +2758,30 @@ class ThreadClass3(QThread):
                                                     self.tb_3.append(output_str)
 
                                             # Mode 1: Check File
-                                            ma = os.path.getmtime(fullpath)
-                                            mb = os.path.getmtime(t_path)
-                                            siz_src = os.path.getsize(fullpath)
-                                            siz_dest = os.path.getsize(t_path)
-
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
-                                                output_str = str('updated file: ' + t_path).strip()
-                                                self.tb_3.append(output_str)
-                                                cp1_count += 1
-                                            elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path).strip()
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    self.tb_3.append(output_str)
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        self.tb_3.append(output_str)
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        self.tb_3.append(output_str)
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 self.tb_3.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -2891,17 +2938,30 @@ class ThreadClass4(QThread):
                                                     self.tb_4.append(output_str)
 
                                             # Mode 1: Check File
-                                            ma = os.path.getmtime(fullpath)
-                                            mb = os.path.getmtime(t_path)
-                                            siz_src = os.path.getsize(fullpath)
-                                            siz_dest = os.path.getsize(t_path)
-
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
-                                                output_str = str('updated file: ' + t_path).strip()
-                                                self.tb_4.append(output_str)
-                                                cp1_count += 1
-                                            elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path).strip()
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    self.tb_4.append(output_str)
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        self.tb_4.append(output_str)
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        self.tb_4.append(output_str)
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 self.tb_4.append(output_str)
                                                 cp1_fail_count += 1
 
@@ -3058,17 +3118,30 @@ class ThreadClass5(QThread):
                                                     self.tb_5.append(output_str)
 
                                             # Mode 1: Check File
-                                            ma = os.path.getmtime(fullpath)
-                                            mb = os.path.getmtime(t_path)
-                                            siz_src = os.path.getsize(fullpath)
-                                            siz_dest = os.path.getsize(t_path)
-
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
-                                                output_str = str('updated file: ' + t_path).strip()
-                                                self.tb_5.append(output_str)
-                                                cp1_count += 1
-                                            elif not os.path.exists(t_path) or mb < ma or siz_src != siz_dest:
-                                                output_str = str('failed to update file: ' + t_path).strip()
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    self.tb_5.append(output_str)
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        self.tb_5.append(output_str)
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        self.tb_5.append(output_str)
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 self.tb_5.append(output_str)
                                                 cp1_fail_count += 1
 
