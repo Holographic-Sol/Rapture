@@ -298,6 +298,8 @@ class App(QMainWindow):
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
 
+        self.output_verbosity = 1
+
         # Title Bar: Close
         self.close_button = QPushButton(self)
         self.close_button.move((self.width - 20), 0)
@@ -912,7 +914,8 @@ class App(QMainWindow):
                                      self.img_execute_false,
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
-                                     self.img_stop_thread_true)
+                                     self.img_stop_thread_true,
+                                     self.output_verbosity)
 
         # Thread: Main Function Thread - Read/Write Thread 1
         thread_var[1] = ThreadClass1(self.tb_1,
@@ -923,7 +926,8 @@ class App(QMainWindow):
                                      self.img_execute_false,
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
-                                     self.img_stop_thread_true)
+                                     self.img_stop_thread_true,
+                                     self.output_verbosity)
 
         # Thread: Main Function Thread - Read/Write Thread 2
         thread_var[2] = ThreadClass2(self.tb_2,
@@ -934,7 +938,8 @@ class App(QMainWindow):
                                      self.img_execute_false,
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
-                                     self.img_stop_thread_true)
+                                     self.img_stop_thread_true,
+                                     self.output_verbosity)
 
         # Thread: Main Function Thread - Read/Write Thread 3
         thread_var[3] = ThreadClass3(self.tb_3,
@@ -945,7 +950,8 @@ class App(QMainWindow):
                                      self.img_execute_false,
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
-                                     self.img_stop_thread_true)
+                                     self.img_stop_thread_true,
+                                     self.output_verbosity)
 
         # Thread: Main Function Thread - Read/Write Thread 4
         thread_var[4] = ThreadClass4(self.tb_4,
@@ -956,7 +962,8 @@ class App(QMainWindow):
                                      self.img_execute_false,
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
-                                     self.img_stop_thread_true)
+                                     self.img_stop_thread_true,
+                                     self.output_verbosity)
 
         # Thread: Main Function Thread - Read/Write Thread 5
         thread_var[5] = ThreadClass5(self.tb_5,
@@ -967,7 +974,8 @@ class App(QMainWindow):
                                      self.img_execute_false,
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
-                                     self.img_stop_thread_true)
+                                     self.img_stop_thread_true,
+                                     self.output_verbosity)
 
         # Thread: LEDs In Sector 2 Indicate Source & Destination Path Validity
         settings_input_response_thread = SettingsInputResponse(self.default_valid_path_led_green,
@@ -2090,7 +2098,7 @@ class UpdateSettingsWindow(QThread):
 
 # Sector 1 Class: Main Function Button Thread 0  self.stop_thr_button.setIcon(QIcon(self.img_stop_thread_false))
 class ThreadClass0(QThread):
-    def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
+    def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
         self.tb_0 = tb_0
         self.confirm_op0_tru = confirm_op0_tru
@@ -2101,6 +2109,7 @@ class ThreadClass0(QThread):
         self.img_execute_true = img_execute_true
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
+        self.output_verbosity = output_verbosity
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2154,7 +2163,7 @@ class ThreadClass0(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Write 0: If File Not Exists In Destination
+                                # Mode 0: Write
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2167,32 +2176,30 @@ class ThreadClass0(QThread):
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_0.append(output_str)
 
-                                    # Check File Now Exists In Destination  # ToDo --> Ensure os.get.stat fSize t_path never returns 0 (observed false negative)
-                                    # EDIT
-                                    siz_src = str(os.path.getsize(fullpath))
-                                    siz_dest = ()
-                                    if os.path.exists(t_path):
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
                                         siz_dest = str(os.path.getsize(t_path))
 
-                                        print('size src:', siz_src, '  |  size dst:', siz_dest)
-
                                         if siz_src == siz_dest:
-                                            output_str = str('copied new: ' + siz_dest + '/' + siz_src + ' ' + t_path).strip()
-                                            # EDIT END
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_0.append(output_str)
                                             cp0_count += 1
 
-                                    elif not os.path.exists(t_path) or siz_src != siz_dest:
-                                        if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                            self.tb_0.append(output_str)
-                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_0.append(output_str)
                                             cp0_fail_count += 1
 
-                                # Write 1: If File Exists In Destination But Needs Updating
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        self.tb_0.append(output_str)
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Time Stamp Compare
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2209,7 +2216,7 @@ class ThreadClass0(QThread):
                                                     output_str = str('error: ' + t_path).strip()
                                                     self.tb_0.append(output_str)
 
-                                            # Check File Now Exists In Destination
+                                            # Mode 1: Check File
                                             ma = os.path.getmtime(fullpath)
                                             mb = os.path.getmtime(t_path)
                                             siz_src = os.path.getsize(fullpath)
@@ -2259,7 +2266,7 @@ class ThreadClass0(QThread):
 
 # Sector 1 Class: Main Function Button Thread 1
 class ThreadClass1(QThread):
-    def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
+    def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
         self.tb_1 = tb_1
         self.confirm_op1_tru = confirm_op1_tru
@@ -2270,6 +2277,7 @@ class ThreadClass1(QThread):
         self.img_execute_true = img_execute_true
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
+        self.output_verbosity = output_verbosity
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2323,7 +2331,7 @@ class ThreadClass1(QThread):
 
                             if not fullpath.endswith('.ini'):
 
-                                # Write 0: If File Not Exists In Destination
+                                # Mode 0: Write
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2336,28 +2344,30 @@ class ThreadClass1(QThread):
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_1.append(output_str)
 
-                                    # Check File Now Exists In Destination
-                                    siz_src = os.path.getsize(fullpath)
-                                    siz_dest = ()
-                                    if os.path.exists(t_path):
-                                        siz_dest = os.path.getsize(t_path)
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
 
                                         if siz_src == siz_dest:
-                                            output_str = str('copied new: ' + t_path).strip()
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_1.append(output_str)
                                             cp0_count += 1
 
-                                    elif not os.path.exists(t_path) or siz_src != siz_dest:
-                                        if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                            self.tb_1.append(output_str)
-                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
-                                            cp0_fail_count += 1
+                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_1.append(output_str)
+                                            cp0_fail_count += 1
 
-                                # Write 1: If File Exists In Destination But Needs Updating
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        self.tb_1.append(output_str)
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Time Stamp Compare
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2374,7 +2384,7 @@ class ThreadClass1(QThread):
                                                     output_str = str('error: ' + t_path).strip()
                                                     self.tb_1.append(output_str)
 
-                                            # Check File Now Exists In Destination
+                                            # Mode 1: Check File
                                             ma = os.path.getmtime(fullpath)
                                             mb = os.path.getmtime(t_path)
                                             siz_src = os.path.getsize(fullpath)
@@ -2429,7 +2439,7 @@ class ThreadClass1(QThread):
 
 # Sector 1 Class: Main Function Button Thread 2
 class ThreadClass2(QThread):
-    def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
+    def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
         self.tb_2 = tb_2
         self.confirm_op2_tru = confirm_op2_tru
@@ -2440,6 +2450,7 @@ class ThreadClass2(QThread):
         self.img_execute_true = img_execute_true
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
+        self.output_verbosity = output_verbosity
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2492,7 +2503,7 @@ class ThreadClass2(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Write 0: If File Not Exists In Destination
+                                # Mode 0: Write
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2505,28 +2516,30 @@ class ThreadClass2(QThread):
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_2.append(output_str)
 
-                                    # Check File Now Exists In Destination
-                                    siz_src = os.path.getsize(fullpath)
-                                    siz_dest = ()
-                                    if os.path.exists(t_path):
-                                        siz_dest = os.path.getsize(t_path)
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
 
                                         if siz_src == siz_dest:
-                                            output_str = str('copied new: ' + t_path).strip()
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_2.append(output_str)
                                             cp0_count += 1
 
-                                    elif not os.path.exists(t_path) or siz_src != siz_dest:
-                                        if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                            self.tb_2.append(output_str)
-                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_2.append(output_str)
                                             cp0_fail_count += 1
 
-                                # Write 1: If File Exists In Destination But Needs Updating
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        self.tb_2.append(output_str)
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Time Stamp Compare
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2543,7 +2556,7 @@ class ThreadClass2(QThread):
                                                     output_str = str('error: ' + t_path).strip()
                                                     self.tb_2.append(output_str)
 
-                                            # Check File Now Exists In Destination
+                                            # Mode 1: Check File
                                             ma = os.path.getmtime(fullpath)
                                             mb = os.path.getmtime(t_path)
                                             siz_src = os.path.getsize(fullpath)
@@ -2593,7 +2606,7 @@ class ThreadClass2(QThread):
 
 # Sector 1 Class: Main Function Button Thread 3
 class ThreadClass3(QThread):
-    def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
+    def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
         self.tb_3 = tb_3
         self.confirm_op3_tru = confirm_op3_tru
@@ -2604,6 +2617,7 @@ class ThreadClass3(QThread):
         self.img_execute_true = img_execute_true
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
+        self.output_verbosity = output_verbosity
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2656,7 +2670,7 @@ class ThreadClass3(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Write 0: If File Not Exists In Destination
+                                # Mode 0: Write
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2669,28 +2683,30 @@ class ThreadClass3(QThread):
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_3.append(output_str)
 
-                                    # Check File Now Exists In Destination
-                                    siz_src = os.path.getsize(fullpath)
-                                    siz_dest = ()
-                                    if os.path.exists(t_path):
-                                        siz_dest = os.path.getsize(t_path)
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
 
                                         if siz_src == siz_dest:
-                                            output_str = str('copied new: ' + t_path).strip()
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_3.append(output_str)
                                             cp0_count += 1
 
-                                    elif not os.path.exists(t_path) or siz_src != siz_dest:
-                                        if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                            self.tb_3.append(output_str)
-                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_3.append(output_str)
                                             cp0_fail_count += 1
 
-                                # Write 1: If File Exists In Destination But Needs Updating
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        self.tb_3.append(output_str)
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Time Stamp Compare
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2707,7 +2723,7 @@ class ThreadClass3(QThread):
                                                     output_str = str('error: ' + t_path).strip()
                                                     self.tb_3.append(output_str)
 
-                                            # Check File Now Exists In Destination
+                                            # Mode 1: Check File
                                             ma = os.path.getmtime(fullpath)
                                             mb = os.path.getmtime(t_path)
                                             siz_src = os.path.getsize(fullpath)
@@ -2757,7 +2773,7 @@ class ThreadClass3(QThread):
 
 # Sector 1 Class: Main Function Button Thread 4
 class ThreadClass4(QThread):
-    def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
+    def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
         self.tb_4 = tb_4
         self.confirm_op4_tru = confirm_op4_tru
@@ -2768,6 +2784,7 @@ class ThreadClass4(QThread):
         self.img_execute_true = img_execute_true
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
+        self.output_verbosity = output_verbosity
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2820,7 +2837,7 @@ class ThreadClass4(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Write 0: If File Not Exists In Destination
+                                # Mode 0: Write
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2833,28 +2850,30 @@ class ThreadClass4(QThread):
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_4.append(output_str)
 
-                                    # Check File Now Exists In Destination
-                                    siz_src = os.path.getsize(fullpath)
-                                    siz_dest = ()
-                                    if os.path.exists(t_path):
-                                        siz_dest = os.path.getsize(t_path)
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
 
                                         if siz_src == siz_dest:
-                                            output_str = str('copied new: ' + t_path).strip()
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_4.append(output_str)
                                             cp0_count += 1
 
-                                    elif not os.path.exists(t_path) or siz_src != siz_dest:
-                                        if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                            self.tb_4.append(output_str)
-                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_4.append(output_str)
                                             cp0_fail_count += 1
 
-                                # Write 1: If File Exists In Destination But Needs Updating
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        self.tb_4.append(output_str)
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Time Stamp Compare
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2871,7 +2890,7 @@ class ThreadClass4(QThread):
                                                     output_str = str('error: ' + t_path).strip()
                                                     self.tb_4.append(output_str)
 
-                                            # Check File Now Exists In Destination
+                                            # Mode 1: Check File
                                             ma = os.path.getmtime(fullpath)
                                             mb = os.path.getmtime(t_path)
                                             siz_src = os.path.getsize(fullpath)
@@ -2921,7 +2940,7 @@ class ThreadClass4(QThread):
 
 # Sector 1 Class: Main Function Button Thread 5
 class ThreadClass5(QThread):
-    def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
+    def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
         self.tb_5 = tb_5
         self.confirm_op5_tru = confirm_op5_tru
@@ -2932,6 +2951,7 @@ class ThreadClass5(QThread):
         self.img_execute_true = img_execute_true
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
+        self.output_verbosity = output_verbosity
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2984,7 +3004,7 @@ class ThreadClass5(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Write 0: If File Not Exists In Destination
+                                # Mode 0: Write
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2997,28 +3017,30 @@ class ThreadClass5(QThread):
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_5.append(output_str)
 
-                                    # Check File Now Exists In Destination
-                                    siz_src = os.path.getsize(fullpath)
-                                    siz_dest = ()
-                                    if os.path.exists(t_path):
-                                        siz_dest = os.path.getsize(t_path)
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
 
                                         if siz_src == siz_dest:
-                                            output_str = str('copied new: ' + t_path).strip()
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_5.append(output_str)
                                             cp0_count += 1
 
-                                    elif not os.path.exists(t_path) or siz_src != siz_dest:
-                                        if not os.path.exists(t_path):
-                                            output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                            self.tb_5.append(output_str)
-                                            cp0_fail_count += 1
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (bytes difference): ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             self.tb_5.append(output_str)
                                             cp0_fail_count += 1
 
-                                # Write 1: If File Exists In Destination But Needs Updating
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        self.tb_5.append(output_str)
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Time Stamp Compare
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -3035,7 +3057,7 @@ class ThreadClass5(QThread):
                                                     output_str = str('error: ' + t_path).strip()
                                                     self.tb_5.append(output_str)
 
-                                            # Check File Now Exists In Destination
+                                            # Mode 1: Check File
                                             ma = os.path.getmtime(fullpath)
                                             mb = os.path.getmtime(t_path)
                                             siz_src = os.path.getsize(fullpath)
