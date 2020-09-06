@@ -72,6 +72,7 @@ btnx_settings_var = []
 settings_source_edit_var = []
 settings_dest_edit_var = []
 settings_input_response_label = [(), ()]
+paths_readonly_button_var = []
 
 config_src_var = ['SOURCE 0:',
                   'SOURCE 1:',
@@ -288,7 +289,7 @@ class App(QMainWindow):
     def initUI(self):
         global pressed_int
         global thread_var, settings_input_response_thread, update_settings_window_thread
-        global btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, back_label_var
+        global btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, back_label_var, paths_readonly_button_var
         global settings_source_edit_var, settings_dest_edit_var, settings_input_response_label
         global path_var, dest_path_var
         global confirm_op0_bool, confirm_op0_wait, confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait
@@ -358,6 +359,9 @@ class App(QMainWindow):
         back_label_var[4].move(back_label_ankor_w4, back_label_ankor_h4)
         back_label_var[5].move(back_label_ankor_w5, back_label_ankor_h5)
 
+        set_src_dst_w = (self.width - 152)
+        set_src_dst_pos_w = 107
+
         # Sector 1: Objects Placed On Top Background Tiles
         i = 0
         while i < 6:
@@ -397,6 +401,17 @@ class App(QMainWindow):
             self.stop_thr_button.setStyleSheet(self.default_qpbtn_style)
             stop_thr_button_var.append(self.stop_thr_button)
             self.stop_thr_button.setEnabled(False)
+
+            # Sector 2: Enable/Disable ReadOnly Path Settings
+            paths_readonly_button = 'paths_readonly_button' + str(i)
+            self.paths_readonly_button = QPushButton(self)
+            self.paths_readonly_button.resize(15, 35)
+            self.paths_readonly_button.move((set_src_dst_pos_w + set_src_dst_w + 15), 126)
+            self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_button.setIconSize(QSize(8, 8))
+            self.paths_readonly_button.setStyleSheet(self.default_qpbtn_style)
+            paths_readonly_button_var.append(self.paths_readonly_button)
+            paths_readonly_button_var[i].hide()
 
             i += 1
 
@@ -512,9 +527,6 @@ class App(QMainWindow):
         self.setting_title5.setStyleSheet(self.default_qlbl_style)
         self.setting_title5.setAlignment(Qt.AlignCenter) 
         self.setting_title5.hide()
-
-        set_src_dst_w = (self.width - 152)
-        set_src_dst_pos_w = 107
 
         # Sector 2: Source Path Configuration Edit 0
         self.settings_source0 = QLineEdit(self)
@@ -673,15 +685,6 @@ class App(QMainWindow):
         self.settings_input_response_label_dst.resize(5, 15)
         self.settings_input_response_label_dst.setStyleSheet(self.default_valid_path_led)
         settings_input_response_label[1] = self.settings_input_response_label_dst
-
-        # Sector 2: Enable/Disable ReadOnly Path Settings
-        self.paths_readonly_button = QPushButton(self)
-        self.paths_readonly_button.resize(15, 35)
-        self.paths_readonly_button.move((set_src_dst_pos_w + set_src_dst_w + 15), 126)
-        self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_true))
-        self.paths_readonly_button.setIconSize(QSize(8, 8))
-        self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
-        self.paths_readonly_button.setStyleSheet(self.default_qpbtn_style)
 
          # Sector 1: Main Function Confirmation 0
         self.confirm_op0_tru = QPushButton(self)
@@ -895,6 +898,14 @@ class App(QMainWindow):
         btnx_settings_var[3].clicked.connect(self.settings_funk3)
         btnx_settings_var[4].clicked.connect(self.settings_funk4)
         btnx_settings_var[5].clicked.connect(self.settings_funk5)
+
+        # Sector 2: Plug Read Only Buttons Into Read Only Functions
+        paths_readonly_button_var[0].clicked.connect(self.paths_readonly_button_funk_0)
+        paths_readonly_button_var[1].clicked.connect(self.paths_readonly_button_funk_1)
+        paths_readonly_button_var[2].clicked.connect(self.paths_readonly_button_funk_2)
+        paths_readonly_button_var[3].clicked.connect(self.paths_readonly_button_funk_3)
+        paths_readonly_button_var[4].clicked.connect(self.paths_readonly_button_funk_4)
+        paths_readonly_button_var[5].clicked.connect(self.paths_readonly_button_funk_5)
 
         # Thread: Adjusts App Geometry To Account For Display Re-Scaling
         self.oldPos = self.pos()
@@ -1237,43 +1248,107 @@ class App(QMainWindow):
         confirm_op5_bool = True
         confirm_op5_wait = False
 
-    # Section 2 Funtion: Set's ReadOnly For Source And Settings Configuration And Configures Display To Reflect ReadOnly State
-    def paths_readonly_funk(self):
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 0 #
+    def paths_readonly_button_funk_0(self):
+        print('-- plugged in: paths_readonly_button_funk_0')
         global settings_source_edit_vars
-        read_only = True
 
         if settings_source_edit_var[0].isReadOnly() is True:
-            read_only = True
+            settings_source_edit_var[0].setReadOnly(False)
+            settings_dest_edit_var[0].setReadOnly(False)
+            paths_readonly_button_var[0].setIcon(QIcon(self.img_read_ony_false))
+            paths_readonly_button_var[0].setIconSize(QSize(8, 21))
+
         elif settings_source_edit_var[0].isReadOnly() is False:
-            read_only = False
+            settings_source_edit_var[0].setReadOnly(True)
+            settings_dest_edit_var[0].setReadOnly(True)
+            paths_readonly_button_var[0].setIcon(QIcon(self.img_read_ony_true))
+            paths_readonly_button_var[0].setIconSize(QSize(8, 8))
 
-        if read_only is True:
-            i = 0
-            for settings_source_edit_vars in settings_source_edit_var:
-                settings_source_edit_var[i].setReadOnly(False)
-                settings_source_edit_var[i].setStyleSheet(self.default_qle_style)
-                i += 1
-            i = 0
-            for settings_dest_edit_vars in settings_dest_edit_var:
-                settings_dest_edit_var[i].setReadOnly(False)
-                settings_dest_edit_var[i].setStyleSheet(self.default_qle_style)
-                i += 1
-            self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_false))
-            self.paths_readonly_button.setIconSize(QSize(8, 21))
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 1
+    def paths_readonly_button_funk_1(self):
+        print('-- plugged in: paths_readonly_button_funk_1')
+        global settings_source_edit_vars
 
-        elif read_only is False:
-            i = 0
-            for settings_source_edit_vars in settings_source_edit_var:
-                settings_source_edit_var[i].setReadOnly(True)
-                settings_source_edit_var[i].setStyleSheet(self.default_qle_style)
-                i += 1
-            i = 0
-            for settings_dest_edit_vars in settings_dest_edit_var:
-                settings_dest_edit_var[i].setReadOnly(True)
-                settings_dest_edit_var[i].setStyleSheet(self.default_qle_style)
-                i += 1
-            self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_true))
-            self.paths_readonly_button.setIconSize(QSize(8, 8))
+        if settings_source_edit_var[1].isReadOnly() is True:
+            settings_source_edit_var[1].setReadOnly(False)
+            settings_dest_edit_var[1].setReadOnly(False)
+            paths_readonly_button_var[1].setIcon(QIcon(self.img_read_ony_false))
+            paths_readonly_button_var[1].setIconSize(QSize(8, 21))
+
+        elif settings_source_edit_var[1].isReadOnly() is False:
+            settings_source_edit_var[1].setReadOnly(True)
+            settings_dest_edit_var[1].setReadOnly(True)
+            paths_readonly_button_var[1].setIcon(QIcon(self.img_read_ony_true))
+            paths_readonly_button_var[1].setIconSize(QSize(8, 8))
+
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 2
+    def paths_readonly_button_funk_2(self):
+        print('-- plugged in: paths_readonly_button_funk_2')
+        global settings_source_edit_vars
+
+        if settings_source_edit_var[2].isReadOnly() is True:
+            settings_source_edit_var[2].setReadOnly(False)
+            settings_dest_edit_var[2].setReadOnly(False)
+            paths_readonly_button_var[2].setIcon(QIcon(self.img_read_ony_false))
+            paths_readonly_button_var[2].setIconSize(QSize(8, 21))
+
+        elif settings_source_edit_var[2].isReadOnly() is False:
+            settings_source_edit_var[2].setReadOnly(True)
+            settings_dest_edit_var[2].setReadOnly(True)
+            paths_readonly_button_var[2].setIcon(QIcon(self.img_read_ony_true))
+            paths_readonly_button_var[2].setIconSize(QSize(8, 8))
+
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 3
+    def paths_readonly_button_funk_3(self):
+        print('-- plugged in: paths_readonly_button_funk_3')
+        global settings_source_edit_vars
+
+        if settings_source_edit_var[3].isReadOnly() is True:
+            settings_source_edit_var[3].setReadOnly(False)
+            settings_dest_edit_var[3].setReadOnly(False)
+            paths_readonly_button_var[3].setIcon(QIcon(self.img_read_ony_false))
+            paths_readonly_button_var[3].setIconSize(QSize(8, 21))
+
+        elif settings_source_edit_var[3].isReadOnly() is False:
+            settings_source_edit_var[3].setReadOnly(True)
+            settings_dest_edit_var[3].setReadOnly(True)
+            paths_readonly_button_var[3].setIcon(QIcon(self.img_read_ony_true))
+            paths_readonly_button_var[3].setIconSize(QSize(8, 8))
+
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 4
+    def paths_readonly_button_funk_4(self):
+        print('-- plugged in: paths_readonly_button_funk_4')
+        global settings_source_edit_vars
+
+        if settings_source_edit_var[4].isReadOnly() is True:
+            settings_source_edit_var[4].setReadOnly(False)
+            settings_dest_edit_var[4].setReadOnly(False)
+            paths_readonly_button_var[4].setIcon(QIcon(self.img_read_ony_false))
+            paths_readonly_button_var[4].setIconSize(QSize(8, 21))
+
+        elif settings_source_edit_var[4].isReadOnly() is False:
+            settings_source_edit_var[4].setReadOnly(True)
+            settings_dest_edit_var[4].setReadOnly(True)
+            paths_readonly_button_var[4].setIcon(QIcon(self.img_read_ony_true))
+            paths_readonly_button_var[4].setIconSize(QSize(8, 8))
+
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 5
+    def paths_readonly_button_funk_5(self):
+        print('-- plugged in: paths_readonly_button_funk_5')
+        global settings_source_edit_vars
+
+        if settings_source_edit_var[5].isReadOnly() is True:
+            settings_source_edit_var[5].setReadOnly(False)
+            settings_dest_edit_var[5].setReadOnly(False)
+            paths_readonly_button_var[5].setIcon(QIcon(self.img_read_ony_false))
+            paths_readonly_button_var[5].setIconSize(QSize(8, 21))
+
+        elif settings_source_edit_var[5].isReadOnly() is False:
+            settings_source_edit_var[5].setReadOnly(True)
+            settings_dest_edit_var[5].setReadOnly(True)
+            paths_readonly_button_var[5].setIcon(QIcon(self.img_read_ony_true))
+            paths_readonly_button_var[5].setIconSize(QSize(8, 8))
 
     # Sector 2 Funtion: Moves To Next Settings Page Left
     def scr_left_funk(self):
@@ -1507,6 +1582,13 @@ class App(QMainWindow):
         btnx_settings_var[4].setIcon(QIcon(self.img_show_menu_false))
         btnx_settings_var[5].setIcon(QIcon(self.img_show_menu_false))
 
+        paths_readonly_button_var[0].hide()
+        paths_readonly_button_var[1].hide()
+        paths_readonly_button_var[2].hide()
+        paths_readonly_button_var[3].hide()
+        paths_readonly_button_var[4].hide()
+        paths_readonly_button_var[5].hide()
+
     # Sector 2: Funtion: Calls hide_settings_funk Then Hides Settings Page By Resizing Window
     def hide_settings_page_funk(self):
         self.hide_settings_funk()
@@ -1529,6 +1611,12 @@ class App(QMainWindow):
         self.tb_0.show()
         self.tb_label_0.setText('Archives Output')
         self.tb_label_0.show()
+        settings_source_edit_var[0].setReadOnly(True)
+        settings_dest_edit_var[0].setReadOnly(True)
+        paths_readonly_button_var[0].setIconSize(QSize(8, 8))
+        paths_readonly_button_var[0].setIcon(QIcon(self.img_read_ony_true))
+        paths_readonly_button_var[0].show()
+        paths_readonly_button_var[0].setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 1
     def btnx_set_focus_funk_1(self):
@@ -1547,6 +1635,12 @@ class App(QMainWindow):
         self.tb_1.show()
         self.tb_label_0.setText('Documents Output')
         self.tb_label_0.show()
+        settings_source_edit_var[1].setReadOnly(True)
+        settings_dest_edit_var[1].setReadOnly(True)
+        paths_readonly_button_var[1].setIconSize(QSize(8, 8))
+        paths_readonly_button_var[1].setIcon(QIcon(self.img_read_ony_true))
+        paths_readonly_button_var[1].show()
+        paths_readonly_button_var[1].setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 2
     def btnx_set_focus_funk_2(self):
@@ -1565,6 +1659,12 @@ class App(QMainWindow):
         self.tb_2.show()
         self.tb_label_0.setText('Music Output')
         self.tb_label_0.show()
+        settings_source_edit_var[2].setReadOnly(True)
+        settings_dest_edit_var[2].setReadOnly(True)
+        paths_readonly_button_var[2].setIconSize(QSize(8, 8))
+        paths_readonly_button_var[2].setIcon(QIcon(self.img_read_ony_true))
+        paths_readonly_button_var[2].show()
+        paths_readonly_button_var[2].setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 3
     def btnx_set_focus_funk_3(self):
@@ -1583,6 +1683,12 @@ class App(QMainWindow):
         self.tb_3.show()
         self.tb_label_0.setText('Pictures Output')
         self.tb_label_0.show()
+        settings_source_edit_var[3].setReadOnly(True)
+        settings_dest_edit_var[3].setReadOnly(True)
+        paths_readonly_button_var[3].setIconSize(QSize(8, 8))
+        paths_readonly_button_var[3].setIcon(QIcon(self.img_read_ony_true))
+        paths_readonly_button_var[3].show()
+        paths_readonly_button_var[3].setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 4
     def btnx_set_focus_funk_4(self):
@@ -1601,6 +1707,12 @@ class App(QMainWindow):
         self.tb_4.show()
         self.tb_label_0.setText('Video Output')
         self.tb_label_0.show()
+        settings_source_edit_var[4].setReadOnly(True)
+        settings_dest_edit_var[4].setReadOnly(True)
+        paths_readonly_button_var[4].setIconSize(QSize(8, 8))
+        paths_readonly_button_var[4].setIcon(QIcon(self.img_read_ony_true))
+        paths_readonly_button_var[4].show()
+        paths_readonly_button_var[4].setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 5
     def btnx_set_focus_funk_5(self):
@@ -1619,6 +1731,12 @@ class App(QMainWindow):
         self.tb_5.show()
         self.tb_label_0.setText('Programs Output')
         self.tb_label_0.show()
+        settings_source_edit_var[5].setReadOnly(True)
+        settings_dest_edit_var[5].setReadOnly(True)
+        paths_readonly_button_var[5].setIconSize(QSize(8, 8))
+        paths_readonly_button_var[5].setIcon(QIcon(self.img_read_ony_true))
+        paths_readonly_button_var[5].show()
+        paths_readonly_button_var[5].setEnabled(False)
 
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 0
@@ -1641,6 +1759,8 @@ class App(QMainWindow):
                 self.tb_0.show()
                 self.tb_label_0.setText('Archives Output')
                 self.tb_label_0.show()
+
+                paths_readonly_button_var[0].show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1669,6 +1789,8 @@ class App(QMainWindow):
                 self.tb_label_0.setText('Documents Output')
                 self.tb_label_0.show()
 
+                paths_readonly_button_var[1].show()
+
                 settings_active_int_prev = settings_active_int
 
             elif settings_active_int == settings_active_int_prev:
@@ -1695,6 +1817,8 @@ class App(QMainWindow):
                 self.tb_2.show()
                 self.tb_label_0.setText('Music Output')
                 self.tb_label_0.show()
+
+                paths_readonly_button_var[2].show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1723,6 +1847,8 @@ class App(QMainWindow):
                 self.tb_label_0.setText('Pictures Output')
                 self.tb_label_0.show()
 
+                paths_readonly_button_var[3].show()
+
                 settings_active_int_prev = settings_active_int
 
             elif settings_active_int == settings_active_int_prev:
@@ -1749,6 +1875,8 @@ class App(QMainWindow):
                 self.tb_4.show()
                 self.tb_label_0.setText('Videos Output')
                 self.tb_label_0.show()
+
+                paths_readonly_button_var[4].show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -1777,6 +1905,8 @@ class App(QMainWindow):
                 self.tb_5.show()
                 self.tb_label_0.setText('Programs Output')
                 self.tb_label_0.show()
+
+                paths_readonly_button_var[5].show()
 
                 settings_active_int_prev = settings_active_int
 
@@ -2096,7 +2226,7 @@ class UpdateSettingsWindow(QThread):
         configuration_engaged = False
 
 
-# Sector 1 Class: Main Function Button Thread 0  self.stop_thr_button.setIcon(QIcon(self.img_stop_thread_false))
+# Sector 1 Class: Main Function Button Thread 0  self.stop_thr_button.setIcon(QIcon(self.img_stop_thread_false))  settings_source_edit_var
 class ThreadClass0(QThread):
     def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
@@ -2113,7 +2243,7 @@ class ThreadClass0(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
+        global configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2259,6 +2389,7 @@ class ThreadClass0(QThread):
             stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[0].setEnabled(False)
             thread_engaged_var[0] = False
+            paths_readonly_button_var[0].setEnabled(True)
 
     def stop_thr(self):
         global btnx_main_var
@@ -2273,6 +2404,7 @@ class ThreadClass0(QThread):
         stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[0].setEnabled(False)
         thread_engaged_var[0] = False
+        paths_readonly_button_var[0].setEnabled(True)
 
         self.terminate()
 
@@ -2294,7 +2426,7 @@ class ThreadClass1(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
+        global configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2440,6 +2572,7 @@ class ThreadClass1(QThread):
             stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[1].setEnabled(False)
             thread_engaged_var[1] = False
+            paths_readonly_button_var[1].setEnabled(True)
 
     def stop_thr(self):
         global btnx_main_var
@@ -2454,6 +2587,7 @@ class ThreadClass1(QThread):
         stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[1].setEnabled(False)
         thread_engaged_var[1] = False
+        paths_readonly_button_var[1].setEnabled(True)
 
         self.terminate()
 
@@ -2475,7 +2609,7 @@ class ThreadClass2(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
+        global configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2620,6 +2754,7 @@ class ThreadClass2(QThread):
             stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[2].setEnabled(False)
             thread_engaged_var[2] = False
+            paths_readonly_button_var[2].setEnabled(True)
 
     def stop_thr(self):
         global btnx_main_var
@@ -2634,6 +2769,7 @@ class ThreadClass2(QThread):
         stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[2].setEnabled(False)
         thread_engaged_var[2] = False
+        paths_readonly_button_var[2].setEnabled(True)
 
         self.terminate()
 
@@ -2655,7 +2791,7 @@ class ThreadClass3(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
+        global configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2800,6 +2936,7 @@ class ThreadClass3(QThread):
             stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[3].setEnabled(False)
             thread_engaged_var[3] = False
+            paths_readonly_button_var[3].setEnabled(True)
 
     def stop_thr(self):
         global btnx_main_var
@@ -2814,6 +2951,7 @@ class ThreadClass3(QThread):
         stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[3].setEnabled(False)
         thread_engaged_var[3] = False
+        paths_readonly_button_var[3].setEnabled(True)
 
         self.terminate()
 
@@ -2835,7 +2973,7 @@ class ThreadClass4(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
+        global configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2980,6 +3118,7 @@ class ThreadClass4(QThread):
             stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[4].setEnabled(False)
             thread_engaged_var[4] = False
+            paths_readonly_button_var[4].setEnabled(True)
 
     def stop_thr(self):
         global btnx_main_var
@@ -2994,6 +3133,7 @@ class ThreadClass4(QThread):
         stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[4].setEnabled(False)
         thread_engaged_var[4] = False
+        paths_readonly_button_var[4].setEnabled(True)
 
         self.terminate()
 
@@ -3015,7 +3155,7 @@ class ThreadClass5(QThread):
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
+        global configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -3160,6 +3300,7 @@ class ThreadClass5(QThread):
             stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[5].setEnabled(False)
             thread_engaged_var[5] = False
+            paths_readonly_button_var[5].setEnabled(True)
 
     def stop_thr(self):
         global btnx_main_var
@@ -3174,6 +3315,7 @@ class ThreadClass5(QThread):
         stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[5].setEnabled(False)
         thread_engaged_var[5] = False
+        paths_readonly_button_var[5].setEnabled(True)
 
         self.terminate()
 
