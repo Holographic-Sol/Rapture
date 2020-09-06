@@ -2167,11 +2167,16 @@ class ThreadClass0(QThread):
                                             output_str = str('error: ' + t_path).strip()
                                             self.tb_0.append(output_str)
 
-                                    # Check File Now Exists In Destination
+                                    # Check File Now Exists In Destination  # ToDo --> Ensure os.get.stat fSize t_path never returns 0 (observed false negative)
                                     siz_src = os.path.getsize(fullpath)
                                     siz_dest = ()
                                     if os.path.exists(t_path):
                                         siz_dest = os.path.getsize(t_path)
+
+                                        # EDIT
+                                        print('size src:', siz_src)
+                                        print('size dst:', siz_dest)
+                                        # EDIT END
 
                                         if siz_src == siz_dest or siz_dest is 0:
                                             output_str = str('copied new: ' + t_path).strip()
@@ -2211,7 +2216,7 @@ class ThreadClass0(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
                                                 output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_0.append(output_str)
                                                 cp1_count += 1
@@ -2381,7 +2386,7 @@ class ThreadClass1(QThread):
                                             print('ma:'+ ma_str)
                                             print('mb:'+ mb_str)
 
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
                                                 output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_1.append(output_str)
                                                 cp1_count += 1
@@ -2545,7 +2550,7 @@ class ThreadClass2(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
                                                 output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_2.append(output_str)
                                                 cp1_count += 1
@@ -2709,7 +2714,7 @@ class ThreadClass3(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
                                                 output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_3.append(output_str)
                                                 cp1_count += 1
@@ -2873,7 +2878,7 @@ class ThreadClass4(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
                                                 output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_4.append(output_str)
                                                 cp1_count += 1
@@ -3037,7 +3042,7 @@ class ThreadClass5(QThread):
                                             siz_src = os.path.getsize(fullpath)
                                             siz_dest = os.path.getsize(t_path)
 
-                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest or os.path.exists(t_path) and siz_dest is 0 and mb >= ma:
+                                            if os.path.exists(t_path) and mb >= ma and siz_src == siz_dest:
                                                 output_str = str('updated file: ' + t_path).strip()
                                                 self.tb_5.append(output_str)
                                                 cp1_count += 1
