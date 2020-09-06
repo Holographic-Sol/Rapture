@@ -10,6 +10,7 @@ from win32api import GetSystemMetrics
 from PyQt5.QtCore import Qt, QThread, QSize, QTimer, QPoint, QCoreApplication
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit, QDesktopWidget, QTextBrowser
 from PyQt5.QtGui import QIcon, QFont, QPixmap
+import distutils.dir_util
 
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
@@ -1449,9 +1450,46 @@ class App(QMainWindow):
             settings_input_response_thread.start()
 
         elif not os.path.exists(dest_path_entered):
-            settings_input_response_dest_bool = False
-            settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
-            settings_input_response_thread.start()
+            try:
+                # Attempt Path Creation
+                var = dest_path_entered[0]
+                var = str(var + ':\\')
+                if os.path.exists(var):
+                    dest_path_entered = str(dest_path_entered).strip()
+                    print('-- creating directory(s):', dest_path_entered)
+
+                    # Only Partially Sanitized Path!
+                    distutils.dir_util.mkpath(dest_path_entered)
+                    settings_input_response_dest_bool = True
+                    path_item = []
+                    with open(cfg_f, 'r') as fo:
+                        for line in fo:
+                            line = line.strip()
+                            if not line.startswith(config_dst_var[dest_selected]):
+                                path_item.append(line)
+                            elif line.startswith(config_dst_var[dest_selected]):
+                                new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
+                                path_item.append(new_line)
+                    open(cfg_f, 'w').close()
+                    with open(cfg_f, 'a') as fo:
+                        i = 0
+                        for path_items in path_item:
+                            fo.writelines(path_item[i] + '\n')
+                            i += 1
+                    fo.close()
+                    dest_path_var[dest_selected] = dest_path_entered
+                    settings_input_response_thread.start()
+                elif not os.path.exists(var):
+                    print('-- cannot create directory(s) on drive that does not exist')
+                    settings_input_response_dest_bool = False
+                    settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+                    settings_input_response_thread.start()
+            except Exception as e:
+                print(str(e))
+                print('-- could not create destination path')
+                settings_input_response_dest_bool = False
+                settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+                settings_input_response_thread.start()
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 0
     def settings_source_pre_funk0(self):
