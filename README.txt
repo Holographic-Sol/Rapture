@@ -28,5 +28,18 @@ NOTES:
 2. Initial backup will of course take time but after that it can be insanely fast once only new/new+ammended files are being written to the destination.
 3. Try it with a huge Steam library and you will see.
 
-Recent Experiment In Write Mode 1:
-Rapture Steam Game Planetary Annihilation Titans --> 2 Seconds For 800 Updated Files compared to over 3 minutes if one re-backed up the whole game after an update.
+
+
+Recent Experiment In Write Mode 1: Codename 'Rapture Steam Game Planetary Annihilation Titans':
+Steam Game before downloading Planetary Annihilation Titans update: 3,638,532,352 bytes.
+Steam Game after downloading Planetary Annihilation Titans update:  3,639,084,249 bytes.
+Time to backup whole game (3,638,532,352 bytes): approx. 3 minutes.
+Time to Rapture the game: approx. 2 seconds.
+Result: The Raptured games plays.
+Conclusion: I will keep working on project rapture as many Steam libraries are TB's and this makes updating backups of files including large games, extremely fast.
+
+Example Source: D:\Documents
+Example Destination: X:\Documents
+
+Example Source: D:\Steam
+Example Destination: X:\Steam
