@@ -32,6 +32,7 @@ update_settings_window_thread = ()
 thread_var = [(), (), (), (), (), ()]
 
 cfg_f = './config.txt'
+img_path = './image/default/'
 source_path_entered = ''
 dest_path_entered = ''
 
@@ -60,8 +61,6 @@ settings_active_int = 0
 settings_active_int_prev = ()
 pressed_int = ()
 compare_clicked = ()
-back_label_ankor_w0 = ()
-back_label_ankor_h0 = ()
 
 path_var = []
 dest_path_var = []
@@ -88,28 +87,10 @@ config_dst_var = ['DESTINATION 0:',
                   'DESTINATION 4:',
                   'DESTINATION 5:']
 
-background_img = ['./image/background_img_black_label_0.png',
-                  './image/background_img_black_label_1.png']
-
-small_image = ['./image/small_img_menu_down.png',
-               './image/small_img_menu_up.png',
-               './image/small_img_menu_left.png',
-               './image/small_img_menu_right.png',
-               './image/small_img_mode_0.png',
-               './image/small_img_mode_1.png',
-               './image/small_img_read_ony_false.png',
-               './image/small_img_read_ony_true.png',
-               './image/small_img_stop_thread_grey.png',
-               './image/small_img_stop_thread_green.png']
-
-btnx_img_led_var = ['./image/btnx_img_led_red.png',
-                './image/btnx_img_led_amber.png',
-                './image/btnx_img_led_green.png']
-
 
 # Read Configuration File
 def get_conf_funk():
-    global path_var, dest_path_var
+    global path_var, dest_path_var, img_path
     path_var = []
     dest_path_var = []
 
@@ -120,7 +101,20 @@ def get_conf_funk():
             for line in fo:
                 line = line.strip()
 
-                # Read Sources
+                # Read Image Path
+                if line.startswith('IMAGE PATH: '):
+                    line = line.replace('IMAGE PATH: ', '')
+                    if line.startswith('./image/'):
+                        if os.path.exists(line):
+                            if not line.endswith('/'):
+                                line = line + '/'
+                            print('config image path exists:', line)
+                            img_path = line
+                        elif not os.path.exists(line):
+                            print('config image path does not exist:', line)
+                            print('using image path:', img_path)
+
+                # Read Source Paths
                 if line.startswith('SOURCE 0: '):
                     line = line.replace('SOURCE 0: ', '')
                     if os.path.exists(line) and len(path_var) <= 6:
@@ -175,7 +169,7 @@ def get_conf_funk():
                         print('config source path does not exist', line)
                         path_var.append('')
                         
-                # Read Destination
+                # Read Destination Paths
                 if line.startswith('DESTINATION 0: '):
                     line = line.replace('DESTINATION 0: ', '')
                     if os.path.exists(line) and len(dest_path_var) <= 6:
@@ -230,6 +224,8 @@ def get_conf_funk():
                         print('config destination path does not exist', line)
                         dest_path_var.append('')
         fo.close()
+
+    # Write A New Configuration File
     elif not os.path.exists(cfg_f):
         print('-- creating new configuration file')
         open(cfg_f, 'w').close()
@@ -242,6 +238,7 @@ def get_conf_funk():
             for config_dst_vars in config_dst_var:
                 fo.writelines(config_dst_var[i] + ' x' + '\n')
                 i += 1
+            fo.writelines('IMAGE PATH: ./image/default/')
         fo.close()
         get_conf_funk()
 
@@ -249,99 +246,26 @@ def get_conf_funk():
 class App(QMainWindow):
     def __init__(self):
         super(App, self).__init__()
+        global img_path
+
+        # Set Program Icon & Program Title
         self.setWindowIcon(QIcon('./icon.png'))
         self.title = 'Rapture Extreme Backup Solution'
 
-        get_conf_funk()
+        # Set Window Width And Height
         self.width = 605
         self.height = 110
+
+        # Position Window On The Display
         scr_w = GetSystemMetrics(0)
         scr_h = GetSystemMetrics(1)
         self.left = (scr_w / 2) - (self.width / 2)
         self.top = ((scr_h / 2) - (self.height / 2))
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.black)
+
+        # Set Window Title Bar Frameless Windows Hint
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
-        self.setPalette(p)
 
-        self.setStyleSheet("""
-                    QScrollBar:vertical {width: 11px;
-                    margin: 11px 0 11px 0;
-                    background-color: black;
-                    }
-                    QScrollBar::handle:vertical {
-                    background-color: black;
-                    min-height: 11px;
-                    }
-                    QScrollBar::add-line:vertical {
-                    background-color: black;
-                    height: 11px;
-                    subcontrol-position: bottom;
-                    subcontrol-origin: margin;
-                    }
-                    QScrollBar::sub-line:vertical {
-                    background-color: black;
-                    height: 11px;
-                    subcontrol-position: top;
-                    subcontrol-origin: margin;
-                    }
-                    QScrollBar::up-arrow:vertical {
-                    image:url('./image/small_img_scroll_up.png');
-                    height: 11px;
-                    width: 11px;
-                    }
-                    QScrollBar::down-arrow:vertical {
-                    image:url('./image/small_img_scroll_down.png');
-                    height: 11px;
-                    width: 11px;
-                    }
-                    QScrollBar::add-page:vertical {
-                    background: rgb(25, 25, 25);
-                    }
-                    QScrollBar::sub-page:vertical {
-                    background: rgb(25, 25, 25);
-                    }
-
-                    QScrollBar:horizontal {
-                    height: 11px;
-                    margin: 0px 11px 0 11px;
-                    background-color: black;
-                    }
-                    QScrollBar::handle:horizontal {
-                    background-color: black;
-                    min-width: 11px;
-                    }
-                    QScrollBar::add-line:horizontal {
-                    background-color: black;
-                    width: 11px;
-                    subcontrol-position: right;
-                    subcontrol-origin: margin;
-                    }
-                    QScrollBar::sub-line:horizontal {
-                    background-color: black;
-                    width: 11px;
-                    subcontrol-position: top left;
-                    subcontrol-origin: margin;
-                    position: absolute;
-                    }
-                    QScrollBar::left-arrow:horizontal {
-                    image:url('./image/small_img_menu_left.png');
-                    height: 11px;
-                    width: 11px;
-                    }
-                    QScrollBar::right-arrow:horizontal {
-                    image:url('./image/small_img_menu_right.png');
-                    height: 11px;
-                    width: 11px;
-                    }
-                    QScrollBar::add-page:horizontal {
-                    background: rgb(25, 25, 25);
-                    }
-                    QScrollBar::sub-page:horizontal {
-                    background: rgb(25, 25, 25);
-                    }
-                    """)
-        # Font Setup. Cambria Math, Candara, Consolas, Corbel, Segoe UI
+        # Set Font
         self.font_s5 = QFont("Segoe UI", 5, QFont.Normal)
         self.font_s6 = QFont("Segoe UI", 6, QFont.Normal)
         self.font_s8 = QFont("Segoe UI", 8, QFont.Normal)
@@ -349,17 +273,28 @@ class App(QMainWindow):
         self.font_s6b = QFont("Segoe UI", 6, QFont.Bold)
         self.font_s8b = QFont("Segoe UI", 8, QFont.Bold)
 
+        # Run Read Configuration File Function
+        get_conf_funk()
+
+        # Run Set Style Sheet Function
+        self.set_style_sheet_funk()
+
+        # Run Function That Pre-Appends Image Path Variable To Static Image Names
+        self.set_images_funk()
+
+        # Run initUI Function
         self.initUI()
 
     def initUI(self):
         global pressed_int
         global thread_var, settings_input_response_thread, update_settings_window_thread
-        global btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, back_label_var, btnx_img_led_var
+        global btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, back_label_var
         global settings_source_edit_var, settings_dest_edit_var, settings_input_response_label
         global path_var, dest_path_var
         global confirm_op0_bool, confirm_op0_wait, confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait
         global confirm_op3_bool, confirm_op3_wait, confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait
 
+        # Set A Fixed Window Size
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
 
@@ -367,34 +302,25 @@ class App(QMainWindow):
         self.close_button = QPushButton(self)
         self.close_button.move((self.width - 20), 0)
         self.close_button.resize(20, 20)
-        self.close_button.setIcon(QIcon("./image/img_close.png"))
+        self.close_button.setIcon(QIcon("./image/default/img_titlebar_close.png"))
         self.close_button.setIconSize(QSize(8, 8))
         self.close_button.clicked.connect(QCoreApplication.instance().quit)
-        self.close_button.setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 0);
-               border:0px solid rgb(0, 0, 0);}"""
-               )
+        self.close_button.setStyleSheet(self.default_title_qpb_style)
 
         # Title Bar: Minimize
         self.minimize_button = QPushButton(self)
         self.minimize_button.move((self.width - 50), 0)
         self.minimize_button.resize(20, 20)
-        self.minimize_button.setIcon(QIcon("./image/img_minimize.png"))
+        self.minimize_button.setIcon(QIcon("./image/default/img_titlebar_minimize.png"))
         self.minimize_button.setIconSize(QSize(50, 20))
         self.minimize_button.clicked.connect(self.showMinimized)
-        self.minimize_button.setStyleSheet(
-            """QPushButton{background-color: rgb(0, 0, 0);
-               border:0px solid rgb(0, 0, 0);}"""
-               )
+        self.minimize_button.setStyleSheet(self.default_title_qpb_style)
 
         # Sector 1: Background Colour
         self.back_label_main = QLabel(self)
         self.back_label_main.move(0, 20)
         self.back_label_main.resize(self.width, 90)
-        self.back_label_main.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.back_label_main.setStyleSheet(self.default_bg_0_style)
 
         # Sector 1: Background Tiles
         i = 0
@@ -402,12 +328,7 @@ class App(QMainWindow):
             back_label = 'back_label' + str(i)
             self.back_label = QLabel(self)
             self.back_label.resize(95, 80)
-            pixmap = QPixmap(background_img[0])
-            self.back_label.setPixmap(pixmap)
-            self.back_label.setStyleSheet(
-                """QLabel {background-color: rgb(0, 0, 0);
-               border:0px solid rgb(0, 0, 0);}"""
-               )
+            self.back_label.setStyleSheet(self.default_bg_tile_style)
             back_label_var.append(self.back_label)
             i += 1
 
@@ -444,93 +365,73 @@ class App(QMainWindow):
             self.btnx_main = QPushButton(self)
             self.btnx_main.resize(54, 54)
             self.btnx_main.setIconSize(QSize(54, 54))
-            self.btnx_main.setStyleSheet(
-                    """QPushButton{background-color: rgb(0, 0, 0);
-                   border:2px solid rgb(30, 30, 30);}"""
-                   )
+            self.btnx_main.setStyleSheet(self.btnx_main_style)
             btnx_main_var.append(self.btnx_main)
 
             # Sector 1: Drop Down Setting's Button(s)
             sett_name = 'btnx_settings' + str(i)
             self.sett_name = QPushButton(self)
             self.sett_name.resize(30, 10)
-            self.sett_name.setIcon(QIcon(small_image[0]))
+            self.sett_name.setIcon(QIcon(self.img_show_menu_false))
             self.sett_name.setIconSize(QSize(15, 15))
-            self.sett_name.setStyleSheet(
-                """QPushButton{background-color: rgb(35, 35, 35);
-               border:0px solid rgb(0, 0, 0);}"""
-               )
+            self.sett_name.setStyleSheet(self.default_qpbtn_style)
             btnx_settings_var.append(self.sett_name)
 
             # Sector 1: Switch Main Function Mode Button(s)
             comp_cont_button = 'comp_cont_button' + str(i)
             self.comp_cont_button = QPushButton(self)
             self.comp_cont_button.resize(30, 26)
-            self.comp_cont_button.setIcon(QIcon(small_image[4]))
+            self.comp_cont_button.setIcon(QIcon(self.img_mode_0))
             self.comp_cont_button.setIconSize(QSize(18, 18))
-            self.comp_cont_button.setStyleSheet(
-                """QPushButton{background-color: rgb(35, 35, 35);
-               border:0px solid rgb(0, 0, 0);}"""
-               )
+            self.comp_cont_button.setStyleSheet(self.default_qpbtn_style)
             comp_cont_button_var.append(self.comp_cont_button)
 
             # Sector 1: Stop Main Functions(s) Button(s)
             stop_thr_button = 'stop_thr_button' + str(i)
             self.stop_thr_button = QPushButton(self)
             self.stop_thr_button.resize(30, 10)
-            self.stop_thr_button.setIcon(QIcon(small_image[8]))
+            self.stop_thr_button.setIcon(QIcon(self.img_stop_thread_false))
             self.stop_thr_button.setIconSize(QSize(15, 15))
-            self.stop_thr_button.setStyleSheet(
-                """QPushButton{background-color: rgb(35, 35, 35);
-               border:0px solid rgb(35, 35, 35);}"""
-               )
+            self.stop_thr_button.setStyleSheet(self.default_qpbtn_style)
             stop_thr_button_var.append(self.stop_thr_button)
             self.stop_thr_button.setEnabled(False)
 
             i += 1
 
-        btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
-        btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
-        btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
-        btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
-        btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
-        btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
+        # Setctor 1: Set Btnx Images
+        btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
+        btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
+        btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
+        btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
+        btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
+        btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
 
         # Sector 2: Hide Drop Down Settings
         self.hide_settings_button = QPushButton(self)
         self.hide_settings_button.resize(self.width, 10)
         self.hide_settings_button.move(0, 310)
-        self.hide_settings_button.setIcon(QIcon(small_image[1]))
+        self.hide_settings_button.setIcon(QIcon(self.img_show_menu_true))
         self.hide_settings_button.clicked.connect(self.hide_settings_page_funk)
         self.hide_settings_button.setIconSize(QSize(15, 15))
-        self.hide_settings_button.setStyleSheet(
-            """QPushButton{background-color: rgb(35, 35, 35);
-           border:0px solid rgb(0, 0, 0);}"""
-           )
+        self.hide_settings_button.setStyleSheet(self.default_qpbtn_style)
 
         # Sector 2: Settings Page Left
         self.scr_left = QPushButton(self)
         self.scr_left.resize(10, 35)
         self.scr_left.move(0, 126)
-        self.scr_left.setIcon(QIcon(small_image[2]))
+        self.scr_left.setIcon(QIcon(self.img_menu_left))
         self.scr_left.setIconSize(QSize(15, 35))
         self.scr_left.clicked.connect(self.scr_left_funk)
-        self.scr_left.setStyleSheet(
-            """QPushButton{background-color: rgb(35, 35, 35);
-           border:0px solid rgb(0, 0, 0);}"""
-           )
+        self.scr_left.setStyleSheet(self.default_qpbtn_style)
 
         # Sector 2: Settings Page Right
         self.scr_right = QPushButton(self)
         self.scr_right.resize(10, 35)
         self.scr_right.move((self.width - 10), 126)
-        self.scr_right.setIcon(QIcon(small_image[3]))
+        self.scr_right.setIcon(QIcon(self.img_menu_right))
         self.scr_right.setIconSize(QSize(15, 35))
         self.scr_right.clicked.connect(self.scr_right_funk)
-        self.scr_right.setStyleSheet(
-            """QPushButton{background-color: rgb(35, 35, 35);
-           border:0px solid rgb(0, 0, 0);}"""
-           )
+        self.scr_right.setStyleSheet(self.default_qpbtn_style)
 
         # Sector 2: A Label To Signify Source Path Configuration
         self.settings_source_label = QLabel(self)
@@ -538,11 +439,7 @@ class App(QMainWindow):
         self.settings_source_label.resize(87, 15)
         self.settings_source_label.setFont(self.font_s6b)
         self.settings_source_label.setText('Source:')
-        self.settings_source_label.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.settings_source_label.setStyleSheet(self.default_qlbl_style)
         self.settings_source_label.setAlignment(Qt.AlignCenter) 
 
         # Sector 2: A Label To Signify Destination Path Configuration
@@ -551,11 +448,7 @@ class App(QMainWindow):
         self.settings_dest_label.resize(87, 15)
         self.settings_dest_label.setFont(self.font_s6b)
         self.settings_dest_label.setText('Destination:')
-        self.settings_dest_label.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.settings_dest_label.setStyleSheet(self.default_qlbl_style)
         self.settings_dest_label.setAlignment(Qt.AlignCenter) 
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 0
@@ -564,11 +457,7 @@ class App(QMainWindow):
         self.setting_title0.move((back_label_ankor_w0 + 5), 105)
         self.setting_title0.setFont(self.font_s6b)
         self.setting_title0.setText("Archives")
-        self.setting_title0.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.setting_title0.setStyleSheet(self.default_qlbl_style)
         self.setting_title0.setAlignment(Qt.AlignCenter) 
         self.setting_title0.hide()
 
@@ -578,11 +467,7 @@ class App(QMainWindow):
         self.setting_title1.move((back_label_ankor_w1 + 5), 105)
         self.setting_title1.setFont(self.font_s6b)
         self.setting_title1.setText("Documents")
-        self.setting_title1.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.setting_title1.setStyleSheet(self.default_qlbl_style)
         self.setting_title1.setAlignment(Qt.AlignCenter)
         self.setting_title1.hide()
 
@@ -592,11 +477,7 @@ class App(QMainWindow):
         self.setting_title2.move((back_label_ankor_w2 + 5), 105)
         self.setting_title2.setFont(self.font_s6b)
         self.setting_title2.setText("Music")
-        self.setting_title2.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.setting_title2.setStyleSheet(self.default_qlbl_style)
         self.setting_title2.setAlignment(Qt.AlignCenter)
         self.setting_title2.hide()
 
@@ -606,11 +487,7 @@ class App(QMainWindow):
         self.setting_title3.move((back_label_ankor_w3 + 5), 105)
         self.setting_title3.setFont(self.font_s6b)
         self.setting_title3.setText("Pictures")
-        self.setting_title3.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.setting_title3.setStyleSheet(self.default_qlbl_style)
         self.setting_title3.setAlignment(Qt.AlignCenter)
         self.setting_title3.hide()
 
@@ -620,11 +497,7 @@ class App(QMainWindow):
         self.setting_title4.move((back_label_ankor_w4 + 5), 105)
         self.setting_title4.setFont(self.font_s6b)
         self.setting_title4.setText("Videos")
-        self.setting_title4.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.setting_title4.setStyleSheet(self.default_qlbl_style)
         self.setting_title4.setAlignment(Qt.AlignCenter)
         self.setting_title4.hide()
 
@@ -634,11 +507,7 @@ class App(QMainWindow):
         self.setting_title5.move((back_label_ankor_w5 + 5), 105)
         self.setting_title5.setFont(self.font_s6b)
         self.setting_title5.setText("Programs")
-        self.setting_title5.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.setting_title5.setStyleSheet(self.default_qlbl_style)
         self.setting_title5.setAlignment(Qt.AlignCenter) 
         self.setting_title5.hide()
 
@@ -653,13 +522,7 @@ class App(QMainWindow):
         self.settings_source0.setText(path_var[0])
         self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
-        self.settings_source0.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_source0.setStyleSheet(self.default_qle_style)
         settings_source_edit_var.append(self.settings_source0)
         self.settings_source0.hide()
 
@@ -671,13 +534,7 @@ class App(QMainWindow):
         self.settings_source1.setText(path_var[1])
         self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
-        self.settings_source1.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_source1.setStyleSheet(self.default_qle_style)
         settings_source_edit_var.append(self.settings_source1)
         self.settings_source1.hide()
 
@@ -689,13 +546,7 @@ class App(QMainWindow):
         self.settings_source2.setText(path_var[2])
         self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
-        self.settings_source2.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_source2.setStyleSheet(self.default_qle_style)
         settings_source_edit_var.append(self.settings_source2)
         self.settings_source2.hide()
 
@@ -707,13 +558,7 @@ class App(QMainWindow):
         self.settings_source3.setText(path_var[3])
         self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
-        self.settings_source3.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_source3.setStyleSheet(self.default_qle_style)
         settings_source_edit_var.append(self.settings_source3)
         self.settings_source3.hide()
 
@@ -725,13 +570,7 @@ class App(QMainWindow):
         self.settings_source4.setText(path_var[4])
         self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
-        self.settings_source4.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_source4.setStyleSheet(self.default_qle_style)
         settings_source_edit_var.append(self.settings_source4)
         self.settings_source4.hide()
 
@@ -743,13 +582,7 @@ class App(QMainWindow):
         self.settings_source5.setText(path_var[5])
         self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
-        self.settings_source5.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_source5.setStyleSheet(self.default_qle_style)
         settings_source_edit_var.append(self.settings_source5)
         self.settings_source5.hide()
 
@@ -761,13 +594,7 @@ class App(QMainWindow):
         self.settings_dest0.setText(dest_path_var[0])
         self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
-        self.settings_dest0.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_dest0.setStyleSheet(self.default_qle_style)
         settings_dest_edit_var.append(self.settings_dest0)
         self.settings_dest0.hide()
 
@@ -779,13 +606,7 @@ class App(QMainWindow):
         self.settings_dest1.setText(dest_path_var[1])
         self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
-        self.settings_dest1.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_dest1.setStyleSheet(self.default_qle_style)
         settings_dest_edit_var.append(self.settings_dest1)
         self.settings_dest1.hide()
 
@@ -797,13 +618,7 @@ class App(QMainWindow):
         self.settings_dest2.setText(dest_path_var[2])
         self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
-        self.settings_dest2.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_dest2.setStyleSheet(self.default_qle_style)
         settings_dest_edit_var.append(self.settings_dest2)
         self.settings_dest2.hide()
 
@@ -815,13 +630,7 @@ class App(QMainWindow):
         self.settings_dest3.setText(dest_path_var[3])
         self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
-        self.settings_dest3.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_dest3.setStyleSheet(self.default_qle_style)
         settings_dest_edit_var.append(self.settings_dest3)
         self.settings_dest3.hide()
 
@@ -833,13 +642,7 @@ class App(QMainWindow):
         self.settings_dest4.setText(dest_path_var[4])
         self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
-        self.settings_dest4.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_dest4.setStyleSheet(self.default_qle_style)
         settings_dest_edit_var.append(self.settings_dest4)
         self.settings_dest4.hide()
 
@@ -851,13 +654,7 @@ class App(QMainWindow):
         self.settings_dest5.setText(dest_path_var[5])
         self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
-        self.settings_dest5.setStyleSheet(
-            """QLineEdit {background-color: rgb(30, 30, 30);
-            border:0px solid rgb(0, 0, 0);
-            selection-color: green;
-            selection-background-color: black;
-            color: grey;}"""
-            )
+        self.settings_dest5.setStyleSheet(self.default_qle_style)
         settings_dest_edit_var.append(self.settings_dest5)
         self.settings_dest5.hide()
 
@@ -865,43 +662,31 @@ class App(QMainWindow):
         self.settings_input_response_label_src = QLabel(self)
         self.settings_input_response_label_src.move((set_src_dst_pos_w + set_src_dst_w + 5), 126)
         self.settings_input_response_label_src.resize(5, 15)
-        self.settings_input_response_label_src.setStyleSheet(
-            """QLabel {background-color: rgb(15, 15, 15);
-           border:1px solid rgb(15, 15, 15);}"""
-           )
+        self.settings_input_response_label_src.setStyleSheet(self.default_valid_path_led)
         settings_input_response_label[0] = self.settings_input_response_label_src
 
         # Sector 2: File Path Validation LED Destination
         self.settings_input_response_label_dst = QLabel(self)
         self.settings_input_response_label_dst.move((set_src_dst_pos_w + set_src_dst_w + 5), 145)
         self.settings_input_response_label_dst.resize(5, 15)
-        self.settings_input_response_label_dst.setStyleSheet(
-            """QLabel {background-color: rgb(15, 15, 15);
-           border:1px solid rgb(15, 15, 15);}"""
-           )
+        self.settings_input_response_label_dst.setStyleSheet(self.default_valid_path_led)
         settings_input_response_label[1] = self.settings_input_response_label_dst
 
         # Sector 2: Enable/Disable ReadOnly Path Settings
         self.paths_readonly_button = QPushButton(self)
         self.paths_readonly_button.resize(15, 35)
         self.paths_readonly_button.move((set_src_dst_pos_w + set_src_dst_w + 15), 126)
-        self.paths_readonly_button.setIcon(QIcon(small_image[7]))
+        self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_true))
         self.paths_readonly_button.setIconSize(QSize(8, 8))
         self.paths_readonly_button.clicked.connect(self.paths_readonly_funk)
-        self.paths_readonly_button.setStyleSheet(
-            """QPushButton{background-color: rgb(35, 35, 35);
-           border:0px solid rgb(0, 0, 0);}"""
-           )
+        self.paths_readonly_button.setStyleSheet(self.default_qpbtn_style)
 
          # Sector 1: Main Function Confirmation 0
         self.confirm_op0_tru = QPushButton(self)
         self.confirm_op0_tru.resize(87, 13)
-        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        self.confirm_op0_tru.setIcon(QIcon(self.img_execute_false))
         self.confirm_op0_tru.setIconSize(QSize(45, 10))
-        self.confirm_op0_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(30, 30, 30);
-                border:0px solid rgb(30, 30, 30);}"""
-                )
+        self.confirm_op0_tru.setStyleSheet(self.default_qpbtn_style)
         self.confirm_op0_tru.move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 63))
         self.confirm_op0_tru.clicked.connect(self.confirm_op0_funk0)
         self.confirm_op0_tru.setEnabled(False)
@@ -910,12 +695,9 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 1
         self.confirm_op1_tru = QPushButton(self)
         self.confirm_op1_tru.resize(87, 13)
-        self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        self.confirm_op1_tru.setIcon(QIcon(self.img_execute_false))
         self.confirm_op1_tru.setIconSize(QSize(45, 10))
-        self.confirm_op1_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(30, 30, 30);
-                border:0px solid rgb(30, 30, 30);}"""
-                )
+        self.confirm_op1_tru.setStyleSheet(self.default_qpbtn_style)
         self.confirm_op1_tru.move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 63))
         self.confirm_op1_tru.clicked.connect(self.confirm_op1_funk0)
         self.confirm_op1_tru.setEnabled(False)
@@ -924,12 +706,9 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 2
         self.confirm_op2_tru = QPushButton(self)
         self.confirm_op2_tru.resize(87, 13)
-        self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        self.confirm_op2_tru.setIcon(QIcon(self.img_execute_false))
         self.confirm_op2_tru.setIconSize(QSize(45, 10))
-        self.confirm_op2_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(30, 30, 30);
-                border:0px solid rgb(30, 30, 30);}"""
-                )
+        self.confirm_op2_tru.setStyleSheet(self.default_qpbtn_style)
         self.confirm_op2_tru.move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 63))
         self.confirm_op2_tru.clicked.connect(self.confirm_op2_funk0)
         self.confirm_op2_tru.setEnabled(False)
@@ -938,12 +717,9 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 3
         self.confirm_op3_tru = QPushButton(self)
         self.confirm_op3_tru.resize(87, 13)
-        self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        self.confirm_op3_tru.setIcon(QIcon(self.img_execute_false))
         self.confirm_op3_tru.setIconSize(QSize(45, 10))
-        self.confirm_op3_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(30, 30, 30);
-                border:0px solid rgb(30, 30, 30);}"""
-                )
+        self.confirm_op3_tru.setStyleSheet(self.default_qpbtn_style)
         self.confirm_op3_tru.move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 63))
         self.confirm_op3_tru.clicked.connect(self.confirm_op3_funk0)
         self.confirm_op3_tru.setEnabled(False)
@@ -952,12 +728,9 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 4
         self.confirm_op4_tru = QPushButton(self)
         self.confirm_op4_tru.resize(87, 13)
-        self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        self.confirm_op4_tru.setIcon(QIcon(self.img_execute_false))
         self.confirm_op4_tru.setIconSize(QSize(45, 10))
-        self.confirm_op4_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(30, 30, 30);
-                border:0px solid rgb(30, 30, 30);}"""
-                )
+        self.confirm_op4_tru.setStyleSheet(self.default_qpbtn_style)
         self.confirm_op4_tru.move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 63))
         self.confirm_op4_tru.clicked.connect(self.confirm_op4_funk0)
         self.confirm_op4_tru.setEnabled(False)
@@ -966,12 +739,9 @@ class App(QMainWindow):
         # Sector 1: Main Function Confirmation 5
         self.confirm_op5_tru = QPushButton(self)
         self.confirm_op5_tru.resize(87, 13)
-        self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+        self.confirm_op5_tru.setIcon(QIcon(self.img_execute_false))
         self.confirm_op5_tru.setIconSize(QSize(45, 10))
-        self.confirm_op5_tru.setStyleSheet(
-                """QPushButton{background-color: rgb(30, 30, 30);
-                border:0px solid rgb(30, 30, 30);}"""
-                )
+        self.confirm_op5_tru.setStyleSheet(self.default_qpbtn_style)
         self.confirm_op5_tru.move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 63))
         self.confirm_op5_tru.clicked.connect(self.confirm_op5_funk0)
         self.confirm_op5_tru.setEnabled(False)
@@ -988,11 +758,7 @@ class App(QMainWindow):
         self.tb_label_0.move(5, (self.tb_pos_h - 14))
         self.tb_label_0.resize(87, 14)
         self.tb_label_0.setFont(self.font_s6b)
-        self.tb_label_0.setStyleSheet(
-            """QLabel {background-color: rgb(30, 30, 30);
-           color: grey;
-           border:0px solid rgb(35, 35, 35);}"""
-           )
+        self.tb_label_0.setStyleSheet(self.default_qlbl_style)
         self.tb_label_0.setAlignment(Qt.AlignCenter)
         self.tb_label_0.hide()
 
@@ -1002,16 +768,7 @@ class App(QMainWindow):
         self.tb_0.resize(self.tb_w, self.tb_h)
         self.tb_0.setFont(self.font_s6b)
         self.tb_0.setObjectName("tb_0")
-        self.tb_0.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
+        self.tb_0.setStyleSheet(self.default_qtbb_style)
         self.tb_0.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_0.horizontalScrollBar().setValue(0)
 
@@ -1021,16 +778,7 @@ class App(QMainWindow):
         self.tb_1.resize(self.tb_w, self.tb_h)
         self.tb_1.setFont(self.font_s6b)
         self.tb_1.setObjectName("tb_1")
-        self.tb_1.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
+        self.tb_1.setStyleSheet(self.default_qtbb_style)
         self.tb_1.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_1.horizontalScrollBar().setValue(0)
 
@@ -1040,16 +788,7 @@ class App(QMainWindow):
         self.tb_2.resize(self.tb_w, self.tb_h)
         self.tb_2.setFont(self.font_s6b)
         self.tb_2.setObjectName("tb_2")
-        self.tb_2.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
+        self.tb_2.setStyleSheet(self.default_qtbb_style)
         self.tb_2.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_2.horizontalScrollBar().setValue(0)
 
@@ -1059,16 +798,7 @@ class App(QMainWindow):
         self.tb_3.resize(self.tb_w, self.tb_h)
         self.tb_3.setFont(self.font_s6b)
         self.tb_3.setObjectName("tb_3")
-        self.tb_3.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
+        self.tb_3.setStyleSheet(self.default_qtbb_style)
         self.tb_3.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_3.horizontalScrollBar().setValue(0)
 
@@ -1078,16 +808,7 @@ class App(QMainWindow):
         self.tb_4.resize(self.tb_w, self.tb_h)
         self.tb_4.setFont(self.font_s6b)
         self.tb_4.setObjectName("tb_4")
-        self.tb_4.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
+        self.tb_4.setStyleSheet(self.default_qtbb_style)
         self.tb_4.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_4.horizontalScrollBar().setValue(0)
 
@@ -1097,16 +818,7 @@ class App(QMainWindow):
         self.tb_5.resize(self.tb_w, self.tb_h)
         self.tb_5.setFont(self.font_s6b)
         self.tb_5.setObjectName("tb_5")
-        self.tb_5.setStyleSheet(
-            """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
-            selection-color: black;
-            selection-background-color: rgb(0, 180, 0);
-            color: rgb(0, 180, 0);}"""
-        )
+        self.tb_5.setStyleSheet(self.default_qtbb_style)
         self.tb_5.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_5.horizontalScrollBar().setValue(0)
 
@@ -1191,17 +903,76 @@ class App(QMainWindow):
         update_settings_window_thread = UpdateSettingsWindow()
         update_settings_window_thread.start()
 
-        # Threads: Main Function Threads. Read/Write Operations & Time Stamp Comparing
-        thread_var[0] = ThreadClass0(self.confirm_op0_tru, self.tb_0)
-        thread_var[1] = ThreadClass1(self.confirm_op1_tru, self.tb_1)
-        thread_var[2] = ThreadClass2(self.confirm_op2_tru, self.tb_2)
-        thread_var[3] = ThreadClass3(self.confirm_op3_tru, self.tb_3)
-        thread_var[4] = ThreadClass4(self.confirm_op4_tru, self.tb_4)
-        thread_var[5] = ThreadClass5(self.confirm_op5_tru, self.tb_5)
+        # Thread: Main Function Thread - Read/Write Thread 0
+        thread_var[0] = ThreadClass0(self.tb_0,
+                                     self.confirm_op0_tru,
+                                     self.img_btnx_led_0,
+                                     self.img_btnx_led_1,
+                                     self.img_btnx_led_2,
+                                     self.img_execute_false,
+                                     self.img_execute_true,
+                                     self.img_stop_thread_false,
+                                     self.img_stop_thread_true)
 
-        # Thread: 2x LED In Sector 2 Displays Source & Destination Path Validity
+        # Thread: Main Function Thread - Read/Write Thread 1
+        thread_var[1] = ThreadClass1(self.tb_1,
+                                     self.confirm_op1_tru,
+                                     self.img_btnx_led_0,
+                                     self.img_btnx_led_1,
+                                     self.img_btnx_led_2,
+                                     self.img_execute_false,
+                                     self.img_execute_true,
+                                     self.img_stop_thread_false,
+                                     self.img_stop_thread_true)
+
+        # Thread: Main Function Thread - Read/Write Thread 2
+        thread_var[2] = ThreadClass2(self.tb_2,
+                                     self.confirm_op2_tru,
+                                     self.img_btnx_led_0,
+                                     self.img_btnx_led_1,
+                                     self.img_btnx_led_2,
+                                     self.img_execute_false,
+                                     self.img_execute_true,
+                                     self.img_stop_thread_false,
+                                     self.img_stop_thread_true)
+
+        # Thread: Main Function Thread - Read/Write Thread 3
+        thread_var[3] = ThreadClass3(self.tb_3,
+                                     self.confirm_op3_tru,
+                                     self.img_btnx_led_0,
+                                     self.img_btnx_led_1,
+                                     self.img_btnx_led_2,
+                                     self.img_execute_false,
+                                     self.img_execute_true,
+                                     self.img_stop_thread_false,
+                                     self.img_stop_thread_true)
+
+        # Thread: Main Function Thread - Read/Write Thread 4
+        thread_var[4] = ThreadClass4(self.tb_4,
+                                     self.confirm_op4_tru,
+                                     self.img_btnx_led_0,
+                                     self.img_btnx_led_1,
+                                     self.img_btnx_led_2,
+                                     self.img_execute_false,
+                                     self.img_execute_true,
+                                     self.img_stop_thread_false,
+                                     self.img_stop_thread_true)
+
+        # Thread: Main Function Thread - Read/Write Thread 5
+        thread_var[5] = ThreadClass5(self.tb_5,
+                                     self.confirm_op5_tru,
+                                     self.img_btnx_led_0,
+                                     self.img_btnx_led_1,
+                                     self.img_btnx_led_2,
+                                     self.img_execute_false,
+                                     self.img_execute_true,
+                                     self.img_stop_thread_false,
+                                     self.img_stop_thread_true)
+
+        # Thread: LEDs In Sector 2 Indicate Source & Destination Path Validity
         settings_input_response_thread = SettingsInputResponse()
 
+        # Plugged In & Threaded: Display The Application
         self.show()
 
     # Funtion: Centering Windows
@@ -1220,6 +991,197 @@ class App(QMainWindow):
         delta = QPoint(event.globalPos() - self.oldPos)
         self.move(self.x() + delta.x(), self.y() + delta.y())
         self.oldPos = event.globalPos()
+
+    # Function: Sets StyleSheets And Window Pallette
+    def set_style_sheet_funk(self):
+        print('-- plugged in: set_style_sheet_funk')
+
+        # Default Window Colour
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.black)
+        self.setPalette(p)
+
+        # Default Stylesheet: Scrollbars
+        self.setStyleSheet("""
+                    QScrollBar:vertical {width: 11px;
+                    margin: 11px 0 11px 0;
+                    background-color: black;
+                    }
+                    QScrollBar::handle:vertical {
+                    background-color: black;
+                    min-height: 11px;
+                    }
+                    QScrollBar::add-line:vertical {
+                    background-color: black;
+                    height: 11px;
+                    subcontrol-position: bottom;
+                    subcontrol-origin: margin;
+                    }
+                    QScrollBar::sub-line:vertical {
+                    background-color: black;
+                    height: 11px;
+                    subcontrol-position: top;
+                    subcontrol-origin: margin;
+                    }
+                    QScrollBar::up-arrow:vertical {
+                    image:url('./image/default/img_scrollbar_up.png');
+                    height: 11px;
+                    width: 11px;
+                    }
+                    QScrollBar::down-arrow:vertical {
+                    image:url('./image/default/img_scrollbar_down.png');
+                    height: 11px;
+                    width: 11px;
+                    }
+                    QScrollBar::add-page:vertical {
+                    background: rgb(25, 25, 25);
+                    }
+                    QScrollBar::sub-page:vertical {
+                    background: rgb(25, 25, 25);
+                    }
+
+                    QScrollBar:horizontal {
+                    height: 11px;
+                    margin: 0px 11px 0 11px;
+                    background-color: black;
+                    }
+                    QScrollBar::handle:horizontal {
+                    background-color: black;
+                    min-width: 11px;
+                    }
+                    QScrollBar::add-line:horizontal {
+                    background-color: black;
+                    width: 11px;
+                    subcontrol-position: right;
+                    subcontrol-origin: margin;
+                    }
+                    QScrollBar::sub-line:horizontal {
+                    background-color: black;
+                    width: 11px;
+                    subcontrol-position: top left;
+                    subcontrol-origin: margin;
+                    position: absolute;
+                    }
+                    QScrollBar::left-arrow:horizontal {
+                    image:url('./image/default/img_scrollbar_left.png');
+                    height: 11px;
+                    width: 11px;
+                    }
+                    QScrollBar::right-arrow:horizontal {
+                    image:url('./image/default/img_scrollbar_right.png');
+                    height: 11px;
+                    width: 11px;
+                    }
+                    QScrollBar::add-page:horizontal {
+                    background: rgb(25, 25, 25);
+                    }
+                    QScrollBar::sub-page:horizontal {
+                    background: rgb(25, 25, 25);
+                    }
+                    """)
+
+        # Default Stylesheet: Title Bar QPushButtons
+        self.default_title_qpb_style = """QPushButton{background-color: rgb(0, 0, 0);
+               border:0px solid rgb(0, 0, 0);}"""
+
+        # Default StyleSheet: Background Tiles
+        self.default_bg_tile_style = """QLabel {background-color: rgb(0, 0, 0);
+               border:0px solid rgb(0, 0, 0);}"""
+
+        # Default StyleSheet: Background Colour
+        self.default_bg_0_style = """QLabel {background-color: rgb(30, 30, 30);
+           border:0px solid rgb(35, 35, 35);}"""
+
+        # Default Stylesheet: Valid Path LED
+        self.default_valid_path_led = """QLabel {background-color: rgb(15, 15, 15);
+           border:1px solid rgb(15, 15, 15);}"""
+
+        # Default Stylesheet: Valid Source Path LED Green
+        self.default_valid_path_led_green = ""
+
+        # Default Stylesheet: Valid Source Path LED Red
+        self.default_valid_path_led_red = ""
+
+        # Default StyleSheet: QLabels
+        self.default_qlbl_style = """QLabel {background-color: rgb(30, 30, 30);
+           color: grey;
+           border:0px solid rgb(35, 35, 35);}"""
+
+        # Default StyleSheet: QPushButtons
+        self.default_qpbtn_style = """QPushButton{background-color: rgb(35, 35, 35);
+               border:0px solid rgb(0, 0, 0);}"""
+
+        # Default StyleSheet: QPushButtons Pressed
+        self.default_qpbtn_prsd_style = """QPushButton{background-color: rgb(0, 0, 0);
+               border:0px solid rgb(0, 0, 0);}"""
+
+        # Default Stylesheet: QLineEdit
+        self.default_qle_style = """QLineEdit {background-color: rgb(30, 30, 30);
+            border:0px solid rgb(0, 0, 0);
+            selection-color: white;
+            selection-background-color: rgb(0, 100, 255);
+            color: grey;}"""
+
+        # Default StyleSheet: QTextBoxBrowsers
+        self.default_qtbb_style = """QTextBrowser {background-color: black;
+            border-top:2px solid rgb(35, 35, 35);
+            border-bottom:2px solid rgb(35, 35, 35);
+            border-left:2px solid rgb(35, 35, 35);
+            border-right:2px solid rgb(35, 35, 35);
+            selection-color: white;
+            selection-background-color: rgb(0, 100, 255);
+            color: grey;}"""
+
+        # Default Stylesheet: btnx_main
+        self.btnx_main_style = """QPushButton{background-color: rgb(0, 0, 0);
+                   border:2px solid rgb(30, 30, 30);}"""
+
+    # Function: Concatinates Static Image Values With Variable Image Path
+    def set_images_funk(self):
+        print('-- plugged in: set_images_funk')
+
+        # Set Static Image Names
+        self.img_var = ['img_btnx_led_0.png',         # 0
+                        'img_btnx_led_1.png',         # 1
+                        'img_btnx_led_2.png',         # 2
+                        'img_execute_false.png',      # 3
+                        'img_execute_true.png',       # 4
+                        'img_menu_left.png',          # 5
+                        'img_menu_right.png',         # 6
+                        'img_mode_0.png',             # 7
+                        'img_mode_1.png',             # 8
+                        'img_read_ony_false.png',     # 9
+                        'img_read_ony_true.png',      # 10
+                        'img_scrollbar_down.png',     # 11
+                        'img_scrollbar_left.png',     # 12
+                        'img_scrollbar_right.png',    # 13
+                        'img_scrollbar_up.png',       # 14
+                        'img_show_menu_false.png',    # 15
+                        'img_show_menu_true.png',     # 16
+                        'img_stop_thread_false.png',  # 17
+                        'img_stop_thread_true.png']   # 18
+
+        # Concatinate Static Image Values With Variable Image Path
+        self.img_path = img_path
+        self.img_btnx_led_0 = str(self.img_path + self.img_var[0])
+        self.img_btnx_led_1 = str(self.img_path + self.img_var[1])
+        self.img_btnx_led_2 = str(self.img_path + self.img_var[2])
+        self.img_execute_false = str(self.img_path + self.img_var[3])
+        self.img_execute_true = str(self.img_path + self.img_var[4])
+        self.img_menu_left = str(self.img_path + self.img_var[5])
+        self.img_menu_right = str(self.img_path + self.img_var[6])
+        self.img_mode_0 = str(self.img_path + self.img_var[7])
+        self.img_mode_1 = str(self.img_path + self.img_var[8])
+        self.img_read_ony_false = str(self.img_path + self.img_var[9])
+        self.img_read_ony_true = str(self.img_path + self.img_var[10])
+        self.img_scrollbar_down = str(self.img_path + self.img_var[11])
+        self.img_scrollbar_left = str(self.img_path + self.img_var[12])
+        self.img_scrollbar_right = str(self.img_path + self.img_var[13])
+        self.img_scrollbar_up = str(self.img_path + self.img_var[14])
+        self.img_show_menu_false = str(self.img_path + self.img_var[15])
+        self.img_show_menu_true = str(self.img_path + self.img_var[16])
+        self.img_stop_thread_false = str(self.img_path + self.img_var[17])
+        self.img_stop_thread_true = str(self.img_path + self.img_var[18])
 
     # Section 1 Funtion: Main Function Confirmation 0
     def confirm_op0_funk0(self):
@@ -1277,52 +1239,28 @@ class App(QMainWindow):
             i = 0
             for settings_source_edit_vars in settings_source_edit_var:
                 settings_source_edit_var[i].setReadOnly(False)
-                settings_source_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(30, 30, 30);
-                    border:0px solid rgb(0, 0, 0);
-                    selection-color: green;
-                    selection-background-color: black;
-                    color: grey;}"""
-                    )
+                settings_source_edit_var[i].setStyleSheet(self.default_qle_style)
                 i += 1
             i = 0
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(False)
-                settings_dest_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(30, 30, 30);
-                    border:0px solid rgb(0, 0, 0);
-                    selection-color: green;
-                    selection-background-color: black;
-                    color: grey;}"""
-                    )
+                settings_dest_edit_var[i].setStyleSheet(self.default_qle_style)
                 i += 1
-            self.paths_readonly_button.setIcon(QIcon(small_image[6]))
+            self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_button.setIconSize(QSize(8, 21))
 
         elif read_only is False:
             i = 0
             for settings_source_edit_vars in settings_source_edit_var:
                 settings_source_edit_var[i].setReadOnly(True)
-                settings_source_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(30, 30, 30);
-                    border:0px solid rgb(0, 0, 0);
-                    selection-color: green;
-                    selection-background-color: black;
-                    color: grey;}"""
-                    )
+                settings_source_edit_var[i].setStyleSheet(self.default_qle_style)
                 i += 1
             i = 0
             for settings_dest_edit_vars in settings_dest_edit_var:
                 settings_dest_edit_var[i].setReadOnly(True)
-                settings_dest_edit_var[i].setStyleSheet(
-                    """QLineEdit {background-color: rgb(30, 30, 30);
-                    border:0px solid rgb(0, 0, 0);
-                    selection-color: green;
-                    selection-background-color: black;
-                    color: grey;}"""
-                    )
+                settings_dest_edit_var[i].setStyleSheet(self.default_qle_style)
                 i += 1
-            self.paths_readonly_button.setIcon(QIcon(small_image[7]))
+            self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_button.setIconSize(QSize(8, 8))
 
     # Sector 2 Funtion: Moves To Next Settings Page Left
@@ -1544,71 +1482,18 @@ class App(QMainWindow):
         self.tb_label_0.hide()
 
         back_label_var[0].resize(95, 80)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[0].setPixmap(pixmap)
-        back_label_var[0].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:1px solid rgb(0, 0, 0);
-                    border-left:1px solid rgb(0, 0, 0);
-                    border-right:1px solid rgb(0, 0, 0)}"""
-                    )
-
         back_label_var[1].resize(95, 80)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[1].setPixmap(pixmap)
-        back_label_var[1].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:1px solid rgb(0, 0, 0);
-                    border-left:1px solid rgb(0, 0, 0);
-                    border-right:1px solid rgb(0, 0, 0)}"""
-                    )
-
         back_label_var[2].resize(95, 80)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[2].setPixmap(pixmap)
-        back_label_var[2].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:1px solid rgb(0, 0, 0);
-                    border-left:1px solid rgb(0, 0, 0);
-                    border-right:1px solid rgb(0, 0, 0)}"""
-                    )
-
         back_label_var[3].resize(95, 80)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[3].setPixmap(pixmap)
-        back_label_var[3].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:1px solid rgb(0, 0, 0);
-                    border-left:1px solid rgb(0, 0, 0);
-                    border-right:1px solid rgb(0, 0, 0)}"""
-                    )
-
         back_label_var[4].resize(95, 80)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[4].setPixmap(pixmap)
-        back_label_var[4].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:1px solid rgb(0, 0, 0);
-                    border-left:1px solid rgb(0, 0, 0);
-                    border-right:1px solid rgb(0, 0, 0)}"""
-                    )
-
         back_label_var[5].resize(95, 80)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[5].setPixmap(pixmap)
-        back_label_var[5].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:1px solid rgb(0, 0, 0);
-                    border-left:1px solid rgb(0, 0, 0);
-                    border-right:1px solid rgb(0, 0, 0)}"""
-                    )
 
-        btnx_settings_var[0].setIcon(QIcon(small_image[0]))
-        btnx_settings_var[1].setIcon(QIcon(small_image[0]))
-        btnx_settings_var[2].setIcon(QIcon(small_image[0]))
-        btnx_settings_var[3].setIcon(QIcon(small_image[0]))
-        btnx_settings_var[4].setIcon(QIcon(small_image[0]))
-        btnx_settings_var[5].setIcon(QIcon(small_image[0]))
+        btnx_settings_var[0].setIcon(QIcon(self.img_show_menu_false))
+        btnx_settings_var[1].setIcon(QIcon(self.img_show_menu_false))
+        btnx_settings_var[2].setIcon(QIcon(self.img_show_menu_false))
+        btnx_settings_var[3].setIcon(QIcon(self.img_show_menu_false))
+        btnx_settings_var[4].setIcon(QIcon(self.img_show_menu_false))
+        btnx_settings_var[5].setIcon(QIcon(self.img_show_menu_false))
 
     # Sector 2: Funtion: Calls hide_settings_funk Then Hides Settings Page By Resizing Window
     def hide_settings_page_funk(self):
@@ -1623,14 +1508,8 @@ class App(QMainWindow):
         self.hide_settings_funk()
         self.setFixedSize(self.width, 320)
 
-        btnx_settings_var[0].setIcon(QIcon(small_image[1]))
+        btnx_settings_var[0].setIcon(QIcon(self.img_show_menu_true))
         back_label_var[0].resize(95, 85)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[0].setPixmap(pixmap)
-        back_label_var[0].setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-            border-top:2px solid rgb(0, 0, 0);}"""
-            )
 
         self.setting_title0.show()
         self.settings_source0.show()
@@ -1647,14 +1526,9 @@ class App(QMainWindow):
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[1].setIcon(QIcon(small_image[1]))
+        btnx_settings_var[1].setIcon(QIcon(self.img_show_menu_true))
         back_label_var[1].resize(95, 85)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[1].setPixmap(pixmap)
-        back_label_var[1].setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-            border-top:2px solid rgb(0, 0, 0);}"""
-            )
+
         self.setting_title1.show()
         self.settings_source1.show()
         self.settings_dest1.show()
@@ -1670,14 +1544,9 @@ class App(QMainWindow):
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[2].setIcon(QIcon(small_image[1]))
+        btnx_settings_var[2].setIcon(QIcon(self.img_show_menu_true))
         back_label_var[2].resize(95, 85)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[2].setPixmap(pixmap)
-        back_label_var[2].setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-            border-top:2px solid rgb(0, 0, 0);}"""
-            )
+
         self.setting_title2.show()
         self.settings_source2.show()
         self.settings_dest2.show()
@@ -1693,14 +1562,9 @@ class App(QMainWindow):
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[3].setIcon(QIcon(small_image[1]))
+        btnx_settings_var[3].setIcon(QIcon(self.img_show_menu_true))
         back_label_var[3].resize(95, 85)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[3].setPixmap(pixmap)
-        back_label_var[3].setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-            border-top:2px solid rgb(0, 0, 0);}"""
-            )
+
         self.setting_title3.show()
         self.settings_source3.show()
         self.settings_dest3.show()
@@ -1716,14 +1580,9 @@ class App(QMainWindow):
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[4].setIcon(QIcon(small_image[1]))
+        btnx_settings_var[4].setIcon(QIcon(self.img_show_menu_true))
         back_label_var[4].resize(95, 85)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[4].setPixmap(pixmap)
-        back_label_var[4].setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-            border-top:2px solid rgb(0, 0, 0);}"""
-            )
+
         self.setting_title4.show()
         self.settings_source4.show()
         self.settings_dest4.show()
@@ -1739,14 +1598,9 @@ class App(QMainWindow):
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[5].setIcon(QIcon(small_image[1]))
+        btnx_settings_var[5].setIcon(QIcon(self.img_show_menu_true))
         back_label_var[5].resize(95, 85)
-        pixmap = QPixmap(background_img[0])
-        back_label_var[5].setPixmap(pixmap)
-        back_label_var[5].setStyleSheet(
-            """QLabel {background-color: rgb(0, 0, 0);
-            border-top:2px solid rgb(0, 0, 0);}"""
-            )
+
         self.setting_title5.show()
         self.settings_source5.show()
         self.settings_dest5.show()
@@ -1764,16 +1618,9 @@ class App(QMainWindow):
             if settings_active_int != settings_active_int_prev:
                 self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[0].setIcon(QIcon(small_image[1]))
+                btnx_settings_var[0].setIcon(QIcon(self.img_show_menu_true))
 
                 back_label_var[0].resize(95, 85)
-                pixmap = QPixmap(background_img[1])
-                back_label_var[0].setPixmap(pixmap)
-
-                back_label_var[0].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:2px solid rgb(0, 0, 0);}"""
-                    )
 
                 self.setting_title0.show()
                 self.settings_source0.show()
@@ -1798,16 +1645,9 @@ class App(QMainWindow):
             if settings_active_int != settings_active_int_prev:
                 self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[1].setIcon(QIcon(small_image[1]))
+                btnx_settings_var[1].setIcon(QIcon(self.img_show_menu_true))
 
                 back_label_var[1].resize(95, 85)
-                pixmap = QPixmap(background_img[1])
-                back_label_var[1].setPixmap(pixmap)
-
-                back_label_var[1].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:2px solid rgb(0, 0, 0);}"""
-                    )
 
                 self.setting_title1.show()
                 self.settings_source1.show()
@@ -1832,16 +1672,9 @@ class App(QMainWindow):
             if settings_active_int != settings_active_int_prev:
                 self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[2].setIcon(QIcon(small_image[1]))
+                btnx_settings_var[2].setIcon(QIcon(self.img_show_menu_true))
 
                 back_label_var[2].resize(95, 85)
-                pixmap = QPixmap(background_img[1])
-                back_label_var[2].setPixmap(pixmap)
-
-                back_label_var[2].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:2px solid rgb(0, 0, 0);}"""
-                    )
 
                 self.setting_title2.show()
                 self.settings_source2.show()
@@ -1866,16 +1699,9 @@ class App(QMainWindow):
             if settings_active_int != settings_active_int_prev:
                 self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[3].setIcon(QIcon(small_image[1]))
+                btnx_settings_var[3].setIcon(QIcon(self.img_show_menu_true))
 
                 back_label_var[3].resize(95, 85)
-                pixmap = QPixmap(background_img[1])
-                back_label_var[3].setPixmap(pixmap)
-
-                back_label_var[3].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:2px solid rgb(0, 0, 0);}"""
-                    )
 
                 self.setting_title3.show()
                 self.settings_source3.show()
@@ -1900,16 +1726,9 @@ class App(QMainWindow):
             if settings_active_int != settings_active_int_prev:
                 self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[4].setIcon(QIcon(small_image[1]))
+                btnx_settings_var[4].setIcon(QIcon(self.img_show_menu_true))
 
                 back_label_var[4].resize(95, 85)
-                pixmap = QPixmap(background_img[1])
-                back_label_var[4].setPixmap(pixmap)
-
-                back_label_var[4].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:2px solid rgb(0, 0, 0);}"""
-                    )
 
                 self.setting_title4.show()
                 self.settings_source4.show()
@@ -1934,16 +1753,9 @@ class App(QMainWindow):
             if settings_active_int != settings_active_int_prev:
                 self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[5].setIcon(QIcon(small_image[1]))
+                btnx_settings_var[5].setIcon(QIcon(self.img_show_menu_true))
 
                 back_label_var[5].resize(95, 85)
-                pixmap = QPixmap(background_img[1])
-                back_label_var[5].setPixmap(pixmap)
-
-                back_label_var[5].setStyleSheet(
-                    """QLabel {background-color: rgb(0, 0, 0);
-                    border-top:2px solid rgb(0, 0, 0);}"""
-                    )
 
                 self.setting_title5.show()
                 self.settings_source5.show()
@@ -2027,18 +1839,12 @@ class App(QMainWindow):
         if thread_engaged_var[compare_clicked] is False:
             if compare_bool_var[compare_clicked] is False:
                 compare_bool_var[compare_clicked] = True
-                comp_cont_button_var[compare_clicked].setIcon(QIcon(small_image[5]))
-                comp_cont_button_var[compare_clicked].setStyleSheet(
-                    """QPushButton{background-color: rgb(0, 0, 0);
-                   border:0px solid rgb(30, 30, 30);}"""
-                   )
+                comp_cont_button_var[compare_clicked].setIcon(QIcon(self.img_mode_1))
+                comp_cont_button_var[compare_clicked].setStyleSheet(self.default_qpbtn_prsd_style)
             elif compare_bool_var[compare_clicked] is True:
                 compare_bool_var[compare_clicked] = False
-                comp_cont_button_var[compare_clicked].setIcon(QIcon(small_image[4]))
-                comp_cont_button_var[compare_clicked].setStyleSheet(
-                    """QPushButton{background-color: rgb(35, 35, 35);
-                   border:0px solid rgb(30, 30, 30);}"""
-                   )
+                comp_cont_button_var[compare_clicked].setIcon(QIcon(self.img_mode_0))
+                comp_cont_button_var[compare_clicked].setStyleSheet(self.default_qpbtn_style)
         if thread_engaged_var[compare_clicked] is True:
             print('-- thread engaged: setting mode unavailable')
 
@@ -2098,52 +1904,28 @@ class SettingsInputResponse(QThread):
         global settings_input_response_label
 
         if settings_input_response_source_bool is True:
-            settings_input_response_label[0].setStyleSheet(
-                """QLabel {background-color: rgb(0, 255, 0);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led_green)
             settings_input_response_source_bool = None
             time.sleep(1)
-            settings_input_response_label[0].setStyleSheet(
-                """QLabel {background-color: rgb(15, 15, 15);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led)
 
         elif settings_input_response_source_bool is False:
-            settings_input_response_label[0].setStyleSheet(
-                """QLabel {background-color: rgb(255, 0, 0);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led_red)
             settings_input_response_source_bool = None
             time.sleep(1)
-            settings_input_response_label[0].setStyleSheet(
-                """QLabel {background-color: rgb(15, 15, 15);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led)
 
         elif settings_input_response_dest_bool is True:
-            settings_input_response_label[1].setStyleSheet(
-                """QLabel {background-color: rgb(0, 255, 0);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led_green)
             settings_input_response_dest_bool = None
             time.sleep(1)
-            settings_input_response_label[1].setStyleSheet(
-                """QLabel {background-color: rgb(15, 15, 15);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led)
 
         elif settings_input_response_dest_bool is False:
-            settings_input_response_label[1].setStyleSheet(
-                """QLabel {background-color: rgb(255, 0, 0);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led_red)
             settings_input_response_dest_bool = None
             time.sleep(1)
-            settings_input_response_label[1].setStyleSheet(
-                """QLabel {background-color: rgb(15, 15, 15);
-                border:1px solid rgb(15, 15, 15);}"""
-                )
+            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led)
 
 # Update Sector 2 Settings Window: Sources & Destination Paths Displayed Only When Last Valid Path Entered Still Actually Exists
 class UpdateSettingsWindow(QThread):
@@ -2299,15 +2081,22 @@ class UpdateSettingsWindow(QThread):
         configuration_engaged = False
 
 
-# Sector 1 Class: Main Function Button Thread 0  self.stop_thr_button.setIcon(QIcon(small_image[8]))
+# Sector 1 Class: Main Function Button Thread 0  self.stop_thr_button.setIcon(QIcon(self.img_stop_thread_false))
 class ThreadClass0(QThread):
-    def __init__(self, confirm_op0_tru, tb_0):
+    def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
         QThread.__init__(self)
-        self.confirm_op0_tru = confirm_op0_tru
         self.tb_0 = tb_0
+        self.confirm_op0_tru = confirm_op0_tru
+        self.img_btnx_led_0 = img_btnx_led_0
+        self.img_btnx_led_1 = img_btnx_led_1
+        self.img_btnx_led_2 = img_btnx_led_2
+        self.img_execute_false = img_execute_false
+        self.img_execute_true = img_execute_true
+        self.img_stop_thread_false = img_stop_thread_false
+        self.img_stop_thread_true = img_stop_thread_true
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
+        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
         global configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2321,26 +2110,26 @@ class ThreadClass0(QThread):
             compare_bool = compare_bool_var[0]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[1]))
-            self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right.png'))
+            btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_1))
+            self.confirm_op0_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op0_tru.setEnabled(True)
 
             # Enable Stop thread Button
             stop_thr_button_var[0].setEnabled(True)
-            stop_thr_button_var[0].setIcon(QIcon(small_image[9]))
+            stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op0_wait is True:
                 time.sleep(0.3)
             confirm_op0_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op0_tru.setIcon(QIcon(self.img_execute_false))
             self.confirm_op0_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op0_bool is True:
                 print('-- ThreadClass0: confirm_op0_bool: accepted')
-                btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[2]))
+                btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2435,8 +2224,8 @@ class ThreadClass0(QThread):
             self.tb_0.append(output_sum)
 
             # Disengage
-            btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
-            stop_thr_button_var[0].setIcon(QIcon(small_image[8]))
+            btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
+            stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[0].setEnabled(False)
             thread_engaged_var[0] = False
 
@@ -2447,10 +2236,10 @@ class ThreadClass0(QThread):
         confirm_op0_bool = False
         confirm_op0_wait = True
         print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
-        btnx_main_var[0].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op0_tru.setEnabled(False)
-        self.confirm_op0_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
-        stop_thr_button_var[0].setIcon(QIcon(small_image[8]))
+        self.confirm_op0_tru.setIcon(QIcon(self.img_execute_false))
+        stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[0].setEnabled(False)
         thread_engaged_var[0] = False
 
@@ -2459,13 +2248,20 @@ class ThreadClass0(QThread):
 
 # Sector 1 Class: Main Function Button Thread 1
 class ThreadClass1(QThread):
-    def __init__(self, confirm_op1_tru, tb_1):
+    def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
         QThread.__init__(self)
-        self.confirm_op1_tru = confirm_op1_tru
         self.tb_1 = tb_1
+        self.confirm_op1_tru = confirm_op1_tru
+        self.img_btnx_led_0 = img_btnx_led_0
+        self.img_btnx_led_1 = img_btnx_led_1
+        self.img_btnx_led_2 = img_btnx_led_2
+        self.img_execute_false = img_execute_false
+        self.img_execute_true = img_execute_true
+        self.img_stop_thread_false = img_stop_thread_false
+        self.img_stop_thread_true = img_stop_thread_true
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
+        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
         global configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2479,26 +2275,26 @@ class ThreadClass1(QThread):
             compare_bool = compare_bool_var[1]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[1]))
-            self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right.png'))
+            btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_1))
+            self.confirm_op1_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op1_tru.setEnabled(True)
 
             # Enable Stop thread Button
             stop_thr_button_var[1].setEnabled(True)
-            stop_thr_button_var[1].setIcon(QIcon(small_image[9]))
+            stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op1_wait is True:
                 time.sleep(0.3)
             confirm_op1_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op1_tru.setIcon(QIcon(self.img_execute_false))
             self.confirm_op1_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op1_bool is True:
                 print('-- ThreadClass1: confirm_op1_bool: accepted')
-                btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[2]))
+                btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2598,22 +2394,22 @@ class ThreadClass1(QThread):
             self.tb_1.append(output_sum)
 
             # Disengage
-            btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
-            stop_thr_button_var[1].setIcon(QIcon(small_image[8]))
+            btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
+            stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[1].setEnabled(False)
             thread_engaged_var[1] = False
 
     def stop_thr(self):
-        global btnx_main_var, btnx_img_led_var
+        global btnx_main_var
         global confirm_op1_bool, confirm_op1_wait
         
         confirm_op1_bool = False
         confirm_op1_wait = True
         print('-- confirm_op1 declined: (confirm_op1_bool)', confirm_op1_bool)
-        btnx_main_var[1].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op1_tru.setEnabled(False)
-        self.confirm_op1_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
-        stop_thr_button_var[1].setIcon(QIcon(small_image[8]))
+        self.confirm_op1_tru.setIcon(QIcon(self.img_execute_false))
+        stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[1].setEnabled(False)
         thread_engaged_var[1] = False
 
@@ -2622,13 +2418,20 @@ class ThreadClass1(QThread):
 
 # Sector 1 Class: Main Function Button Thread 2
 class ThreadClass2(QThread):
-    def __init__(self, confirm_op2_tru, tb_2):
+    def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
         QThread.__init__(self)
-        self.confirm_op2_tru = confirm_op2_tru
         self.tb_2 = tb_2
+        self.confirm_op2_tru = confirm_op2_tru
+        self.img_btnx_led_0 = img_btnx_led_0
+        self.img_btnx_led_1 = img_btnx_led_1
+        self.img_btnx_led_2 = img_btnx_led_2
+        self.img_execute_false = img_execute_false
+        self.img_execute_true = img_execute_true
+        self.img_stop_thread_false = img_stop_thread_false
+        self.img_stop_thread_true = img_stop_thread_true
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
+        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
         global configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2642,26 +2445,26 @@ class ThreadClass2(QThread):
             compare_bool = compare_bool_var[2]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[1]))
-            self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right.png'))
+            btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_1))
+            self.confirm_op2_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op2_tru.setEnabled(True)
 
             # Enable Stop thread Button
             stop_thr_button_var[2].setEnabled(True)
-            stop_thr_button_var[2].setIcon(QIcon(small_image[9]))
+            stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op2_wait is True:
                 time.sleep(0.3)
             confirm_op2_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op2_tru.setIcon(QIcon(self.img_execute_false))
             self.confirm_op2_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op2_bool is True:
                 print('-- ThreadClass2: confirm_op2_bool: accepted')
-                btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[2]))
+                btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2755,22 +2558,22 @@ class ThreadClass2(QThread):
             self.tb_2.append(output_sum)
 
             # Disengage
-            btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
-            stop_thr_button_var[2].setIcon(QIcon(small_image[8]))
+            btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
+            stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[2].setEnabled(False)
             thread_engaged_var[2] = False
 
     def stop_thr(self):
-        global btnx_main_var, btnx_img_led_var
+        global btnx_main_var
         global confirm_op2_bool, confirm_op2_wait
         
         confirm_op2_bool = False
         confirm_op2_wait = True
         print('-- confirm_op2 declined: (confirm_op2_bool)', confirm_op2_bool)
-        btnx_main_var[2].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op2_tru.setEnabled(False)
-        self.confirm_op2_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
-        stop_thr_button_var[2].setIcon(QIcon(small_image[8]))
+        self.confirm_op2_tru.setIcon(QIcon(self.img_execute_false))
+        stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[2].setEnabled(False)
         thread_engaged_var[2] = False
 
@@ -2779,13 +2582,20 @@ class ThreadClass2(QThread):
 
 # Sector 1 Class: Main Function Button Thread 3
 class ThreadClass3(QThread):
-    def __init__(self, confirm_op3_tru, tb_3):
+    def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
         QThread.__init__(self)
-        self.confirm_op3_tru = confirm_op3_tru
         self.tb_3 = tb_3
+        self.confirm_op3_tru = confirm_op3_tru
+        self.img_btnx_led_0 = img_btnx_led_0
+        self.img_btnx_led_1 = img_btnx_led_1
+        self.img_btnx_led_2 = img_btnx_led_2
+        self.img_execute_false = img_execute_false
+        self.img_execute_true = img_execute_true
+        self.img_stop_thread_false = img_stop_thread_false
+        self.img_stop_thread_true = img_stop_thread_true
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
+        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
         global configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2799,26 +2609,26 @@ class ThreadClass3(QThread):
             compare_bool = compare_bool_var[3]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[1]))
-            self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right.png'))
+            btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_1))
+            self.confirm_op3_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op3_tru.setEnabled(True)
 
             # Enable Stop thread Button
             stop_thr_button_var[3].setEnabled(True)
-            stop_thr_button_var[3].setIcon(QIcon(small_image[9]))
+            stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op3_wait is True:
                 time.sleep(0.3)
             confirm_op3_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op3_tru.setIcon(QIcon(self.img_execute_false))
             self.confirm_op3_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op3_bool is True:
                 print('-- ThreadClass3: confirm_op3_bool: accepted')
-                btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[2]))
+                btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2912,22 +2722,22 @@ class ThreadClass3(QThread):
             self.tb_3.append(output_sum)
 
             # Disengage
-            btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
-            stop_thr_button_var[3].setIcon(QIcon(small_image[8]))
+            btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
+            stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[3].setEnabled(False)
             thread_engaged_var[3] = False
 
     def stop_thr(self):
-        global btnx_main_var, btnx_img_led_var
+        global btnx_main_var
         global confirm_op3_bool, confirm_op3_wait
         
         confirm_op3_bool = False
         confirm_op3_wait = True
         print('-- confirm_op3 declined: (confirm_op3_bool)', confirm_op3_bool)
-        btnx_main_var[3].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op3_tru.setEnabled(False)
-        self.confirm_op3_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
-        stop_thr_button_var[3].setIcon(QIcon(small_image[8]))
+        self.confirm_op3_tru.setIcon(QIcon(self.img_execute_false))
+        stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[3].setEnabled(False)
         thread_engaged_var[3] = False
 
@@ -2936,13 +2746,20 @@ class ThreadClass3(QThread):
 
 # Sector 1 Class: Main Function Button Thread 4
 class ThreadClass4(QThread):
-    def __init__(self, confirm_op4_tru, tb_4):
+    def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
         QThread.__init__(self)
-        self.confirm_op4_tru = confirm_op4_tru
         self.tb_4 = tb_4
+        self.confirm_op4_tru = confirm_op4_tru
+        self.img_btnx_led_0 = img_btnx_led_0
+        self.img_btnx_led_1 = img_btnx_led_1
+        self.img_btnx_led_2 = img_btnx_led_2
+        self.img_execute_false = img_execute_false
+        self.img_execute_true = img_execute_true
+        self.img_stop_thread_false = img_stop_thread_false
+        self.img_stop_thread_true = img_stop_thread_true
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
+        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
         global configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -2956,26 +2773,26 @@ class ThreadClass4(QThread):
             compare_bool = compare_bool_var[4]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[1]))
-            self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right.png'))
+            btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_1))
+            self.confirm_op4_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op4_tru.setEnabled(True)
 
             # Enable Stop thread Button
             stop_thr_button_var[4].setEnabled(True)
-            stop_thr_button_var[4].setIcon(QIcon(small_image[9]))
+            stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op4_wait is True:
                 time.sleep(0.3)
             confirm_op4_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op4_tru.setIcon(QIcon(self.img_execute_false))
             self.confirm_op4_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op4_bool is True:
                 print('-- ThreadClass4: confirm_op4_bool: accepted')
-                btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[2]))
+                btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -3069,22 +2886,22 @@ class ThreadClass4(QThread):
             self.tb_4.append(output_sum)
 
             # Disengage
-            btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
-            stop_thr_button_var[4].setIcon(QIcon(small_image[8]))
+            btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
+            stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[4].setEnabled(False)
             thread_engaged_var[4] = False
 
     def stop_thr(self):
-        global btnx_main_var, btnx_img_led_var
+        global btnx_main_var
         global confirm_op4_bool, confirm_op4_wait
         
         confirm_op4_bool = False
         confirm_op4_wait = True
         print('-- confirm_op4 declined: (confirm_op4_bool)', confirm_op4_bool)
-        btnx_main_var[4].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op4_tru.setEnabled(False)
-        self.confirm_op4_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
-        stop_thr_button_var[4].setIcon(QIcon(small_image[8]))
+        self.confirm_op4_tru.setIcon(QIcon(self.img_execute_false))
+        stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[4].setEnabled(False)
         thread_engaged_var[4] = False
 
@@ -3093,13 +2910,20 @@ class ThreadClass4(QThread):
 
 # Sector 1 Class: Main Function Button Thread 5
 class ThreadClass5(QThread):
-    def __init__(self, confirm_op5_tru, tb_5):
+    def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true):
         QThread.__init__(self)
-        self.confirm_op5_tru = confirm_op5_tru
         self.tb_5 = tb_5
+        self.confirm_op5_tru = confirm_op5_tru
+        self.img_btnx_led_0 = img_btnx_led_0
+        self.img_btnx_led_1 = img_btnx_led_1
+        self.img_btnx_led_2 = img_btnx_led_2
+        self.img_execute_false = img_execute_false
+        self.img_execute_true = img_execute_true
+        self.img_stop_thread_false = img_stop_thread_false
+        self.img_stop_thread_true = img_stop_thread_true
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, btnx_img_led_var, stop_thr_button_var
+        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
         global configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
@@ -3113,26 +2937,26 @@ class ThreadClass5(QThread):
             compare_bool = compare_bool_var[5]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[1]))
-            self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right.png'))
+            btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_1))
+            self.confirm_op5_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op5_tru.setEnabled(True)
 
             # Enable Stop thread Button
             stop_thr_button_var[5].setEnabled(True)
-            stop_thr_button_var[5].setIcon(QIcon(small_image[9]))
+            stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op5_wait is True:
                 time.sleep(0.3)
             confirm_op5_wait = True
 
             # Confirmation/Declination Occured, Hide Confirmation/Declination Buttons
-            self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
+            self.confirm_op5_tru.setIcon(QIcon(self.img_execute_false))
             self.confirm_op5_tru.setEnabled(False)
 
             # If Confirmed Run Main Function
             if confirm_op5_bool is True:
                 print('-- ThreadClass5: confirm_op5_bool: accepted')
-                btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[2]))
+                btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -3226,22 +3050,22 @@ class ThreadClass5(QThread):
             self.tb_5.append(output_sum)
 
             # Disengage
-            btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
-            stop_thr_button_var[5].setIcon(QIcon(small_image[8]))
+            btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
+            stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_false))
             stop_thr_button_var[5].setEnabled(False)
             thread_engaged_var[5] = False
 
     def stop_thr(self):
-        global btnx_main_var, btnx_img_led_var
+        global btnx_main_var
         global confirm_op5_bool, confirm_op5_wait
         
         confirm_op5_bool = False
         confirm_op5_wait = True
         print('-- confirm_op5 declined: (confirm_op5_bool)', confirm_op5_bool)
-        btnx_main_var[5].setIcon(QIcon(btnx_img_led_var[0]))
+        btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op5_tru.setEnabled(False)
-        self.confirm_op5_tru.setIcon(QIcon('./image/small_img_right_grey.png'))
-        stop_thr_button_var[5].setIcon(QIcon(small_image[8]))
+        self.confirm_op5_tru.setIcon(QIcon(self.img_execute_false))
+        stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_false))
         stop_thr_button_var[5].setEnabled(False)
         thread_engaged_var[5] = False
 
