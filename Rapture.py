@@ -2168,18 +2168,17 @@ class ThreadClass0(QThread):
                                             self.tb_0.append(output_str)
 
                                     # Check File Now Exists In Destination  # ToDo --> Ensure os.get.stat fSize t_path never returns 0 (observed false negative)
-                                    siz_src = os.path.getsize(fullpath)
+                                    # EDIT
+                                    siz_src = str(os.path.getsize(fullpath))
                                     siz_dest = ()
                                     if os.path.exists(t_path):
-                                        siz_dest = os.path.getsize(t_path)
+                                        siz_dest = str(os.path.getsize(t_path))
 
-                                        # EDIT
-                                        print('size src:', siz_src)
-                                        print('size dst:', siz_dest)
-                                        # EDIT END
+                                        print('size src:', siz_src, '  |  size dst:', siz_dest)
 
-                                        if siz_src == siz_dest or siz_dest is 0:
-                                            output_str = str('copied new: ' + t_path).strip()
+                                        if siz_src == siz_dest:
+                                            output_str = str('copied new: ' + siz_dest + '/' + siz_src + ' ' + t_path).strip()
+                                            # EDIT END
                                             self.tb_0.append(output_str)
                                             cp0_count += 1
 
@@ -2343,7 +2342,7 @@ class ThreadClass1(QThread):
                                     if os.path.exists(t_path):
                                         siz_dest = os.path.getsize(t_path)
 
-                                        if siz_src == siz_dest or siz_dest is 0:
+                                        if siz_src == siz_dest:
                                             output_str = str('copied new: ' + t_path).strip()
                                             self.tb_1.append(output_str)
                                             cp0_count += 1
@@ -2512,7 +2511,7 @@ class ThreadClass2(QThread):
                                     if os.path.exists(t_path):
                                         siz_dest = os.path.getsize(t_path)
 
-                                        if siz_src == siz_dest or siz_dest is 0:
+                                        if siz_src == siz_dest:
                                             output_str = str('copied new: ' + t_path).strip()
                                             self.tb_2.append(output_str)
                                             cp0_count += 1
@@ -2676,7 +2675,7 @@ class ThreadClass3(QThread):
                                     if os.path.exists(t_path):
                                         siz_dest = os.path.getsize(t_path)
 
-                                        if siz_src == siz_dest or siz_dest is 0:
+                                        if siz_src == siz_dest:
                                             output_str = str('copied new: ' + t_path).strip()
                                             self.tb_3.append(output_str)
                                             cp0_count += 1
@@ -2840,7 +2839,7 @@ class ThreadClass4(QThread):
                                     if os.path.exists(t_path):
                                         siz_dest = os.path.getsize(t_path)
 
-                                        if siz_src == siz_dest or siz_dest is 0:
+                                        if siz_src == siz_dest:
                                             output_str = str('copied new: ' + t_path).strip()
                                             self.tb_4.append(output_str)
                                             cp0_count += 1
@@ -3004,7 +3003,7 @@ class ThreadClass5(QThread):
                                     if os.path.exists(t_path):
                                         siz_dest = os.path.getsize(t_path)
 
-                                        if siz_src == siz_dest or siz_dest is 0:
+                                        if siz_src == siz_dest:
                                             output_str = str('copied new: ' + t_path).strip()
                                             self.tb_5.append(output_str)
                                             cp0_count += 1
