@@ -2163,7 +2163,7 @@ class ThreadClass0(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Mode 0: Write
+                                # Mode 0: Write Missing Files Only
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2199,7 +2199,7 @@ class ThreadClass0(QThread):
                                         self.tb_0.append(output_str)
                                         cp0_fail_count += 1
 
-                                # Mode 1: Write Missing & Time Stamp Compare
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2344,7 +2344,7 @@ class ThreadClass1(QThread):
 
                             if not fullpath.endswith('.ini'):
 
-                                # Mode 0: Write
+                                # Mode 0: Write Missing Files Only
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2380,7 +2380,7 @@ class ThreadClass1(QThread):
                                         self.tb_1.append(output_str)
                                         cp0_fail_count += 1
 
-                                # Mode 1: Write Missing & Time Stamp Compare
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2524,7 +2524,7 @@ class ThreadClass2(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Mode 0: Write
+                                # Mode 0: Write Missing Files Only
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2560,7 +2560,7 @@ class ThreadClass2(QThread):
                                         self.tb_2.append(output_str)
                                         cp0_fail_count += 1
 
-                                # Mode 1: Write Missing & Time Stamp Compare
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2704,7 +2704,7 @@ class ThreadClass3(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Mode 0: Write
+                                # Mode 0: Write Missing Files Only
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2740,7 +2740,7 @@ class ThreadClass3(QThread):
                                         self.tb_3.append(output_str)
                                         cp0_fail_count += 1
 
-                                # Mode 1: Write Missing & Time Stamp Compare
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -2884,7 +2884,7 @@ class ThreadClass4(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Mode 0: Write
+                                # Mode 0: Write Missing Files Only
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -2920,7 +2920,7 @@ class ThreadClass4(QThread):
                                         self.tb_4.append(output_str)
                                         cp0_fail_count += 1
 
-                                # Mode 1: Write Missing & Time Stamp Compare
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
@@ -3064,7 +3064,7 @@ class ThreadClass5(QThread):
                             t_path = dest + t_path
                             if not fullpath.endswith('.ini'):
 
-                                # Mode 0: Write
+                                # Mode 0: Write Missing Files Only
                                 if not os.path.exists(t_path):
                                     change_var = True
                                     try:
@@ -3100,7 +3100,7 @@ class ThreadClass5(QThread):
                                         self.tb_5.append(output_str)
                                         cp0_fail_count += 1
 
-                                # Mode 1: Write Missing & Time Stamp Compare
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
                                 elif os.path.exists(t_path):
                                     if compare_bool is True:
                                         ma = os.path.getmtime(fullpath)
