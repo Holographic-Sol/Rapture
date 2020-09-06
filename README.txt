@@ -27,3 +27,6 @@ NOTES:
 1. Running in admin account is preferable.
 2. Initial backup will of course take time but after that it can be insanely fast once only new/new+ammended files are being written to the destination.
 3. Try it with a huge Steam library and you will see.
+
+Recent Experiment In Write Mode 1:
+Rapture Steam Game Planetary Annihilation Titans --> 2 Seconds For 800 Updated Files compared to over 3 minutes if one re-backed up the whole game after an update.
