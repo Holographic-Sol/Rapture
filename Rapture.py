@@ -2090,7 +2090,16 @@ class UpdateSettingsWindow(QThread):
         configuration_engaged = True
 
         # Only Update Displayed Source & Destination Paths If Source & Destination Paths Not Being Edited
-        if settings_source_edit_var[0].isReadOnly() is True:
+        check_var = []
+        i = 0
+        for settings_source_edit_vars in settings_source_edit_var:
+            if settings_source_edit_var[i].isReadOnly() is False:
+                check_var.append(False)
+            elif settings_source_edit_var[i].isReadOnly() is True:
+                check_var.append(True)
+            i += 1
+
+        if not False in check_var:
             path_var = []
             dest_path_var = []
             if os.path.exists(cfg_f):
