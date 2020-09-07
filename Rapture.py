@@ -301,6 +301,7 @@ class App(QMainWindow):
         self.setFixedSize(self.width, self.height)
 
         self.output_verbosity = 1
+        self.mirror_source_bool = False
 
         # Title Bar: Close
         self.close_button = QPushButton(self)
@@ -1426,41 +1427,149 @@ class App(QMainWindow):
 
     # Sector 2 Funtion: Writes Destination Changes To Configuration File
     def settings_dest_funk(self):
-        global dest_path_entered, dest_selected, config_dst_var, dest_path_var, settings_dest_edit_var
+        global dest_path_entered, dest_selected, config_dst_var, dest_path_var, settings_dest_edit_var, path_var
         global settings_input_response_thread, settings_input_response_dest_bool
-        if os.path.exists(dest_path_entered):
-            settings_input_response_dest_bool = True
-            path_item = []
-            with open(cfg_f, 'r') as fo:
-                for line in fo:
-                    line = line.strip()
-                    if not line.startswith(config_dst_var[dest_selected]):
-                        path_item.append(line)
-                    elif line.startswith(config_dst_var[dest_selected]):
-                        new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
-                        path_item.append(new_line)
-            open(cfg_f, 'w').close()
-            with open(cfg_f, 'a') as fo:
-                i = 0
-                for path_items in path_item:
-                    fo.writelines(path_item[i] + '\n')
-                    i += 1
-            fo.close()
-            dest_path_var[dest_selected] = dest_path_entered
-            settings_input_response_thread.start()
 
-        elif not os.path.exists(dest_path_entered):
+        settings_input_response_dest_bool = False
+
+        # User Only Enters Drive Letter For Destination
+        if self.mirror_source_bool is True:
+            print('-- copy mirrored from root of source drive')
             try:
-                # Attempt Path Creation
-                var = dest_path_entered[0]
-                var = str(var + ':\\')
-                if os.path.exists(var):
-                    dest_path_entered = str(dest_path_entered).strip()
-                    print('-- creating directory(s):', dest_path_entered)
+                # Ensure The Drive String Is Only 3 Characters In Length & Assign Chars Index 0-2 To Variables That Can Be Checked
+                str_len = len(dest_path_entered)
+                if str_len is 3:
+                    char_var0 = str(dest_path_entered[0])
+                    char_var1 = str(dest_path_entered[1])
+                    char_var2 = str(dest_path_entered[2])
+                    char_var3 = str(char_var0 + char_var1 + char_var2)
 
-                    # Only Partially Sanitized Path!
+                    # Determine If String Is Valid
+                    if char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\' and os.path.exists(char_var3):
+
+                        # Get Destination Input's Corresponding Source Path Using Destination Index Integer To Access Specific Source Path Item
+                        print('Source path:', path_var[dest_selected])
+
+                        # Slice Source Path
+                        var = path_var[dest_selected][3:]
+
+                        # Concatinate Sliced Source Path With Destination Path Input Data
+                        dest_var = str(dest_path_entered + var)
+
+                        # Set Destination Path And Make Child Directories If Not Child Directories Exist
+                        dest_path_entered = dest_var
+                        print('Destination:', dest_path_entered)
+
+                        # Make Only Directories that Do Not Exist
+                        distutils.dir_util.mkpath(dest_path_entered)
+
+                        # Write Changes To Configuration File
+                        path_item = []
+                        with open(cfg_f, 'r') as fo:
+                            for line in fo:
+                                line = line.strip()
+                                if not line.startswith(config_dst_var[dest_selected]):
+                                    path_item.append(line)
+                                elif line.startswith(config_dst_var[dest_selected]):
+                                    new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
+                                    path_item.append(new_line)
+                        open(cfg_f, 'w').close()
+                        with open(cfg_f, 'a') as fo:
+                            i = 0
+                            for path_items in path_item:
+                                fo.writelines(path_item[i] + '\n')
+                                i += 1
+                        fo.close()
+
+                        # Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
+                        dest_path_var[dest_selected] = dest_path_entered
+                        settings_input_response_dest_bool = True
+
+            except Exception as e:
+                    print(str(e))
+                    settings_input_response_dest_bool = False
+                    settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+
+            # If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
+            if settings_input_response_dest_bool is False:
+                settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+
+        # Set A Custom Path For Destination (Currently Developing Sanitization)
+        elif self.mirror_source_bool is False:
+            print('-- user can enter custom destination')
+            valid_len_bool = False
+            valid_drive_bool = False
+            valid_non_win_res_nm_bool = False
+            valid_char_bool = False
+            try:
+
+                # 2 Continue Only If Length Of String Is < 255 Characters
+                str_len = len(dest_path_entered)
+                if str_len < 255:
+                    valid_len_bool = True
+                elif str_len >= 255:
+                    valid_len_bool = False
+
+                # 3 Determine Valid Drive Letter
+                if valid_len_bool is True:
+                    char_var0 = dest_path_entered[0]
+                    char_var1 = dest_path_entered[1]
+                    char_var2 = dest_path_entered[2]
+                    char_var3 = str(char_var0 + char_var1 + char_var2)
+                    if os.path.exists(char_var3) and char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\':
+                        valid_drive_bool = True
+                    else:
+                        valid_drive_bool = False
+
+                # 4 Check For Forbidden Chars
+                if valid_len_bool is True:
+                    valid_char = []
+                    invalid_char = '<>:"/|?*.'
+                    i = 0
+                    for dest_path_entereds in dest_path_entered:
+                        if not i is 1:
+                            print('-- checking character:', dest_path_entered[i])
+                        if dest_path_entered[i] in invalid_char:
+                            valid_char.append(False)
+                        elif i is 1:
+                            print('-- skipping known colon:', dest_path_entered[i])
+                        i += 1
+                    if not False in valid_char:
+                        valid_char_bool = True
+
+                # 5 Determine If The String Matches Windows Reserved Names
+                valid_var = []
+                win_res_nm = ['CON', 'PRN', 'AUX', 'NUL',
+                            'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+                            'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+                i = 0
+                for win_res_nms in win_res_nm:
+                    if str('\\' + win_res_nm[i] + '\\') in dest_path_entered:
+                        valid_var.append(False)
+                    elif dest_path_entered.endswith(win_res_nm[i]):
+                        valid_var.append(False)
+                    elif str(win_res_nm[i] + '.') in dest_path_entered:
+                        valid_var.append(False)
+                    i += 1
+                if not False in valid_var:
+                    valid_non_win_res_nm_bool = True
+
+                # Print Results
+                print('\nResutls:')
+                print('String Length:', valid_len_bool)
+                print('Drive Letter:', valid_drive_bool)
+                print('Valid Characters:', valid_char_bool)
+                print('Does Not Contain System Reserved Names:', valid_non_win_res_nm_bool, '\n')
+
+                # Continue Only If Sanitization Checks All Return True
+                if valid_len_bool is True and valid_drive_bool is True and valid_non_win_res_nm_bool is True and valid_char_bool is True:
+                    print('-- input destination path passed current sanitization checks')
+                    print('Destination:', dest_path_entered)
+
+                    # Make Only Directories that Do Not Exist
                     distutils.dir_util.mkpath(dest_path_entered)
-                    settings_input_response_dest_bool = True
+
+                    # Write Changes To Configuration File
                     path_item = []
                     with open(cfg_f, 'r') as fo:
                         for line in fo:
@@ -1477,19 +1586,23 @@ class App(QMainWindow):
                             fo.writelines(path_item[i] + '\n')
                             i += 1
                     fo.close()
+
+                    # Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
                     dest_path_var[dest_selected] = dest_path_entered
-                    settings_input_response_thread.start()
-                elif not os.path.exists(var):
-                    print('-- cannot create directory(s) on drive that does not exist')
+                    settings_input_response_dest_bool = True
+                else:
+                    print('-- input destination path failed current sanitization checks')
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
-                    settings_input_response_thread.start()
+
             except Exception as e:
-                print(str(e))
-                print('-- could not create destination path')
-                settings_input_response_dest_bool = False
-                settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
-                settings_input_response_thread.start()
+                    print(str(e))
+                    settings_input_response_dest_bool = False
+                    settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+        
+        # Start Input Response Thread
+        settings_input_response_thread.start()
+
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 0
     def settings_source_pre_funk0(self):
