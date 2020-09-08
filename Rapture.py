@@ -1400,30 +1400,125 @@ class App(QMainWindow):
     def settings_source_funk(self):
         global source_path_entered, source_selected, config_src_var, path_var, settings_source_edit_var
         global settings_input_response_thread, settings_input_response_source_bool
-        if os.path.exists(source_path_entered):
-            settings_input_response_source_bool = True
-            path_item = []
-            with open(cfg_f, 'r') as fo:
-                for line in fo:
-                    line = line.strip()
-                    if not line.startswith(config_src_var[source_selected]):
-                        path_item.append(line)
-                    elif line.startswith(config_src_var[source_selected]):
-                        new_line = config_src_var[source_selected]+' '+source_path_entered
-                        path_item.append(new_line)
-            open(cfg_f, 'w').close()
-            with open(cfg_f, 'a') as fo:
+        valid_len_bool = False
+        valid_drive_bool = False
+        valid_char_bool = False
+        valid_non_win_res_nm_bool = False
+
+        try:
+
+            # Ensure Length Of String Is < 255 Characters & >= 3 Characters
+            str_len = len(source_path_entered)
+            if str_len < 255 and str_len >= 3:
+                valid_len_bool = True
+            elif str_len >= 255:
+                valid_len_bool = False
+
+            # Determine Valid Drive Letter
+            if valid_len_bool is True:
+                char_var0 = source_path_entered[0]
+                char_var1 = source_path_entered[1]
+                char_var2 = source_path_entered[2]
+                char_var3 = str(char_var0 + char_var1 + char_var2)
+                if os.path.exists(char_var3) and char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\':
+                    valid_drive_bool = True
+                else:
+                    valid_drive_bool = False
+
+            # Check For Forbidden Chars
+            if valid_len_bool is True:
+                valid_char = []
+                invalid_char = ['<', '>', ':', '"', '/', '|', '?', '*', '.']
                 i = 0
-                for path_items in path_item:
-                    fo.writelines(path_item[i]+'\n')
+                for source_path_entereds in source_path_entered:
+                    if not i is 1:
+                        if source_path_entered[i] in invalid_char:
+                            valid_char.append(False)
                     i += 1
-            fo.close()
-            path_var[source_selected] = source_path_entered
-            settings_input_response_thread.start()
-        elif not os.path.exists(source_path_entered):
-            settings_input_response_source_bool = False
+                if not False in valid_char:
+                    valid_char_bool = True
+
+            # Determine If The String Matches Windows Reserved Names
+            valid_var = []
+            win_res_nm = ['CON', 'PRN', 'AUX', 'NUL',
+                        'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+                        'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+            i = 0
+            for win_res_nms in win_res_nm:
+                if str('\\' + win_res_nm[i] + '\\') in source_path_entered:
+                    valid_var.append(False)
+                elif source_path_entered.endswith(win_res_nm[i]):
+                    valid_var.append(False)
+                elif str(win_res_nm[i] + '.') in source_path_entered:
+                    valid_var.append(False)
+                i += 1
+            if not False in valid_var:
+                valid_non_win_res_nm_bool = True
+
+            # Print Results
+            print('-- resutls:')
+            print('-- string length:', valid_len_bool)
+            print('-- drive letter:', valid_drive_bool)
+            print('-- valid characters:', valid_char_bool)
+            print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
+
+            # Continue Only If Sanitization Checks All Return True
+            if os.path.exists(source_path_entered) and valid_len_bool is True and valid_drive_bool is True and valid_char_bool is True and valid_non_win_res_nm_bool is True:
+                print('-- input source path passed current sanitization checks')
+                path_item = []
+
+                # Open & Read Configuration File
+                with open(cfg_f, 'r') as fo:
+                    for line in fo:
+                        line = line.strip()
+
+                        # Append All Lines But Selected Path To A List
+                        if not line.startswith(config_src_var[source_selected]):
+                            path_item.append(line)
+
+                        # Isolate Selected Source Path And Change Its Value To Source Path Entered Then Append To The Same List
+                        elif line.startswith(config_src_var[source_selected]):
+                            new_line = config_src_var[source_selected]+' '+source_path_entered
+                            path_item.append(new_line)
+
+                # Wipe Configuration File
+                open(cfg_f, 'w').close()
+
+                # Open Configuration File In Append Mode
+                with open(cfg_f, 'a') as fo:
+                    i = 0
+
+                    # Re-Write Configuration File From The New List Of Entries
+                    for path_items in path_item:
+                        fo.writelines(path_item[i]+'\n')
+                        i += 1
+                fo.close()
+
+                # Edit List Value By Index Number & Set Input Response Bool To True
+                path_var[source_selected] = source_path_entered
+                settings_input_response_source_bool = True
+
+            # Do Not Write Configuration File Because Sanitization Failed
+            else:
+                # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
+                print('-- input source path failed current sanitization checks')
+                settings_source_edit_var[source_selected].setText(path_var[source_selected])
+                settings_input_response_source_bool = False
+
+        # Handle Exceptions
+        except Exception as e:
+                        print(str('-- exception:', e))
+                        settings_input_response_source_bool = False
+
+                        # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
+                        settings_source_edit_var[source_selected].setText(path_var[source_selected])
+
+        # If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
+        if settings_input_response_source_bool is False:
             settings_source_edit_var[source_selected].setText(path_var[source_selected])
-            settings_input_response_thread.start()
+
+        # Start Input Response Thread
+        settings_input_response_thread.start()
 
     # Sector 2 Funtion: Writes Destination Changes To Configuration File
     def settings_dest_funk(self):
@@ -1432,11 +1527,11 @@ class App(QMainWindow):
 
         settings_input_response_dest_bool = False
 
-        # User Only Enters Drive Letter For Destination
+        # Destination Mode 0: User Only Enters Drive Letter For Destination
         if self.mirror_source_bool is True:
-            print('-- copy mirrored from root of source drive')
+            print('-- mirror_source_bool', self.mirror_source_bool)
             try:
-                # Ensure The Drive String Is Only 3 Characters In Length & Assign Chars Index 0-2 To Variables That Can Be Checked
+                # Destination Mode 0: Ensure The Drive String Is Only 3 Characters In Length & Assign Chars Index 0-2 To Variables That Can Be Checked
                 str_len = len(dest_path_entered)
                 if str_len is 3:
                     char_var0 = str(dest_path_entered[0])
@@ -1444,26 +1539,27 @@ class App(QMainWindow):
                     char_var2 = str(dest_path_entered[2])
                     char_var3 = str(char_var0 + char_var1 + char_var2)
 
-                    # Determine If String Is Valid
+                    # Destination Mode 0: Determine If String Is Valid
                     if char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\' and os.path.exists(char_var3):
+                        print('-- input destination path passed current sanitization checks')
 
-                        # Get Destination Input's Corresponding Source Path Using Destination Index Integer To Access Specific Source Path Item
-                        print('Source path:', path_var[dest_selected])
+                        # Destination Mode 0: Get Destination Input's Corresponding Source Path Using Destination Index Integer To Access Specific Source Path Item
+                        print('-- source path:', path_var[dest_selected])
 
-                        # Slice Source Path
+                        # Destination Mode 0: Slice Source Path
                         var = path_var[dest_selected][3:]
 
-                        # Concatinate Sliced Source Path With Destination Path Input Data
+                        # Destination Mode 0: Concatinate Sliced Source Path With Destination Path Input Data
                         dest_var = str(dest_path_entered + var)
 
-                        # Set Destination Path And Make Child Directories If Not Child Directories Exist
+                        # Destination Mode 0: Set Destination Path And Make Child Directories If Not Child Directories Exist
                         dest_path_entered = dest_var
-                        print('Destination:', dest_path_entered)
+                        print('-- creating destination:', dest_path_entered)
 
-                        # Make Only Directories that Do Not Exist
+                        # Destination Mode 0: Make Only Directories that Do Not Exist
                         distutils.dir_util.mkpath(dest_path_entered)
 
-                        # Write Changes To Configuration File
+                        # Destination Mode 0: Write Changes To Configuration File
                         path_item = []
                         with open(cfg_f, 'r') as fo:
                             for line in fo:
@@ -1481,36 +1577,37 @@ class App(QMainWindow):
                                 i += 1
                         fo.close()
 
-                        # Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
+                        # Destination Mode 0: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
                         dest_path_var[dest_selected] = dest_path_entered
                         settings_input_response_dest_bool = True
 
+            # Destination Mode 0: Handle Exception
             except Exception as e:
-                    print(str(e))
+                    print(str('-- exception:', e))
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
-            # If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
+            # Destination Mode 0: If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
             if settings_input_response_dest_bool is False:
                 settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
-        # Set A Custom Path For Destination (Currently Developing Sanitization)
+        # Destination Mode 1: Set A Custom Path For Destination
         elif self.mirror_source_bool is False:
-            print('-- user can enter custom destination')
+            print('-- mirror_source_bool', self.mirror_source_bool)
             valid_len_bool = False
             valid_drive_bool = False
             valid_non_win_res_nm_bool = False
             valid_char_bool = False
             try:
 
-                # 2 Continue Only If Length Of String Is < 255 Characters
+                # Destination Mode 1: Ensure Length Of String Is < 255 Characters & >= 3 Characters
                 str_len = len(dest_path_entered)
-                if str_len < 255:
+                if str_len < 255 and str_len >= 3:
                     valid_len_bool = True
                 elif str_len >= 255:
                     valid_len_bool = False
 
-                # 3 Determine Valid Drive Letter
+                # Destination Mode 1: Determine Valid Drive Letter
                 if valid_len_bool is True:
                     char_var0 = dest_path_entered[0]
                     char_var1 = dest_path_entered[1]
@@ -1521,23 +1618,20 @@ class App(QMainWindow):
                     else:
                         valid_drive_bool = False
 
-                # 4 Check For Forbidden Chars
+                # Destination Mode 1: Check For Forbidden Chars
                 if valid_len_bool is True:
                     valid_char = []
-                    invalid_char = '<>:"/|?*.'
+                    invalid_char = ['<', '>', ':', '"', '/', '|', '?', '*', '.']
                     i = 0
                     for dest_path_entereds in dest_path_entered:
                         if not i is 1:
-                            print('-- checking character:', dest_path_entered[i])
-                        if dest_path_entered[i].strip() in invalid_char.split():
-                            valid_char.append(False)
-                        elif i is 1:
-                            print('-- skipping known colon:', dest_path_entered[i])
+                            if dest_path_entered[i] in invalid_char:
+                                valid_char.append(False)
                         i += 1
                     if not False in valid_char:
                         valid_char_bool = True
 
-                # 5 Determine If The String Matches Windows Reserved Names
+                # Destination Mode 1: Determine If The String Matches Windows Reserved Names
                 valid_var = []
                 win_res_nm = ['CON', 'PRN', 'AUX', 'NUL',
                             'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
@@ -1554,22 +1648,22 @@ class App(QMainWindow):
                 if not False in valid_var:
                     valid_non_win_res_nm_bool = True
 
-                # Print Results
-                print('\nResutls:')
-                print('String Length:', valid_len_bool)
-                print('Drive Letter:', valid_drive_bool)
-                print('Valid Characters:', valid_char_bool)
-                print('Does Not Contain System Reserved Names:', valid_non_win_res_nm_bool, '\n')
+                # Destination Mode 1: Print Results
+                print('-- resutls:')
+                print('-- string length:', valid_len_bool)
+                print('-- drive letter:', valid_drive_bool)
+                print('-- valid characters:', valid_char_bool)
+                print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
 
-                # Continue Only If Sanitization Checks All Return True
+                # Destination Mode 1: Continue Only If Sanitization Checks All Return True
                 if valid_len_bool is True and valid_drive_bool is True and valid_non_win_res_nm_bool is True and valid_char_bool is True:
                     print('-- input destination path passed current sanitization checks')
-                    print('Destination:', dest_path_entered)
+                    print('-- creating destination:', dest_path_entered)
 
-                    # Make Only Directories that Do Not Exist
+                    # Destination Mode 1: Make Only Directories that Do Not Exist
                     distutils.dir_util.mkpath(dest_path_entered)
 
-                    # Write Changes To Configuration File
+                    # Destination Mode 1: Write Changes To Configuration File
                     path_item = []
                     with open(cfg_f, 'r') as fo:
                         for line in fo:
@@ -1587,7 +1681,7 @@ class App(QMainWindow):
                             i += 1
                     fo.close()
 
-                    # Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
+                    # Destination Mode 1: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
                     dest_path_var[dest_selected] = dest_path_entered
                     settings_input_response_dest_bool = True
                 else:
@@ -1595,12 +1689,13 @@ class App(QMainWindow):
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
+            # Destination Mode 1: Handle Exception 
             except Exception as e:
-                    print(str(e))
+                    print(str('-- exception:', e))
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
         
-        # Start Input Response Thread
+        # Sector 2: Start Input Response Thread
         settings_input_response_thread.start()
 
 
