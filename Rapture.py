@@ -1521,7 +1521,7 @@ class App(QMainWindow):
 
         # Handle Exceptions
         except Exception as e:
-                        print(str('-- exception:', e))
+                        print('-- exception:', str(e))
                         settings_input_response_source_bool = False
 
                         # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
@@ -1611,7 +1611,7 @@ class App(QMainWindow):
 
             # Destination Mode 0: Handle Exception
             except Exception as e:
-                    print(str('-- exception:', e))
+                    print('-- exception:', str(e))
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
@@ -1734,7 +1734,7 @@ class App(QMainWindow):
 
             # Destination Mode 1: Handle Exception 
             except Exception as e:
-                    print(str('-- exception:', e))
+                    print('-- exception:', str(e))
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
         
@@ -2524,7 +2524,7 @@ class UpdateSettingsWindow(QThread):
         configuration_engaged = False
 
 
-# Sector 1 Class: Main Function Button Thread 0  self.stop_thr_button.setIcon(QIcon(self.img_stop_thread_false))  settings_source_edit_var
+# Sector 1 Class: Main Function Button Thread 0
 class ThreadClass0(QThread):
     def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
         QThread.__init__(self)
@@ -2596,13 +2596,19 @@ class ThreadClass0(QThread):
                                     change_var = True
                                     try:
                                         shutil.copy2(fullpath, t_path)
-                                    except IOError:
+                                    except Exception as e:
+                                        print('-- exception:', str(e))
+
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
-                                        except:
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                             output_str = str('error: ' + t_path).strip()
-                                            self.tb_0.append(output_str)
+                                            try:
+                                                self.tb_0.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2614,17 +2620,27 @@ class ThreadClass0(QThread):
                                                 output_str = str('copied new: ' + t_path).strip()
                                             elif self.output_verbosity is 1:
                                                 output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_0.append(output_str)
+                                            try:
+                                                self.tb_0.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_0.append(output_str)
+                                            try:
+                                                self.tb_0.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
                                         output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                        self.tb_0.append(output_str)
+                                        try:
+                                            self.tb_0.append(output_str)
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
+
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -2636,13 +2652,18 @@ class ThreadClass0(QThread):
                                             change_var = True
                                             try:
                                                 shutil.copy2(fullpath, t_path)
-                                            except IOError:
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
-                                                except:
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                     output_str = str('error: ' + t_path).strip()
-                                                    self.tb_0.append(output_str)
+                                                    try:
+                                                        self.tb_0.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2656,20 +2677,32 @@ class ThreadClass0(QThread):
                                                         output_str = str('updated new: ' + t_path).strip()
                                                     elif self.output_verbosity is 1:
                                                         output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                    self.tb_0.append(output_str)
+                                                    try:
+                                                        self.tb_0.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
                                                         output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                        self.tb_0.append(output_str)
+                                                        try:
+                                                            self.tb_0.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
-                                                        self.tb_0.append(output_str)
+                                                        try:
+                                                            self.tb_0.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
-                                                self.tb_0.append(output_str)
+                                                try:
+                                                    self.tb_0.append(output_str)
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -2680,7 +2713,10 @@ class ThreadClass0(QThread):
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
             print('-- ThreadClass0: ' + output_sum)
-            self.tb_0.append(output_sum)
+            try:
+                self.tb_0.append(output_sum)
+            except Exception as e:
+                print('-- exception:', str(e))
 
             # Disengage
             btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
@@ -2779,13 +2815,18 @@ class ThreadClass1(QThread):
                                     change_var = True
                                     try:
                                         shutil.copy2(fullpath, t_path)
-                                    except IOError:
+                                    except Exception as e:
+                                        print('-- exception:', str(e))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
-                                        except:
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                             output_str = str('error: ' + t_path).strip()
-                                            self.tb_1.append(output_str)
+                                            try:
+                                                self.tb_1.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2797,17 +2838,26 @@ class ThreadClass1(QThread):
                                                 output_str = str('copied new: ' + t_path).strip()
                                             elif self.output_verbosity is 1:
                                                 output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_1.append(output_str)
+                                            try:
+                                                self.tb_1.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_1.append(output_str)
+                                            try:
+                                                self.tb_1.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
                                         output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                        self.tb_1.append(output_str)
+                                        try:
+                                            self.tb_1.append(output_str)
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -2819,13 +2869,18 @@ class ThreadClass1(QThread):
                                             change_var = True
                                             try:
                                                 shutil.copy2(fullpath, t_path)
-                                            except IOError:
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
-                                                except:
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                     output_str = str('error: ' + t_path).strip()
-                                                    self.tb_1.append(output_str)
+                                                    try:
+                                                        self.tb_1.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2839,20 +2894,32 @@ class ThreadClass1(QThread):
                                                         output_str = str('updated new: ' + t_path).strip()
                                                     elif self.output_verbosity is 1:
                                                         output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                    self.tb_1.append(output_str)
+                                                    try:
+                                                        self.tb_1.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
                                                         output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                        self.tb_1.append(output_str)
+                                                        try:
+                                                            self.tb_1.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
-                                                        self.tb_1.append(output_str)
+                                                        try:
+                                                            self.tb_1.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
-                                                self.tb_1.append(output_str)
+                                                try:
+                                                    self.tb_1.append(output_str)
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -2863,7 +2930,10 @@ class ThreadClass1(QThread):
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
             print('-- ThreadClass1: ' + output_sum)
-            self.tb_1.append(output_sum)
+            try:
+                self.tb_1.append(output_sum)
+            except Exception as e:
+                print('-- exception:', str(e))
 
             # Disengage
             btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
@@ -2961,13 +3031,18 @@ class ThreadClass2(QThread):
                                     change_var = True
                                     try:
                                         shutil.copy2(fullpath, t_path)
-                                    except IOError:
+                                    except Exception as e:
+                                        print('-- exception:', str(e))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
-                                        except:
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                             output_str = str('error: ' + t_path).strip()
-                                            self.tb_2.append(output_str)
+                                            try:
+                                                self.tb_2.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2979,17 +3054,26 @@ class ThreadClass2(QThread):
                                                 output_str = str('copied new: ' + t_path).strip()
                                             elif self.output_verbosity is 1:
                                                 output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_2.append(output_str)
+                                            try:
+                                                self.tb_2.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_2.append(output_str)
+                                            try:
+                                                self.tb_2.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
                                         output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                        self.tb_2.append(output_str)
+                                        try:
+                                            self.tb_2.append(output_str)
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3001,13 +3085,18 @@ class ThreadClass2(QThread):
                                             change_var = True
                                             try:
                                                 shutil.copy2(fullpath, t_path)
-                                            except IOError:
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
-                                                except:
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                     output_str = str('error: ' + t_path).strip()
-                                                    self.tb_2.append(output_str)
+                                                    try:
+                                                        self.tb_2.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3021,20 +3110,32 @@ class ThreadClass2(QThread):
                                                         output_str = str('updated new: ' + t_path).strip()
                                                     elif self.output_verbosity is 1:
                                                         output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                    self.tb_2.append(output_str)
+                                                    try:
+                                                        self.tb_2.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
                                                         output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                        self.tb_2.append(output_str)
+                                                        try:
+                                                            self.tb_2.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
-                                                        self.tb_2.append(output_str)
+                                                        try:
+                                                            self.tb_2.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
-                                                self.tb_2.append(output_str)
+                                                try:
+                                                    self.tb_2.append(output_str)
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3045,7 +3146,10 @@ class ThreadClass2(QThread):
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
             print('-- ThreadClass2: ' + output_sum)
-            self.tb_2.append(output_sum)
+            try:
+                self.tb_2.append(output_sum)
+            except Exception as e:
+                print('-- exception:', str(e))
 
             # Disengage
             btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
@@ -3143,13 +3247,18 @@ class ThreadClass3(QThread):
                                     change_var = True
                                     try:
                                         shutil.copy2(fullpath, t_path)
-                                    except IOError:
+                                    except Exception as e:
+                                        print('-- exception:', str(e))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
-                                        except:
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                             output_str = str('error: ' + t_path).strip()
-                                            self.tb_3.append(output_str)
+                                            try:
+                                                self.tb_3.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3161,17 +3270,26 @@ class ThreadClass3(QThread):
                                                 output_str = str('copied new: ' + t_path).strip()
                                             elif self.output_verbosity is 1:
                                                 output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_3.append(output_str)
+                                            try:
+                                                self.tb_3.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_3.append(output_str)
+                                            try:
+                                                self.tb_3.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
                                         output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                        self.tb_3.append(output_str)
+                                        try:
+                                            self.tb_3.append(output_str)
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3183,13 +3301,18 @@ class ThreadClass3(QThread):
                                             change_var = True
                                             try:
                                                 shutil.copy2(fullpath, t_path)
-                                            except IOError:
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
-                                                except:
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                     output_str = str('error: ' + t_path).strip()
-                                                    self.tb_3.append(output_str)
+                                                    try:
+                                                        self.tb_3.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3203,20 +3326,32 @@ class ThreadClass3(QThread):
                                                         output_str = str('updated new: ' + t_path).strip()
                                                     elif self.output_verbosity is 1:
                                                         output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                    self.tb_3.append(output_str)
+                                                    try:
+                                                        self.tb_3.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
                                                         output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                        self.tb_3.append(output_str)
+                                                        try:
+                                                            self.tb_3.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
-                                                        self.tb_3.append(output_str)
+                                                        try:
+                                                            self.tb_3.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
-                                                self.tb_3.append(output_str)
+                                                try:
+                                                    self.tb_3.append(output_str)
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3227,7 +3362,10 @@ class ThreadClass3(QThread):
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
             print('-- ThreadClass3: ' + output_sum)
-            self.tb_3.append(output_sum)
+            try:
+                self.tb_3.append(output_sum)
+            except Exception as e:
+                print('-- exception:', str(e))
 
             # Disengage
             btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
@@ -3325,13 +3463,18 @@ class ThreadClass4(QThread):
                                     change_var = True
                                     try:
                                         shutil.copy2(fullpath, t_path)
-                                    except IOError:
+                                    except Exception as e:
+                                        print('-- exception:', str(e))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
-                                        except:
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                             output_str = str('error: ' + t_path).strip()
-                                            self.tb_4.append(output_str)
+                                            try:
+                                                self.tb_4.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3343,17 +3486,26 @@ class ThreadClass4(QThread):
                                                 output_str = str('copied new: ' + t_path).strip()
                                             elif self.output_verbosity is 1:
                                                 output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_4.append(output_str)
+                                            try:
+                                                self.tb_4.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_4.append(output_str)
+                                            try:
+                                                self.tb_4.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
                                         output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                        self.tb_4.append(output_str)
+                                        try:
+                                            self.tb_4.append(output_str)
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3365,13 +3517,18 @@ class ThreadClass4(QThread):
                                             change_var = True
                                             try:
                                                 shutil.copy2(fullpath, t_path)
-                                            except IOError:
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
-                                                except:
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                     output_str = str('error: ' + t_path).strip()
-                                                    self.tb_4.append(output_str)
+                                                    try:
+                                                        self.tb_4.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3385,20 +3542,32 @@ class ThreadClass4(QThread):
                                                         output_str = str('updated new: ' + t_path).strip()
                                                     elif self.output_verbosity is 1:
                                                         output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                    self.tb_4.append(output_str)
+                                                    try:
+                                                        self.tb_4.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
                                                         output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                        self.tb_4.append(output_str)
+                                                        try:
+                                                            self.tb_4.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
-                                                        self.tb_4.append(output_str)
+                                                        try:
+                                                            self.tb_4.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
-                                                self.tb_4.append(output_str)
+                                                try:
+                                                    self.tb_4.append(output_str)
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3409,7 +3578,10 @@ class ThreadClass4(QThread):
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
             print('-- ThreadClass4: ' + output_sum)
-            self.tb_4.append(output_sum)
+            try:
+                self.tb_4.append(output_sum)
+            except Exception as e:
+                print('-- exception:', str(e))
 
             # Disengage
             btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
@@ -3507,13 +3679,18 @@ class ThreadClass5(QThread):
                                     change_var = True
                                     try:
                                         shutil.copy2(fullpath, t_path)
-                                    except IOError:
+                                    except Exception as e:
+                                        print('-- exception:', str(e))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
-                                        except:
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                             output_str = str('error: ' + t_path).strip()
-                                            self.tb_5.append(output_str)
+                                            try:
+                                                self.tb_5.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3525,17 +3702,26 @@ class ThreadClass5(QThread):
                                                 output_str = str('copied new: ' + t_path).strip()
                                             elif self.output_verbosity is 1:
                                                 output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_5.append(output_str)
+                                            try:
+                                                self.tb_5.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
                                             output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                            self.tb_5.append(output_str)
+                                            try:
+                                                self.tb_5.append(output_str)
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
                                         output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
-                                        self.tb_5.append(output_str)
+                                        try:
+                                            self.tb_5.append(output_str)
+                                        except Exception as e:
+                                            print('-- exception:', str(e))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3547,13 +3733,18 @@ class ThreadClass5(QThread):
                                             change_var = True
                                             try:
                                                 shutil.copy2(fullpath, t_path)
-                                            except IOError:
+                                            except Exception as e:
+                                                print('-- exception:', str(e))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
-                                                except:
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                     output_str = str('error: ' + t_path).strip()
-                                                    self.tb_5.append(output_str)
+                                                    try:
+                                                        self.tb_5.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3567,20 +3758,32 @@ class ThreadClass5(QThread):
                                                         output_str = str('updated new: ' + t_path).strip()
                                                     elif self.output_verbosity is 1:
                                                         output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                    self.tb_5.append(output_str)
+                                                    try:
+                                                        self.tb_5.append(output_str)
+                                                    except Exception as e:
+                                                        print('-- exception:', str(e))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
                                                         output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
-                                                        self.tb_5.append(output_str)
+                                                        try:
+                                                            self.tb_5.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
-                                                        self.tb_5.append(output_str)
+                                                        try:
+                                                            self.tb_5.append(output_str)
+                                                        except Exception as e:
+                                                            print('-- exception:', str(e))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
-                                                self.tb_5.append(output_str)
+                                                try:
+                                                    self.tb_5.append(output_str)
+                                                except Exception as e:
+                                                    print('-- exception:', str(e))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3591,7 +3794,10 @@ class ThreadClass5(QThread):
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
             print('-- ThreadClass5: ' + output_sum)
-            self.tb_5.append(output_sum)
+            try:
+                self.tb_5.append(output_sum)
+            except Exception as e:
+                print('-- exception:', str(e))
 
             # Disengage
             btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
