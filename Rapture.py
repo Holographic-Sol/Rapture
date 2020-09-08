@@ -302,6 +302,7 @@ class App(QMainWindow):
 
         self.output_verbosity = 1
         self.mirror_source_bool = False
+        self.debug_exception_enabled = True
 
         # Title Bar: Close
         self.close_button = QPushButton(self)
@@ -911,11 +912,11 @@ class App(QMainWindow):
 
         # Thread: Adjusts App Geometry To Account For Display Re-Scaling
         self.oldPos = self.pos()
-        scaling_thread = ScalingClass(self.setGeometry, self.width, self.height, self.pos)
+        scaling_thread = ScalingClass(self.setGeometry, self.width, self.height, self.pos, self.debug_exception_enabled)
         scaling_thread.start()
 
         # Thread: Checks The Validity Of Directory Paths Set In Sector 2 As Source & Destination And Updates GUI Accordingly
-        update_settings_window_thread = UpdateSettingsWindow()
+        update_settings_window_thread = UpdateSettingsWindow(self.debug_exception_enabled)
         update_settings_window_thread.start()
 
         # Thread: Main Function Thread - Read/Write Thread 0
@@ -928,7 +929,8 @@ class App(QMainWindow):
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
-                                     self.output_verbosity)
+                                     self.output_verbosity,
+                                     self.debug_exception_enabled)
 
         # Thread: Main Function Thread - Read/Write Thread 1
         thread_var[1] = ThreadClass1(self.tb_1,
@@ -940,7 +942,8 @@ class App(QMainWindow):
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
-                                     self.output_verbosity)
+                                     self.output_verbosity,
+                                     self.debug_exception_enabled)
 
         # Thread: Main Function Thread - Read/Write Thread 2
         thread_var[2] = ThreadClass2(self.tb_2,
@@ -952,7 +955,8 @@ class App(QMainWindow):
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
-                                     self.output_verbosity)
+                                     self.output_verbosity,
+                                     self.debug_exception_enabled)
 
         # Thread: Main Function Thread - Read/Write Thread 3
         thread_var[3] = ThreadClass3(self.tb_3,
@@ -964,7 +968,8 @@ class App(QMainWindow):
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
-                                     self.output_verbosity)
+                                     self.output_verbosity,
+                                     self.debug_exception_enabled)
 
         # Thread: Main Function Thread - Read/Write Thread 4
         thread_var[4] = ThreadClass4(self.tb_4,
@@ -976,7 +981,8 @@ class App(QMainWindow):
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
-                                     self.output_verbosity)
+                                     self.output_verbosity,
+                                     self.debug_exception_enabled)
 
         # Thread: Main Function Thread - Read/Write Thread 5
         thread_var[5] = ThreadClass5(self.tb_5,
@@ -988,12 +994,14 @@ class App(QMainWindow):
                                      self.img_execute_true,
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
-                                     self.output_verbosity)
+                                     self.output_verbosity,
+                                     self.debug_exception_enabled)
 
         # Thread: LEDs In Sector 2 Indicate Source & Destination Path Validity
         settings_input_response_thread = SettingsInputResponse(self.default_valid_path_led_green,
                                                                self.default_valid_path_led_red,
-                                                               self.default_valid_path_led)
+                                                               self.default_valid_path_led,
+                                                               self.debug_exception_enabled)
 
         # Plugged In & Threaded: Display The Application
         self.show()
@@ -1521,11 +1529,12 @@ class App(QMainWindow):
 
         # Handle Exceptions
         except Exception as e:
-                        print('-- exception:', str(e))
-                        settings_input_response_source_bool = False
+            if self.debug_exception_enabled is True:
+                print('-- exception:', str(e).encode('utf8'))
+            settings_input_response_source_bool = False
 
-                        # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
-                        settings_source_edit_var[source_selected].setText(path_var[source_selected])
+            # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
+            settings_source_edit_var[source_selected].setText(path_var[source_selected])
 
         # If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
         if settings_input_response_source_bool is False:
@@ -1611,7 +1620,8 @@ class App(QMainWindow):
 
             # Destination Mode 0: Handle Exception
             except Exception as e:
-                    print('-- exception:', str(e))
+                    if self.debug_exception_enabled is True:
+                        print('-- exception:', str(e).encode('utf8'))
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
@@ -1734,7 +1744,8 @@ class App(QMainWindow):
 
             # Destination Mode 1: Handle Exception 
             except Exception as e:
-                    print('-- exception:', str(e))
+                    if self.debug_exception_enabled is True:
+                        print('-- exception:', str(e).encode('utf8'))
                     settings_input_response_dest_bool = False
                     settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
         
@@ -2312,12 +2323,13 @@ class App(QMainWindow):
 
 # Scaling Class: Automatically Adjusts Form's Geometry Accounting For Changes In Display Scaling Settings
 class ScalingClass(QThread):
-    def __init__(self, setGeometry, width, height, pos):
+    def __init__(self, setGeometry, width, height, pos, debug_exception_enabled):
         QThread.__init__(self)
         self.setGeometry = setGeometry
         self.width = width
         self.height = height
         self.pos = pos
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         print('-- plugged in: ScalingClass')
@@ -2327,11 +2339,12 @@ class ScalingClass(QThread):
 
 # Input Respons Class: LED's Dsilpay Valid/Invalid Paths Attempted At Being Set In Sector 2 Source & Destination Path Configuration
 class SettingsInputResponse(QThread):
-    def __init__(self, default_valid_path_led_green, default_valid_path_led_red, default_valid_path_led):
+    def __init__(self, default_valid_path_led_green, default_valid_path_led_red, default_valid_path_led, debug_exception_enabled):
         QThread.__init__(self)
         self.default_valid_path_led_green = default_valid_path_led_green
         self.default_valid_path_led_red = default_valid_path_led_red
         self.default_valid_path_led = default_valid_path_led
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         global settings_input_response_source_bool, settings_input_response_dest_bool
@@ -2363,8 +2376,9 @@ class SettingsInputResponse(QThread):
 
 # Update Sector 2 Settings Window: Sources & Destination Paths Displayed Only When Last Valid Path Entered Still Actually Exists
 class UpdateSettingsWindow(QThread):
-    def __init__(self):
+    def __init__(self, debug_exception_enabled):
         QThread.__init__(self)
+        self.debug_exception_enabled = debug_exception_enabled
 
     # Run This Thread While Program Is Alive And Read Configuration File
     def run(self):
@@ -2526,7 +2540,7 @@ class UpdateSettingsWindow(QThread):
 
 # Sector 1 Class: Main Function Button Thread 0
 class ThreadClass0(QThread):
-    def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
+    def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
         QThread.__init__(self)
         self.tb_0 = tb_0
         self.confirm_op0_tru = confirm_op0_tru
@@ -2538,6 +2552,7 @@ class ThreadClass0(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2597,18 +2612,21 @@ class ThreadClass0(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        print('-- exception:', str(e))
+                                        if self.debug_exception_enabled is True:
+                                            print('-- exception:', str(e).encode('utf8'))
 
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_0.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2623,7 +2641,8 @@ class ThreadClass0(QThread):
                                             try:
                                                 self.tb_0.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
@@ -2631,7 +2650,8 @@ class ThreadClass0(QThread):
                                             try:
                                                 self.tb_0.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
@@ -2639,7 +2659,8 @@ class ThreadClass0(QThread):
                                         try:
                                             self.tb_0.append(output_str)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
 
                                         cp0_fail_count += 1
 
@@ -2653,17 +2674,20 @@ class ThreadClass0(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_0.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2680,7 +2704,8 @@ class ThreadClass0(QThread):
                                                     try:
                                                         self.tb_0.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
@@ -2688,21 +2713,24 @@ class ThreadClass0(QThread):
                                                         try:
                                                             self.tb_0.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
                                                         try:
                                                             self.tb_0.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 try:
                                                     self.tb_0.append(output_str)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -2716,7 +2744,8 @@ class ThreadClass0(QThread):
             try:
                 self.tb_0.append(output_sum)
             except Exception as e:
-                print('-- exception:', str(e))
+                if self.debug_exception_enabled is True:
+                    print('-- exception:', str(e).encode('utf8'))
 
             # Disengage
             btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
@@ -2745,7 +2774,7 @@ class ThreadClass0(QThread):
 
 # Sector 1 Class: Main Function Button Thread 1
 class ThreadClass1(QThread):
-    def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
+    def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
         QThread.__init__(self)
         self.tb_1 = tb_1
         self.confirm_op1_tru = confirm_op1_tru
@@ -2757,6 +2786,7 @@ class ThreadClass1(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -2816,17 +2846,20 @@ class ThreadClass1(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        print('-- exception:', str(e))
+                                        if self.debug_exception_enabled is True:
+                                            print('-- exception:', str(e).encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_1.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2841,7 +2874,8 @@ class ThreadClass1(QThread):
                                             try:
                                                 self.tb_1.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
@@ -2849,7 +2883,8 @@ class ThreadClass1(QThread):
                                             try:
                                                 self.tb_1.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
@@ -2857,7 +2892,8 @@ class ThreadClass1(QThread):
                                         try:
                                             self.tb_1.append(output_str)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -2870,17 +2906,20 @@ class ThreadClass1(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_1.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -2897,7 +2936,8 @@ class ThreadClass1(QThread):
                                                     try:
                                                         self.tb_1.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
@@ -2905,21 +2945,24 @@ class ThreadClass1(QThread):
                                                         try:
                                                             self.tb_1.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
                                                         try:
                                                             self.tb_1.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 try:
                                                     self.tb_1.append(output_str)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -2933,7 +2976,8 @@ class ThreadClass1(QThread):
             try:
                 self.tb_1.append(output_sum)
             except Exception as e:
-                print('-- exception:', str(e))
+                if self.debug_exception_enabled is True:
+                    print('-- exception:', str(e).encode('utf8'))
 
             # Disengage
             btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
@@ -2962,7 +3006,7 @@ class ThreadClass1(QThread):
 
 # Sector 1 Class: Main Function Button Thread 2
 class ThreadClass2(QThread):
-    def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
+    def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
         QThread.__init__(self)
         self.tb_2 = tb_2
         self.confirm_op2_tru = confirm_op2_tru
@@ -2974,6 +3018,7 @@ class ThreadClass2(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -3032,17 +3077,20 @@ class ThreadClass2(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        print('-- exception:', str(e))
+                                        if self.debug_exception_enabled is True:
+                                            print('-- exception:', str(e).encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_2.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3057,7 +3105,8 @@ class ThreadClass2(QThread):
                                             try:
                                                 self.tb_2.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
@@ -3065,7 +3114,8 @@ class ThreadClass2(QThread):
                                             try:
                                                 self.tb_2.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
@@ -3073,7 +3123,8 @@ class ThreadClass2(QThread):
                                         try:
                                             self.tb_2.append(output_str)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3086,17 +3137,20 @@ class ThreadClass2(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_2.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3113,7 +3167,8 @@ class ThreadClass2(QThread):
                                                     try:
                                                         self.tb_2.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
@@ -3121,21 +3176,24 @@ class ThreadClass2(QThread):
                                                         try:
                                                             self.tb_2.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
                                                         try:
                                                             self.tb_2.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 try:
                                                     self.tb_2.append(output_str)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3149,7 +3207,8 @@ class ThreadClass2(QThread):
             try:
                 self.tb_2.append(output_sum)
             except Exception as e:
-                print('-- exception:', str(e))
+                if self.debug_exception_enabled is True:
+                    print('-- exception:', str(e).encode('utf8'))
 
             # Disengage
             btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
@@ -3178,7 +3237,7 @@ class ThreadClass2(QThread):
 
 # Sector 1 Class: Main Function Button Thread 3
 class ThreadClass3(QThread):
-    def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
+    def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
         QThread.__init__(self)
         self.tb_3 = tb_3
         self.confirm_op3_tru = confirm_op3_tru
@@ -3190,6 +3249,7 @@ class ThreadClass3(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -3248,17 +3308,20 @@ class ThreadClass3(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        print('-- exception:', str(e))
+                                        if self.debug_exception_enabled is True:
+                                            print('-- exception:', str(e).encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_3.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3273,7 +3336,8 @@ class ThreadClass3(QThread):
                                             try:
                                                 self.tb_3.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
@@ -3281,7 +3345,8 @@ class ThreadClass3(QThread):
                                             try:
                                                 self.tb_3.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
@@ -3289,7 +3354,8 @@ class ThreadClass3(QThread):
                                         try:
                                             self.tb_3.append(output_str)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3302,17 +3368,20 @@ class ThreadClass3(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_3.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3329,7 +3398,8 @@ class ThreadClass3(QThread):
                                                     try:
                                                         self.tb_3.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
@@ -3337,21 +3407,24 @@ class ThreadClass3(QThread):
                                                         try:
                                                             self.tb_3.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
                                                         try:
                                                             self.tb_3.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 try:
                                                     self.tb_3.append(output_str)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3365,7 +3438,8 @@ class ThreadClass3(QThread):
             try:
                 self.tb_3.append(output_sum)
             except Exception as e:
-                print('-- exception:', str(e))
+                if self.debug_exception_enabled is True:
+                    print('-- exception:', str(e).encode('utf8'))
 
             # Disengage
             btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
@@ -3394,7 +3468,7 @@ class ThreadClass3(QThread):
 
 # Sector 1 Class: Main Function Button Thread 4
 class ThreadClass4(QThread):
-    def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
+    def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
         QThread.__init__(self)
         self.tb_4 = tb_4
         self.confirm_op4_tru = confirm_op4_tru
@@ -3406,6 +3480,7 @@ class ThreadClass4(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -3464,17 +3539,20 @@ class ThreadClass4(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        print('-- exception:', str(e))
+                                        if self.debug_exception_enabled is True:
+                                            print('-- exception:', str(e).encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_4.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3489,7 +3567,8 @@ class ThreadClass4(QThread):
                                             try:
                                                 self.tb_4.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
@@ -3497,7 +3576,8 @@ class ThreadClass4(QThread):
                                             try:
                                                 self.tb_4.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
@@ -3505,7 +3585,8 @@ class ThreadClass4(QThread):
                                         try:
                                             self.tb_4.append(output_str)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3518,17 +3599,20 @@ class ThreadClass4(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_4.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3545,7 +3629,8 @@ class ThreadClass4(QThread):
                                                     try:
                                                         self.tb_4.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
@@ -3553,21 +3638,24 @@ class ThreadClass4(QThread):
                                                         try:
                                                             self.tb_4.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
                                                         try:
                                                             self.tb_4.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 try:
                                                     self.tb_4.append(output_str)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3581,7 +3669,8 @@ class ThreadClass4(QThread):
             try:
                 self.tb_4.append(output_sum)
             except Exception as e:
-                print('-- exception:', str(e))
+                if self.debug_exception_enabled is True:
+                    print('-- exception:', str(e).encode('utf8'))
 
             # Disengage
             btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
@@ -3610,7 +3699,7 @@ class ThreadClass4(QThread):
 
 # Sector 1 Class: Main Function Button Thread 5
 class ThreadClass5(QThread):
-    def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity):
+    def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
         QThread.__init__(self)
         self.tb_5 = tb_5
         self.confirm_op5_tru = confirm_op5_tru
@@ -3622,6 +3711,7 @@ class ThreadClass5(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
+        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
         global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
@@ -3680,17 +3770,20 @@ class ThreadClass5(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        print('-- exception:', str(e))
+                                        if self.debug_exception_enabled is True:
+                                            print('-- exception:', str(e).encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_5.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
 
                                     # Mode 0: Check File
                                     if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3705,7 +3798,8 @@ class ThreadClass5(QThread):
                                             try:
                                                 self.tb_5.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
@@ -3713,7 +3807,8 @@ class ThreadClass5(QThread):
                                             try:
                                                 self.tb_5.append(output_str)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                             cp0_fail_count += 1
 
                                     elif not os.path.exists(t_path):
@@ -3721,7 +3816,8 @@ class ThreadClass5(QThread):
                                         try:
                                             self.tb_5.append(output_str)
                                         except Exception as e:
-                                            print('-- exception:', str(e))
+                                            if self.debug_exception_enabled is True:
+                                                print('-- exception:', str(e).encode('utf8'))
                                         cp0_fail_count += 1
 
                                 # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
@@ -3734,17 +3830,20 @@ class ThreadClass5(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                print('-- exception:', str(e))
+                                                if self.debug_exception_enabled is True:
+                                                    print('-- exception:', str(e).encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_5.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
 
                                             # Mode 1: Check File
                                             if os.path.exists(t_path) and os.path.exists(fullpath):
@@ -3761,7 +3860,8 @@ class ThreadClass5(QThread):
                                                     try:
                                                         self.tb_5.append(output_str)
                                                     except Exception as e:
-                                                        print('-- exception:', str(e))
+                                                        if self.debug_exception_enabled is True:
+                                                            print('-- exception:', str(e).encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
@@ -3769,21 +3869,24 @@ class ThreadClass5(QThread):
                                                         try:
                                                             self.tb_5.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
                                                         output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
                                                         try:
                                                             self.tb_5.append(output_str)
                                                         except Exception as e:
-                                                            print('-- exception:', str(e))
+                                                            if self.debug_exception_enabled is True:
+                                                                print('-- exception:', str(e).encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
                                                 output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
                                                 try:
                                                     self.tb_5.append(output_str)
                                                 except Exception as e:
-                                                    print('-- exception:', str(e))
+                                                    if self.debug_exception_enabled is True:
+                                                        print('-- exception:', str(e).encode('utf8'))
                                                 cp1_fail_count += 1
 
             # Output Summary
@@ -3797,7 +3900,8 @@ class ThreadClass5(QThread):
             try:
                 self.tb_5.append(output_sum)
             except Exception as e:
-                print('-- exception:', str(e))
+                if self.debug_exception_enabled is True:
+                    print('-- exception:', str(e).encode('utf8'))
 
             # Disengage
             btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
