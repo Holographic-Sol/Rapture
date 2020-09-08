@@ -2613,14 +2613,14 @@ class ThreadClass0(QThread):
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
                                         if self.debug_exception_enabled is True:
-                                            print('-- exception:', str(e).encode('utf8'))
+                                            print('-- exception:', str(e).strip().encode('utf8'))
 
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
                                             if self.debug_exception_enabled is True:
-                                                print('-- exception:', str(e).encode('utf8'))
+                                                print('-- exception:', str(e).strip().encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_0.append(output_str)
