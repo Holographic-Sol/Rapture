@@ -1250,7 +1250,7 @@ class App(QMainWindow):
         confirm_op5_bool = True
         confirm_op5_wait = False
 
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 0 #
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 0
     def paths_readonly_button_funk_0(self):
         print('-- plugged in: paths_readonly_button_funk_0')
         global settings_source_edit_vars
@@ -1498,6 +1498,20 @@ class App(QMainWindow):
                 path_var[source_selected] = source_path_entered
                 settings_input_response_source_bool = True
 
+                # Set Pertaining QLineEdits ReadOnly On Enter
+                if source_selected is 0:
+                    self.paths_readonly_button_funk_0()
+                elif source_selected is 1:
+                    self.paths_readonly_button_funk_1()
+                elif source_selected is 2:
+                    self.paths_readonly_button_funk_2()
+                elif source_selected is 3:
+                    self.paths_readonly_button_funk_3()
+                elif source_selected is 4:
+                    self.paths_readonly_button_funk_4()
+                elif source_selected is 5:
+                    self.paths_readonly_button_funk_5()
+
             # Do Not Write Configuration File Because Sanitization Failed
             else:
                 # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
@@ -1552,7 +1566,7 @@ class App(QMainWindow):
                         # Destination Mode 0: Concatinate Sliced Source Path With Destination Path Input Data
                         dest_var = str(dest_path_entered + var)
 
-                        # Destination Mode 0: Set Destination Path And Make Child Directories If Not Child Directories Exist
+                        # Destination Mode 0: Set Destination Path To Dest_Var
                         dest_path_entered = dest_var
                         print('-- creating destination:', dest_path_entered)
 
@@ -1580,6 +1594,20 @@ class App(QMainWindow):
                         # Destination Mode 0: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
                         dest_path_var[dest_selected] = dest_path_entered
                         settings_input_response_dest_bool = True
+
+                        # Destination Mode 0: Set Pertaining QLineEdits ReadOnly On Enter
+                        if dest_selected is 0:
+                            self.paths_readonly_button_funk_0()
+                        elif dest_selected is 1:
+                            self.paths_readonly_button_funk_1()
+                        elif dest_selected is 2:
+                            self.paths_readonly_button_funk_2()
+                        elif dest_selected is 3:
+                            self.paths_readonly_button_funk_3()
+                        elif dest_selected is 4:
+                            self.paths_readonly_button_funk_4()
+                        elif dest_selected is 5:
+                            self.paths_readonly_button_funk_5()
 
             # Destination Mode 0: Handle Exception
             except Exception as e:
@@ -1684,6 +1712,21 @@ class App(QMainWindow):
                     # Destination Mode 1: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
                     dest_path_var[dest_selected] = dest_path_entered
                     settings_input_response_dest_bool = True
+
+                    # Destination Mode 1: Set Pertaining QLineEdits ReadOnly On Enter
+                    if dest_selected is 0:
+                        self.paths_readonly_button_funk_0()
+                    elif dest_selected is 1:
+                        self.paths_readonly_button_funk_1()
+                    elif dest_selected is 2:
+                        self.paths_readonly_button_funk_2()
+                    elif dest_selected is 3:
+                        self.paths_readonly_button_funk_3()
+                    elif dest_selected is 4:
+                        self.paths_readonly_button_funk_4()
+                    elif dest_selected is 5:
+                        self.paths_readonly_button_funk_5()
+
                 else:
                     print('-- input destination path failed current sanitization checks')
                     settings_input_response_dest_bool = False
