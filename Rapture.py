@@ -3,14 +3,14 @@ import sys
 import time
 import shutil
 import datetime
+import win32con
 import win32api
 import win32process
-import win32con
+import distutils.dir_util
 from win32api import GetSystemMetrics
 from PyQt5.QtCore import Qt, QThread, QSize, QTimer, QPoint, QCoreApplication
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit, QDesktopWidget, QTextBrowser
 from PyQt5.QtGui import QIcon, QFont, QPixmap
-import distutils.dir_util
 
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
@@ -28,52 +28,37 @@ pid = win32api.GetCurrentProcessId()
 handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
 win32process.SetPriorityClass(handle, priority_classes[4])
 
-settings_input_response_thread = ()
-update_settings_window_thread = ()
-thread_var = [(), (), (), (), (), ()]
-
 cfg_f = './config.txt'
 img_path = './image/default/'
 source_path_entered = ''
 dest_path_entered = ''
+path_var = ['', '', '', '', '', '']
+dest_path_var = ['', '', '', '', '', '']
 
-settings_input_response_source_bool = None
-settings_input_response_dest_bool = None
-configuration_engaged = False
-settings_active = False
-compare_bool_var = [False, False, False, False, False, False]
-confirm_op0_bool = False
+debug_enabled = False
 confirm_op0_wait = True
-confirm_op1_bool = False
 confirm_op1_wait = True
-confirm_op2_bool = False
 confirm_op2_wait = True
-confirm_op3_bool = False
 confirm_op3_wait = True
-confirm_op4_bool = False
 confirm_op4_wait = True
-confirm_op5_bool = False
 confirm_op5_wait = True
+confirm_op0_bool = False
+confirm_op1_bool = False
+confirm_op2_bool = False
+confirm_op3_bool = False
+confirm_op4_bool = False
+confirm_op5_bool = False
+configuration_engaged = False
+settings_input_response_dest_bool = None
+settings_input_response_source_bool = None
+compare_bool_var = [False, False, False, False, False, False]
 thread_engaged_var = [False, False, False, False, False, False]
 
 source_selected = ()
 dest_selected = ()
 settings_active_int = 0
 settings_active_int_prev = ()
-pressed_int = ()
 compare_clicked = ()
-
-path_var = []
-dest_path_var = []
-btnx_main_var = []
-stop_thr_button_var = []
-comp_cont_button_var = []
-back_label_var = []
-btnx_settings_var = []
-settings_source_edit_var = []
-settings_dest_edit_var = []
-settings_input_response_label = [(), ()]
-paths_readonly_button_var = []
 
 config_src_var = ['SOURCE 0:',
                   'SOURCE 1:',
@@ -90,165 +75,10 @@ config_dst_var = ['DESTINATION 0:',
                   'DESTINATION 5:']
 
 
-# Read Configuration File
-def get_conf_funk():
-    global path_var, dest_path_var, img_path
-    path_var = []
-    dest_path_var = []
-
-    if os.path.exists(cfg_f):
-        print('-- found configuration file')
-        with open(cfg_f, 'r') as fo:
-
-            for line in fo:
-                line = line.strip()
-
-                # Read Image Path
-                if line.startswith('IMAGE PATH: '):
-                    line = line.replace('IMAGE PATH: ', '')
-                    if line.startswith('./image/'):
-                        if os.path.exists(line):
-                            if not line.endswith('/'):
-                                line = line + '/'
-                            print('config image path exists:', line)
-                            img_path = line
-                        elif not os.path.exists(line):
-                            print('config image path does not exist:', line)
-                            print('using image path:', img_path)
-
-                # Read Source Paths
-                if line.startswith('SOURCE 0: '):
-                    line = line.replace('SOURCE 0: ', '')
-                    if os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path exists:', line)
-                        path_var.append(line)
-                    elif not os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path does not exist', line)
-                        path_var.append('')
-
-                if line.startswith('SOURCE 1: '):
-                    line = line.replace('SOURCE 1: ', '')
-                    if os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path exists:', line)
-                        path_var.append(line)
-                    elif not os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path does not exist', line)
-                        path_var.append('')
-
-                if line.startswith('SOURCE 2: '):
-                    line = line.replace('SOURCE 2: ', '')
-                    if os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path exists:', line)
-                        path_var.append(line)
-                    elif not os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path does not exist', line)
-                        path_var.append('')
-
-                if line.startswith('SOURCE 3: '):
-                    line = line.replace('SOURCE 3: ', '')
-                    if os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path exists:', line)
-                        path_var.append(line)
-                    elif not os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path does not exist', line)
-                        path_var.append('')
-
-                if line.startswith('SOURCE 4: '):
-                    line = line.replace('SOURCE 4: ', '')
-                    if os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path exists:', line)
-                        path_var.append(line)
-                    elif not os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path does not exist', line)
-                        path_var.append('')
-
-                if line.startswith('SOURCE 5: '):
-                    line = line.replace('SOURCE 5: ', '')
-                    if os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path exists:', line)
-                        path_var.append(line)
-                    elif not os.path.exists(line) and len(path_var) <= 6:
-                        print('config source path does not exist', line)
-                        path_var.append('')
-                        
-                # Read Destination Paths
-                if line.startswith('DESTINATION 0: '):
-                    line = line.replace('DESTINATION 0: ', '')
-                    if os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path exists:', line)
-                        dest_path_var.append(line)
-                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path does not exist', line)
-                        dest_path_var.append('')
-
-                if line.startswith('DESTINATION 1: '):
-                    line = line.replace('DESTINATION 1: ', '')
-                    if os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path exists:', line)
-                        dest_path_var.append(line)
-                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path does not exist', line)
-                        dest_path_var.append('')
-
-                if line.startswith('DESTINATION 2: '):
-                    line = line.replace('DESTINATION 2: ', '')
-                    if os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path exists:', line)
-                        dest_path_var.append(line)
-                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path does not exist', line)
-                        dest_path_var.append('')
-
-                if line.startswith('DESTINATION 3: '):
-                    line = line.replace('DESTINATION 3: ', '')
-                    if os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path exists:', line)
-                        dest_path_var.append(line)
-                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path does not exist', line)
-                        dest_path_var.append('')
-
-                if line.startswith('DESTINATION 4: '):
-                    line = line.replace('DESTINATION 4: ', '')
-                    if os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path exists:', line)
-                        dest_path_var.append(line)
-                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path does not exist', line)
-                        dest_path_var.append('')
-
-                if line.startswith('DESTINATION 5: '):
-                    line = line.replace('DESTINATION 5: ', '')
-                    if os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path exists:', line)
-                        dest_path_var.append(line)
-                    elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                        print('config destination path does not exist', line)
-                        dest_path_var.append('')
-        fo.close()
-
-    # Write A New Configuration File
-    elif not os.path.exists(cfg_f):
-        print('-- creating new configuration file')
-        open(cfg_f, 'w').close()
-        with open(cfg_f, 'a') as fo:
-            i = 0
-            for config_src_vars in config_src_var:
-                fo.writelines(config_src_var[i] + ' x' + '\n')
-                i += 1
-            i = 0
-            for config_dst_vars in config_dst_var:
-                fo.writelines(config_dst_var[i] + ' x' + '\n')
-                i += 1
-            fo.writelines('IMAGE PATH: ./image/default/')
-        fo.close()
-        get_conf_funk()
-
-
 class App(QMainWindow):
     def __init__(self):
         super(App, self).__init__()
-        global img_path
+        global debug_enabled, img_path
 
         # Set Program Icon & Program Title
         self.setWindowIcon(QIcon('./icon.png'))
@@ -268,41 +98,38 @@ class App(QMainWindow):
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
 
         # Set Font
-        self.font_s5 = QFont("Segoe UI", 5, QFont.Normal)
-        self.font_s6 = QFont("Segoe UI", 6, QFont.Normal)
-        self.font_s8 = QFont("Segoe UI", 8, QFont.Normal)
-        self.font_s5b = QFont("Segoe UI", 5, QFont.Bold)
         self.font_s6b = QFont("Segoe UI", 6, QFont.Bold)
-        self.font_s8b = QFont("Segoe UI", 8, QFont.Bold)
 
-        # Run Read Configuration File Function
-        get_conf_funk()
-
-        # Run Set Style Sheet Function
+        # Run Set Style Sheet Function & Run Set Images Function
         self.set_style_sheet_funk()
-
-        # Run Function That Pre-Appends Image Path Variable To Static Image Names
         self.set_images_funk()
 
         # Run initUI Function
         self.initUI()
 
     def initUI(self):
-        global pressed_int
-        global thread_var, settings_input_response_thread, update_settings_window_thread
-        global btnx_main_var, btnx_settings_var, comp_cont_button_var, stop_thr_button_var, back_label_var, paths_readonly_button_var
-        global settings_source_edit_var, settings_dest_edit_var, settings_input_response_label
+        global debug_enabled
         global path_var, dest_path_var
-        global confirm_op0_bool, confirm_op0_wait, confirm_op1_bool, confirm_op1_wait, confirm_op2_bool, confirm_op2_wait
-        global confirm_op3_bool, confirm_op3_wait, confirm_op4_bool, confirm_op4_wait, confirm_op5_bool, confirm_op5_wait
+        global confirm_op0_bool, confirm_op1_bool, confirm_op2_bool, confirm_op3_bool, confirm_op4_bool, confirm_op5_bool
+        global confirm_op0_wait, confirm_op1_wait, confirm_op2_wait, confirm_op3_wait, confirm_op4_wait, confirm_op5_wait
+
+        # Set TextBoxBrowser Output Verbosity
+        self.output_verbosity = 1
+        self.mirror_source_bool = False
+
+        # Initiate Lists For Loop Generated Objects
+        self.btnx_main_var = []
+        self.btnx_settings_var = []
+        self.btnx_mode_btn_var = []
+        self.stop_thread_btn_var = []
+        self.paths_readonly_btn_var = []
+        self.back_label_var = []
+        self.settings_source_edit_var = []
+        self.settings_dest_edit_var = []
 
         # Set A Fixed Window Size
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
-
-        self.output_verbosity = 1
-        self.mirror_source_bool = False
-        self.debug_exception_enabled = False
 
         # Title Bar: Close
         self.close_button = QPushButton(self)
@@ -335,7 +162,7 @@ class App(QMainWindow):
             self.back_label = QLabel(self)
             self.back_label.resize(95, 80)
             self.back_label.setStyleSheet(self.default_bg_tile_style)
-            back_label_var.append(self.back_label)
+            self.back_label_var.append(self.back_label)
             i += 1
 
         # Sector 1: Background Tiles Positions W
@@ -355,12 +182,12 @@ class App(QMainWindow):
         back_label_ankor_h5 = 25
 
         # Sector 1: Background Tiles Moved Into Positions, W & H
-        back_label_var[0].move(back_label_ankor_w0, back_label_ankor_h0)
-        back_label_var[1].move(back_label_ankor_w1, back_label_ankor_h1)
-        back_label_var[2].move(back_label_ankor_w2, back_label_ankor_h2)
-        back_label_var[3].move(back_label_ankor_w3, back_label_ankor_h3)
-        back_label_var[4].move(back_label_ankor_w4, back_label_ankor_h4)
-        back_label_var[5].move(back_label_ankor_w5, back_label_ankor_h5)
+        self.back_label_var[0].move(back_label_ankor_w0, back_label_ankor_h0)
+        self.back_label_var[1].move(back_label_ankor_w1, back_label_ankor_h1)
+        self.back_label_var[2].move(back_label_ankor_w2, back_label_ankor_h2)
+        self.back_label_var[3].move(back_label_ankor_w3, back_label_ankor_h3)
+        self.back_label_var[4].move(back_label_ankor_w4, back_label_ankor_h4)
+        self.back_label_var[5].move(back_label_ankor_w5, back_label_ankor_h5)
 
         set_src_dst_w = (self.width - 152)
         set_src_dst_pos_w = 107
@@ -373,9 +200,10 @@ class App(QMainWindow):
             btnx_name = 'btnx_main' + str(i)
             self.btnx_main = QPushButton(self)
             self.btnx_main.resize(54, 54)
+            self.btnx_main.setIcon(QIcon(self.img_btnx_led_0))
             self.btnx_main.setIconSize(QSize(54, 54))
             self.btnx_main.setStyleSheet(self.btnx_main_style)
-            btnx_main_var.append(self.btnx_main)
+            self.btnx_main_var.append(self.btnx_main)
 
             # Sector 1: Drop Down Setting's Button(s)
             sett_name = 'btnx_settings' + str(i)
@@ -384,26 +212,26 @@ class App(QMainWindow):
             self.sett_name.setIcon(QIcon(self.img_show_menu_false))
             self.sett_name.setIconSize(QSize(15, 15))
             self.sett_name.setStyleSheet(self.default_qpbtn_style)
-            btnx_settings_var.append(self.sett_name)
+            self.btnx_settings_var.append(self.sett_name)
 
             # Sector 1: Switch Main Function Mode Button(s)
-            comp_cont_button = 'comp_cont_button' + str(i)
-            self.comp_cont_button = QPushButton(self)
-            self.comp_cont_button.resize(30, 26)
-            self.comp_cont_button.setIcon(QIcon(self.img_mode_0))
-            self.comp_cont_button.setIconSize(QSize(18, 18))
-            self.comp_cont_button.setStyleSheet(self.default_qpbtn_style)
-            comp_cont_button_var.append(self.comp_cont_button)
+            self.btnx_mode_button = 'btnx_mode_button' + str(i)
+            self.btnx_mode_button = QPushButton(self)
+            self.btnx_mode_button.resize(30, 26)
+            self.btnx_mode_button.setIcon(QIcon(self.img_mode_0))
+            self.btnx_mode_button.setIconSize(QSize(18, 18))
+            self.btnx_mode_button.setStyleSheet(self.default_qpbtn_style)
+            self.btnx_mode_btn_var.append(self.btnx_mode_button)
 
             # Sector 1: Stop Main Functions(s) Button(s)
-            stop_thr_button = 'stop_thr_button' + str(i)
-            self.stop_thr_button = QPushButton(self)
-            self.stop_thr_button.resize(30, 10)
-            self.stop_thr_button.setIcon(QIcon(self.img_stop_thread_false))
-            self.stop_thr_button.setIconSize(QSize(15, 15))
-            self.stop_thr_button.setStyleSheet(self.default_qpbtn_style)
-            stop_thr_button_var.append(self.stop_thr_button)
-            self.stop_thr_button.setEnabled(False)
+            stop_thread_btn = 'stop_thread_btn' + str(i)
+            self.stop_thread_btn = QPushButton(self)
+            self.stop_thread_btn.resize(30, 10)
+            self.stop_thread_btn.setIcon(QIcon(self.img_stop_thread_false))
+            self.stop_thread_btn.setIconSize(QSize(15, 15))
+            self.stop_thread_btn.setStyleSheet(self.default_qpbtn_style)
+            self.stop_thread_btn_var.append(self.stop_thread_btn)
+            self.stop_thread_btn.setEnabled(False)
 
             # Sector 2: Enable/Disable ReadOnly Path Settings
             paths_readonly_button = 'paths_readonly_button' + str(i)
@@ -413,18 +241,46 @@ class App(QMainWindow):
             self.paths_readonly_button.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_button.setIconSize(QSize(8, 8))
             self.paths_readonly_button.setStyleSheet(self.default_qpbtn_style)
-            paths_readonly_button_var.append(self.paths_readonly_button)
-            paths_readonly_button_var[i].hide()
+            self.paths_readonly_btn_var.append(self.paths_readonly_button)
+            self.paths_readonly_btn_var[i].hide()
 
             i += 1
 
-        # Setctor 1: Set Btnx Images
-        btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
-        btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
-        btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
-        btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
-        btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
-        btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
+        # Assign Each Generated Button In the List To A Static Variable
+        self.btnx_main_0 = self.btnx_main_var[0]
+        self.btnx_main_1 = self.btnx_main_var[1]
+        self.btnx_main_2 = self.btnx_main_var[2]
+        self.btnx_main_3 = self.btnx_main_var[3]
+        self.btnx_main_4 = self.btnx_main_var[4]
+        self.btnx_main_5 = self.btnx_main_var[5]
+
+        self.btnx_settings_0 = self.btnx_settings_var[0]
+        self.btnx_settings_1 = self.btnx_settings_var[1]
+        self.btnx_settings_2 = self.btnx_settings_var[2]
+        self.btnx_settings_3 = self.btnx_settings_var[3]
+        self.btnx_settings_4 = self.btnx_settings_var[4]
+        self.btnx_settings_5 = self.btnx_settings_var[5]
+
+        self.btnx_mode_btn_0 = self.btnx_mode_btn_var[0]
+        self.btnx_mode_btn_1 = self.btnx_mode_btn_var[1]
+        self.btnx_mode_btn_2 = self.btnx_mode_btn_var[2]
+        self.btnx_mode_btn_3 = self.btnx_mode_btn_var[3]
+        self.btnx_mode_btn_4 = self.btnx_mode_btn_var[4]
+        self.btnx_mode_btn_5 = self.btnx_mode_btn_var[5]
+
+        self.stop_thread_btn_0 = self.stop_thread_btn_var[0]
+        self.stop_thread_btn_1 = self.stop_thread_btn_var[1]
+        self.stop_thread_btn_2 = self.stop_thread_btn_var[2]
+        self.stop_thread_btn_3 = self.stop_thread_btn_var[3]
+        self.stop_thread_btn_4 = self.stop_thread_btn_var[4]
+        self.stop_thread_btn_5 = self.stop_thread_btn_var[5]
+
+        self.paths_readonly_btn_0 = self.paths_readonly_btn_var[0]
+        self.paths_readonly_btn_1 = self.paths_readonly_btn_var[1]
+        self.paths_readonly_btn_2 = self.paths_readonly_btn_var[2]
+        self.paths_readonly_btn_3 = self.paths_readonly_btn_var[3]
+        self.paths_readonly_btn_4 = self.paths_readonly_btn_var[4]
+        self.paths_readonly_btn_5 = self.paths_readonly_btn_var[5]
 
         # Sector 2: Hide Drop Down Settings
         self.hide_settings_button = QPushButton(self)
@@ -540,8 +396,8 @@ class App(QMainWindow):
         self.settings_source0.setReadOnly(True)
         self.settings_source0.returnPressed.connect(self.settings_source_pre_funk0)
         self.settings_source0.setStyleSheet(self.default_qle_style)
-        settings_source_edit_var.append(self.settings_source0)
-        self.settings_source0.hide()
+        self.settings_source_edit_var.append(self.settings_source0)
+        self.settings_source_edit_var[0].hide()
 
         # Sector 2: Source Path Configuration Edit 1
         self.settings_source1 = QLineEdit(self)
@@ -552,8 +408,8 @@ class App(QMainWindow):
         self.settings_source1.setReadOnly(True)
         self.settings_source1.returnPressed.connect(self.settings_source_pre_funk1)
         self.settings_source1.setStyleSheet(self.default_qle_style)
-        settings_source_edit_var.append(self.settings_source1)
-        self.settings_source1.hide()
+        self.settings_source_edit_var.append(self.settings_source1)
+        self.settings_source_edit_var[1].hide()
 
         # Sector 2: Source Path Configuration Edit 2
         self.settings_source2 = QLineEdit(self)
@@ -564,8 +420,8 @@ class App(QMainWindow):
         self.settings_source2.setReadOnly(True)
         self.settings_source2.returnPressed.connect(self.settings_source_pre_funk2)
         self.settings_source2.setStyleSheet(self.default_qle_style)
-        settings_source_edit_var.append(self.settings_source2)
-        self.settings_source2.hide()
+        self.settings_source_edit_var.append(self.settings_source2)
+        self.settings_source_edit_var[2].hide()
 
         # Sector 2: Source Path Configuration Edit 3
         self.settings_source3 = QLineEdit(self)
@@ -576,8 +432,8 @@ class App(QMainWindow):
         self.settings_source3.setReadOnly(True)
         self.settings_source3.returnPressed.connect(self.settings_source_pre_funk3)
         self.settings_source3.setStyleSheet(self.default_qle_style)
-        settings_source_edit_var.append(self.settings_source3)
-        self.settings_source3.hide()
+        self.settings_source_edit_var.append(self.settings_source3)
+        self.settings_source_edit_var[3].hide()
 
         # Sector 2: Source Path Configuration Edit 4
         self.settings_source4 = QLineEdit(self)
@@ -588,8 +444,8 @@ class App(QMainWindow):
         self.settings_source4.setReadOnly(True)
         self.settings_source4.returnPressed.connect(self.settings_source_pre_funk4)
         self.settings_source4.setStyleSheet(self.default_qle_style)
-        settings_source_edit_var.append(self.settings_source4)
-        self.settings_source4.hide()
+        self.settings_source_edit_var.append(self.settings_source4)
+        self.settings_source_edit_var[4].hide()
 
         # Sector 2: Source Path Configuration Edit 5
         self.settings_source5 = QLineEdit(self)
@@ -600,8 +456,8 @@ class App(QMainWindow):
         self.settings_source5.setReadOnly(True)
         self.settings_source5.returnPressed.connect(self.settings_source_pre_funk5)
         self.settings_source5.setStyleSheet(self.default_qle_style)
-        settings_source_edit_var.append(self.settings_source5)
-        self.settings_source5.hide()
+        self.settings_source_edit_var.append(self.settings_source5)
+        self.settings_source_edit_var[5].hide()
 
         # Sector 2: Destination Path Configuration Edit 0
         self.settings_dest0 = QLineEdit(self)
@@ -612,8 +468,8 @@ class App(QMainWindow):
         self.settings_dest0.setReadOnly(True)
         self.settings_dest0.returnPressed.connect(self.settings_dest_pre_funk0)
         self.settings_dest0.setStyleSheet(self.default_qle_style)
-        settings_dest_edit_var.append(self.settings_dest0)
-        self.settings_dest0.hide()
+        self.settings_dest_edit_var.append(self.settings_dest0)
+        self.settings_dest_edit_var[0].hide()
 
         # Sector 2: Destination Path Configuration Edit 1
         self.settings_dest1 = QLineEdit(self)
@@ -624,8 +480,8 @@ class App(QMainWindow):
         self.settings_dest1.setReadOnly(True)
         self.settings_dest1.returnPressed.connect(self.settings_dest_pre_funk1)
         self.settings_dest1.setStyleSheet(self.default_qle_style)
-        settings_dest_edit_var.append(self.settings_dest1)
-        self.settings_dest1.hide()
+        self.settings_dest_edit_var.append(self.settings_dest1)
+        self.settings_dest_edit_var[1].hide()
 
         # Sector 2: Destination Path Configuration Edit 2
         self.settings_dest2 = QLineEdit(self)
@@ -636,8 +492,8 @@ class App(QMainWindow):
         self.settings_dest2.setReadOnly(True)
         self.settings_dest2.returnPressed.connect(self.settings_dest_pre_funk2)
         self.settings_dest2.setStyleSheet(self.default_qle_style)
-        settings_dest_edit_var.append(self.settings_dest2)
-        self.settings_dest2.hide()
+        self.settings_dest_edit_var.append(self.settings_dest2)
+        self.settings_dest_edit_var[2].hide()
 
         # Sector 2: Destination Path Configuration Edit 3
         self.settings_dest3 = QLineEdit(self)
@@ -648,8 +504,8 @@ class App(QMainWindow):
         self.settings_dest3.setReadOnly(True)
         self.settings_dest3.returnPressed.connect(self.settings_dest_pre_funk3)
         self.settings_dest3.setStyleSheet(self.default_qle_style)
-        settings_dest_edit_var.append(self.settings_dest3)
-        self.settings_dest3.hide()
+        self.settings_dest_edit_var.append(self.settings_dest3)
+        self.settings_dest_edit_var[3].hide()
 
         # Sector 2: Destination Path Configuration Edit 4
         self.settings_dest4 = QLineEdit(self)
@@ -660,8 +516,8 @@ class App(QMainWindow):
         self.settings_dest4.setReadOnly(True)
         self.settings_dest4.returnPressed.connect(self.settings_dest_pre_funk4)
         self.settings_dest4.setStyleSheet(self.default_qle_style)
-        settings_dest_edit_var.append(self.settings_dest4)
-        self.settings_dest4.hide()
+        self.settings_dest_edit_var.append(self.settings_dest4)
+        self.settings_dest_edit_var[4].hide()
 
         # Sector 2: Destination Path Configuration Edit 5
         self.settings_dest5 = QLineEdit(self)
@@ -672,22 +528,20 @@ class App(QMainWindow):
         self.settings_dest5.setReadOnly(True)
         self.settings_dest5.returnPressed.connect(self.settings_dest_pre_funk5)
         self.settings_dest5.setStyleSheet(self.default_qle_style)
-        settings_dest_edit_var.append(self.settings_dest5)
-        self.settings_dest5.hide()
+        self.settings_dest_edit_var.append(self.settings_dest5)
+        self.settings_dest_edit_var[5].hide()
 
         # Sector 2: File Path Validation LED Source
         self.settings_input_response_label_src = QLabel(self)
         self.settings_input_response_label_src.move((set_src_dst_pos_w + set_src_dst_w + 5), 126)
         self.settings_input_response_label_src.resize(5, 15)
         self.settings_input_response_label_src.setStyleSheet(self.default_valid_path_led)
-        settings_input_response_label[0] = self.settings_input_response_label_src
 
         # Sector 2: File Path Validation LED Destination
         self.settings_input_response_label_dst = QLabel(self)
         self.settings_input_response_label_dst.move((set_src_dst_pos_w + set_src_dst_w + 5), 145)
         self.settings_input_response_label_dst.resize(5, 15)
         self.settings_input_response_label_dst.setStyleSheet(self.default_valid_path_led)
-        settings_input_response_label[1] = self.settings_input_response_label_dst
 
          # Sector 1: Main Function Confirmation 0
         self.confirm_op0_tru = QPushButton(self)
@@ -831,96 +685,97 @@ class App(QMainWindow):
         self.tb_5.horizontalScrollBar().setValue(0)
 
         # Sector 1: Attatch Main Function Buttons To Background Tiles Position
-        btnx_main_var[0].move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
-        btnx_main_var[1].move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 5))
-        btnx_main_var[2].move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 5))
-        btnx_main_var[3].move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 5))
-        btnx_main_var[4].move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 5))
-        btnx_main_var[5].move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 5))
+        self.btnx_main_0.move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
+        self.btnx_main_1.move((back_label_ankor_w1 + 5), (back_label_ankor_h1 + 5))
+        self.btnx_main_2.move((back_label_ankor_w2 + 5), (back_label_ankor_h2 + 5))
+        self.btnx_main_3.move((back_label_ankor_w3 + 5), (back_label_ankor_h3 + 5))
+        self.btnx_main_4.move((back_label_ankor_w4 + 5), (back_label_ankor_h4 + 5))
+        self.btnx_main_5.move((back_label_ankor_w5 + 5), (back_label_ankor_h5 + 5))
 
         # Sector 1: Attatch Drop Down Settings Buttons To Background Tiles Position
-        btnx_settings_var[0].move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 49))
-        btnx_settings_var[1].move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 49))
-        btnx_settings_var[2].move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 49))
-        btnx_settings_var[3].move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 49))
-        btnx_settings_var[4].move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 49))
-        btnx_settings_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 49))
+        self.btnx_settings_0.move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 49))
+        self.btnx_settings_1.move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 49))
+        self.btnx_settings_2.move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 49))
+        self.btnx_settings_3.move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 49))
+        self.btnx_settings_4.move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 49))
+        self.btnx_settings_5.move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 49))
 
         # Sector 1: Attatch Main Function Mode Buttons To Background Tiles Position
-        comp_cont_button_var[0].move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 19))
-        comp_cont_button_var[1].move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 19))
-        comp_cont_button_var[2].move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 19))
-        comp_cont_button_var[3].move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 19))
-        comp_cont_button_var[4].move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 19))
-        comp_cont_button_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 19))
+        self.btnx_mode_btn_0.move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 19))
+        self.btnx_mode_btn_1.move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 19))
+        self.btnx_mode_btn_2.move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 19))
+        self.btnx_mode_btn_3.move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 19))
+        self.btnx_mode_btn_4.move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 19))
+        self.btnx_mode_btn_5.move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 19))
 
         # Sector 1: Attatch Stop Main Function Buttons To Background Tiles Position
-        stop_thr_button_var[0].move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 5))
-        stop_thr_button_var[1].move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 5))
-        stop_thr_button_var[2].move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 5))
-        stop_thr_button_var[3].move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 5))
-        stop_thr_button_var[4].move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 5))
-        stop_thr_button_var[5].move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 5))
+        self.stop_thread_btn_0.move((back_label_ankor_w0 + 62), (back_label_ankor_h0 + 5))
+        self.stop_thread_btn_1.move((back_label_ankor_w1 + 62), (back_label_ankor_h1 + 5))
+        self.stop_thread_btn_2.move((back_label_ankor_w2 + 62), (back_label_ankor_h2 + 5))
+        self.stop_thread_btn_3.move((back_label_ankor_w3 + 62), (back_label_ankor_h3 + 5))
+        self.stop_thread_btn_4.move((back_label_ankor_w4 + 62), (back_label_ankor_h4 + 5))
+        self.stop_thread_btn_5.move((back_label_ankor_w5 + 62), (back_label_ankor_h5 + 5))
 
         # Sector 1: Plug Main Function Mode Buttons Into Functions
-        comp_cont_button_var[0].clicked.connect(self.set_comp_bool_pre_funk0)
-        comp_cont_button_var[1].clicked.connect(self.set_comp_bool_pre_funk1)
-        comp_cont_button_var[2].clicked.connect(self.set_comp_bool_pre_funk2)
-        comp_cont_button_var[3].clicked.connect(self.set_comp_bool_pre_funk3)
-        comp_cont_button_var[4].clicked.connect(self.set_comp_bool_pre_funk4)
-        comp_cont_button_var[5].clicked.connect(self.set_comp_bool_pre_funk5)
+        self.btnx_mode_btn_0.clicked.connect(self.set_comp_bool_pre_funk0)
+        self.btnx_mode_btn_1.clicked.connect(self.set_comp_bool_pre_funk1)
+        self.btnx_mode_btn_2.clicked.connect(self.set_comp_bool_pre_funk2)
+        self.btnx_mode_btn_3.clicked.connect(self.set_comp_bool_pre_funk3)
+        self.btnx_mode_btn_4.clicked.connect(self.set_comp_bool_pre_funk4)
+        self.btnx_mode_btn_5.clicked.connect(self.set_comp_bool_pre_funk5)
 
         # Sector 1: Plug Stop Main Function Buttons Into Functions
-        stop_thr_button_var[0].clicked.connect(self.stop_thr_funk0)
-        stop_thr_button_var[1].clicked.connect(self.stop_thr_funk1)
-        stop_thr_button_var[2].clicked.connect(self.stop_thr_funk2)
-        stop_thr_button_var[3].clicked.connect(self.stop_thr_funk3)
-        stop_thr_button_var[4].clicked.connect(self.stop_thr_funk4)
-        stop_thr_button_var[5].clicked.connect(self.stop_thr_funk5)
+        self.stop_thread_btn_0.clicked.connect(self.stop_thr_funk0)
+        self.stop_thread_btn_1.clicked.connect(self.stop_thr_funk1)
+        self.stop_thread_btn_2.clicked.connect(self.stop_thr_funk2)
+        self.stop_thread_btn_3.clicked.connect(self.stop_thr_funk3)
+        self.stop_thread_btn_4.clicked.connect(self.stop_thr_funk4)
+        self.stop_thread_btn_5.clicked.connect(self.stop_thr_funk5)
 
         # Sector 1: Plug Main Function Buttons Into Main Function Button Threads
-        btnx_main_var[0].clicked.connect(self.thread_funk_0)
-        btnx_main_var[1].clicked.connect(self.thread_funk_1)
-        btnx_main_var[2].clicked.connect(self.thread_funk_2)
-        btnx_main_var[3].clicked.connect(self.thread_funk_3)
-        btnx_main_var[4].clicked.connect(self.thread_funk_4)
-        btnx_main_var[5].clicked.connect(self.thread_funk_5)
+        self.btnx_main_0.clicked.connect(self.thread_funk_0)
+        self.btnx_main_1.clicked.connect(self.thread_funk_1)
+        self.btnx_main_2.clicked.connect(self.thread_funk_2)
+        self.btnx_main_3.clicked.connect(self.thread_funk_3)
+        self.btnx_main_4.clicked.connect(self.thread_funk_4)
+        self.btnx_main_5.clicked.connect(self.thread_funk_5)
 
         # Sector 1: Plug Main Function Buttons Into Drop Down Settings Functions
-        btnx_main_var[0].clicked.connect(self.btnx_set_focus_funk_0)
-        btnx_main_var[1].clicked.connect(self.btnx_set_focus_funk_1)
-        btnx_main_var[2].clicked.connect(self.btnx_set_focus_funk_2)
-        btnx_main_var[3].clicked.connect(self.btnx_set_focus_funk_3)
-        btnx_main_var[4].clicked.connect(self.btnx_set_focus_funk_4)
-        btnx_main_var[5].clicked.connect(self.btnx_set_focus_funk_5)
+        self.btnx_main_0.clicked.connect(self.btnx_set_focus_funk_0)
+        self.btnx_main_1.clicked.connect(self.btnx_set_focus_funk_1)
+        self.btnx_main_2.clicked.connect(self.btnx_set_focus_funk_2)
+        self.btnx_main_3.clicked.connect(self.btnx_set_focus_funk_3)
+        self.btnx_main_4.clicked.connect(self.btnx_set_focus_funk_4)
+        self.btnx_main_5.clicked.connect(self.btnx_set_focus_funk_5)
 
         # Sector 1: Plug Drop Down Settings Buttons Into Functions
-        btnx_settings_var[0].clicked.connect(self.settings_funk0)
-        btnx_settings_var[1].clicked.connect(self.settings_funk1)
-        btnx_settings_var[2].clicked.connect(self.settings_funk2)
-        btnx_settings_var[3].clicked.connect(self.settings_funk3)
-        btnx_settings_var[4].clicked.connect(self.settings_funk4)
-        btnx_settings_var[5].clicked.connect(self.settings_funk5)
+        self.btnx_settings_0.clicked.connect(self.settings_funk0)
+        self.btnx_settings_1.clicked.connect(self.settings_funk1)
+        self.btnx_settings_2.clicked.connect(self.settings_funk2)
+        self.btnx_settings_3.clicked.connect(self.settings_funk3)
+        self.btnx_settings_4.clicked.connect(self.settings_funk4)
+        self.btnx_settings_5.clicked.connect(self.settings_funk5)
 
         # Sector 2: Plug Read Only Buttons Into Read Only Functions
-        paths_readonly_button_var[0].clicked.connect(self.paths_readonly_button_funk_0)
-        paths_readonly_button_var[1].clicked.connect(self.paths_readonly_button_funk_1)
-        paths_readonly_button_var[2].clicked.connect(self.paths_readonly_button_funk_2)
-        paths_readonly_button_var[3].clicked.connect(self.paths_readonly_button_funk_3)
-        paths_readonly_button_var[4].clicked.connect(self.paths_readonly_button_funk_4)
-        paths_readonly_button_var[5].clicked.connect(self.paths_readonly_button_funk_5)
+        self.paths_readonly_btn_0.clicked.connect(self.paths_readonly_button_funk_0)
+        self.paths_readonly_btn_1.clicked.connect(self.paths_readonly_button_funk_1)
+        self.paths_readonly_btn_2.clicked.connect(self.paths_readonly_button_funk_2)
+        self.paths_readonly_btn_3.clicked.connect(self.paths_readonly_button_funk_3)
+        self.paths_readonly_btn_4.clicked.connect(self.paths_readonly_button_funk_4)
+        self.paths_readonly_btn_5.clicked.connect(self.paths_readonly_button_funk_5)
 
         # Thread: Adjusts App Geometry To Account For Display Re-Scaling
         self.oldPos = self.pos()
-        scaling_thread = ScalingClass(self.setGeometry, self.width, self.height, self.pos, self.debug_exception_enabled)
+        scaling_thread = ScalingClass(self.setGeometry, self.width, self.height, self.pos)
         scaling_thread.start()
 
         # Thread: Checks The Validity Of Directory Paths Set In Sector 2 As Source & Destination And Updates GUI Accordingly
-        update_settings_window_thread = UpdateSettingsWindow(self.debug_exception_enabled)
-        update_settings_window_thread.start()
+        self.update_settings_window_thread = UpdateSettingsWindow(self.settings_source_edit_var, self.settings_dest_edit_var)
+
+        self.update_settings_window_thread.start()
 
         # Thread: Main Function Thread - Read/Write Thread 0
-        thread_var[0] = ThreadClass0(self.tb_0,
+        self.thread_0 = ThreadClass0(self.tb_0,
                                      self.confirm_op0_tru,
                                      self.img_btnx_led_0,
                                      self.img_btnx_led_1,
@@ -930,10 +785,12 @@ class App(QMainWindow):
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
                                      self.output_verbosity,
-                                     self.debug_exception_enabled)
+                                     self.btnx_main_0,
+                                     self.stop_thread_btn_0,
+                                     self.paths_readonly_btn_0)
 
         # Thread: Main Function Thread - Read/Write Thread 1
-        thread_var[1] = ThreadClass1(self.tb_1,
+        self.thread_1 = ThreadClass1(self.tb_1,
                                      self.confirm_op1_tru,
                                      self.img_btnx_led_0,
                                      self.img_btnx_led_1,
@@ -943,10 +800,12 @@ class App(QMainWindow):
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
                                      self.output_verbosity,
-                                     self.debug_exception_enabled)
+                                     self.btnx_main_1,
+                                     self.stop_thread_btn_1,
+                                     self.paths_readonly_btn_1)
 
         # Thread: Main Function Thread - Read/Write Thread 2
-        thread_var[2] = ThreadClass2(self.tb_2,
+        self.thread_2 = ThreadClass2(self.tb_2,
                                      self.confirm_op2_tru,
                                      self.img_btnx_led_0,
                                      self.img_btnx_led_1,
@@ -956,10 +815,12 @@ class App(QMainWindow):
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
                                      self.output_verbosity,
-                                     self.debug_exception_enabled)
+                                     self.btnx_main_2,
+                                     self.stop_thread_btn_2,
+                                     self.paths_readonly_btn_2)
 
         # Thread: Main Function Thread - Read/Write Thread 3
-        thread_var[3] = ThreadClass3(self.tb_3,
+        self.thread_3 = ThreadClass3(self.tb_3,
                                      self.confirm_op3_tru,
                                      self.img_btnx_led_0,
                                      self.img_btnx_led_1,
@@ -969,10 +830,12 @@ class App(QMainWindow):
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
                                      self.output_verbosity,
-                                     self.debug_exception_enabled)
+                                     self.btnx_main_3,
+                                     self.stop_thread_btn_3,
+                                     self.paths_readonly_btn_3)
 
         # Thread: Main Function Thread - Read/Write Thread 4
-        thread_var[4] = ThreadClass4(self.tb_4,
+        self.thread_4 = ThreadClass4(self.tb_4,
                                      self.confirm_op4_tru,
                                      self.img_btnx_led_0,
                                      self.img_btnx_led_1,
@@ -982,10 +845,12 @@ class App(QMainWindow):
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
                                      self.output_verbosity,
-                                     self.debug_exception_enabled)
+                                     self.btnx_main_4,
+                                     self.stop_thread_btn_4,
+                                     self.paths_readonly_btn_4)
 
         # Thread: Main Function Thread - Read/Write Thread 5
-        thread_var[5] = ThreadClass5(self.tb_5,
+        self.thread_5 = ThreadClass5(self.tb_5,
                                      self.confirm_op5_tru,
                                      self.img_btnx_led_0,
                                      self.img_btnx_led_1,
@@ -995,13 +860,16 @@ class App(QMainWindow):
                                      self.img_stop_thread_false,
                                      self.img_stop_thread_true,
                                      self.output_verbosity,
-                                     self.debug_exception_enabled)
+                                     self.btnx_main_5,
+                                     self.stop_thread_btn_5,
+                                     self.paths_readonly_btn_5)
 
         # Thread: LEDs In Sector 2 Indicate Source & Destination Path Validity
-        settings_input_response_thread = SettingsInputResponse(self.default_valid_path_led_green,
+        self.settings_input_response_thread = SettingsInputResponse(self.default_valid_path_led_green,
                                                                self.default_valid_path_led_red,
                                                                self.default_valid_path_led,
-                                                               self.debug_exception_enabled)
+                                                               self.settings_input_response_label_src,
+                                                               self.settings_input_response_label_dst)
 
         # Plugged In & Threaded: Display The Application
         self.show()
@@ -1025,7 +893,10 @@ class App(QMainWindow):
 
     # Function: Sets StyleSheets And Window Pallette
     def set_style_sheet_funk(self):
-        print('-- plugged in: set_style_sheet_funk')
+        global debug_enabled
+        if debug_enabled is True:
+            if debug_enabled is True:
+                print('-- plugged in: set_style_sheet_funk')
 
         # Default Window Colour
         p = self.palette()
@@ -1171,7 +1042,8 @@ class App(QMainWindow):
 
     # Function: Concatinates Static Image Values With Variable Image Path
     def set_images_funk(self):
-        print('-- plugged in: set_images_funk')
+        if debug_enabled is True:
+            print('-- plugged in: set_images_funk')
 
         # Set Static Image Names
         self.img_var = ['img_btnx_led_0.png',         # 0
@@ -1218,151 +1090,163 @@ class App(QMainWindow):
 
     # Section 1 Funtion: Main Function Confirmation 0
     def confirm_op0_funk0(self):
-        global confirm_op0_bool, confirm_op0_wait
-        print('-- plugged in: confirm_op0_funk0: accepted')
+        global confirm_op0_bool, confirm_op0_wait, debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: confirm_op0_funk0: accepted')
         confirm_op0_bool = True
         confirm_op0_wait = False
 
     # Section 1 Funtion: Main Function Confirmation 1
     def confirm_op1_funk0(self):
-        global confirm_op1_bool, confirm_op1_wait
-        print('-- plugged in: confirm_op1_funk0: accepted')
+        global confirm_op1_bool, confirm_op1_wait, debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: confirm_op1_funk0: accepted')
         confirm_op1_bool = True
         confirm_op1_wait = False
 
     # Section 1 Funtion: Main Function Confirmation 2
     def confirm_op2_funk0(self):
-        global confirm_op2_bool, confirm_op2_wait
-        print('-- plugged in: confirm_op2_funk0: accepted')
+        global confirm_op2_bool, confirm_op2_wait, debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: confirm_op2_funk0: accepted')
         confirm_op2_bool = True
         confirm_op2_wait = False
 
     # Section 1 Funtion: Main Function Confirmation 3
     def confirm_op3_funk0(self):
-        global confirm_op3_bool, confirm_op3_wait
-        print('-- plugged in: confirm_op3_funk0: accepted')
+        global confirm_op3_bool, confirm_op3_wait, debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: confirm_op3_funk0: accepted')
         confirm_op3_bool = True
         confirm_op3_wait = False
 
     # Section 1 Funtion: Main Function Confirmation 4
     def confirm_op4_funk0(self):
-        global confirm_op4_bool, confirm_op4_wait
-        print('-- plugged in: confirm_op4_funk0: accepted')
+        global confirm_op4_bool, confirm_op4_wait, debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: confirm_op4_funk0: accepted')
         confirm_op4_bool = True
         confirm_op4_wait = False
 
     # Section 1 Funtion: Main Function Confirmation 5
     def confirm_op5_funk0(self):
-        global confirm_op5_bool, confirm_op5_wait
-        print('-- plugged in: confirm_op5_funk0: accepted')
+        global confirm_op5_bool, confirm_op5_wait, debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: confirm_op5_funk0: accepted')
         confirm_op5_bool = True
         confirm_op5_wait = False
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 0
     def paths_readonly_button_funk_0(self):
-        print('-- plugged in: paths_readonly_button_funk_0')
-        global settings_source_edit_vars
+        global debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: paths_readonly_button_funk_0')
 
-        if settings_source_edit_var[0].isReadOnly() is True:
-            settings_source_edit_var[0].setReadOnly(False)
-            settings_dest_edit_var[0].setReadOnly(False)
-            paths_readonly_button_var[0].setIcon(QIcon(self.img_read_ony_false))
-            paths_readonly_button_var[0].setIconSize(QSize(8, 21))
+        if self.settings_source_edit_var[0].isReadOnly() is True:
+            self.settings_source_edit_var[0].setReadOnly(False)
+            self.settings_dest_edit_var[0].setReadOnly(False)
+            self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_false))
+            self.paths_readonly_btn_0.setIconSize(QSize(8, 21))
 
-        elif settings_source_edit_var[0].isReadOnly() is False:
-            settings_source_edit_var[0].setReadOnly(True)
-            settings_dest_edit_var[0].setReadOnly(True)
-            paths_readonly_button_var[0].setIcon(QIcon(self.img_read_ony_true))
-            paths_readonly_button_var[0].setIconSize(QSize(8, 8))
+        elif self.settings_source_edit_var[0].isReadOnly() is False:
+            self.settings_source_edit_var[0].setReadOnly(True)
+            self.settings_dest_edit_var[0].setReadOnly(True)
+            self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_0.setIconSize(QSize(8, 8))
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 1
     def paths_readonly_button_funk_1(self):
-        print('-- plugged in: paths_readonly_button_funk_1')
-        global settings_source_edit_vars
+        global debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: paths_readonly_button_funk_1')
 
-        if settings_source_edit_var[1].isReadOnly() is True:
-            settings_source_edit_var[1].setReadOnly(False)
-            settings_dest_edit_var[1].setReadOnly(False)
-            paths_readonly_button_var[1].setIcon(QIcon(self.img_read_ony_false))
-            paths_readonly_button_var[1].setIconSize(QSize(8, 21))
+        if self.settings_source_edit_var[1].isReadOnly() is True:
+            self.settings_source_edit_var[1].setReadOnly(False)
+            self.settings_dest_edit_var[1].setReadOnly(False)
+            self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_false))
+            self.paths_readonly_btn_1.setIconSize(QSize(8, 21))
 
-        elif settings_source_edit_var[1].isReadOnly() is False:
-            settings_source_edit_var[1].setReadOnly(True)
-            settings_dest_edit_var[1].setReadOnly(True)
-            paths_readonly_button_var[1].setIcon(QIcon(self.img_read_ony_true))
-            paths_readonly_button_var[1].setIconSize(QSize(8, 8))
+        elif self.settings_source_edit_var[1].isReadOnly() is False:
+            self.settings_source_edit_var[1].setReadOnly(True)
+            self.settings_dest_edit_var[1].setReadOnly(True)
+            self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_1.setIconSize(QSize(8, 8))
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 2
     def paths_readonly_button_funk_2(self):
-        print('-- plugged in: paths_readonly_button_funk_2')
-        global settings_source_edit_vars
+        global debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: paths_readonly_button_funk_2')
 
-        if settings_source_edit_var[2].isReadOnly() is True:
-            settings_source_edit_var[2].setReadOnly(False)
-            settings_dest_edit_var[2].setReadOnly(False)
-            paths_readonly_button_var[2].setIcon(QIcon(self.img_read_ony_false))
-            paths_readonly_button_var[2].setIconSize(QSize(8, 21))
+        if self.settings_source_edit_var[2].isReadOnly() is True:
+            self.settings_source_edit_var[2].setReadOnly(False)
+            self.settings_dest_edit_var[2].setReadOnly(False)
+            self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_false))
+            self.paths_readonly_btn_2.setIconSize(QSize(8, 21))
 
-        elif settings_source_edit_var[2].isReadOnly() is False:
-            settings_source_edit_var[2].setReadOnly(True)
-            settings_dest_edit_var[2].setReadOnly(True)
-            paths_readonly_button_var[2].setIcon(QIcon(self.img_read_ony_true))
-            paths_readonly_button_var[2].setIconSize(QSize(8, 8))
+        elif self.settings_source_edit_var[2].isReadOnly() is False:
+            self.settings_source_edit_var[2].setReadOnly(True)
+            self.settings_dest_edit_var[2].setReadOnly(True)
+            self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_2.setIconSize(QSize(8, 8))
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 3
     def paths_readonly_button_funk_3(self):
-        print('-- plugged in: paths_readonly_button_funk_3')
-        global settings_source_edit_vars
+        global debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: paths_readonly_button_funk_3')
 
-        if settings_source_edit_var[3].isReadOnly() is True:
-            settings_source_edit_var[3].setReadOnly(False)
-            settings_dest_edit_var[3].setReadOnly(False)
-            paths_readonly_button_var[3].setIcon(QIcon(self.img_read_ony_false))
-            paths_readonly_button_var[3].setIconSize(QSize(8, 21))
+        if self.settings_source_edit_var[3].isReadOnly() is True:
+            self.settings_source_edit_var[3].setReadOnly(False)
+            self.settings_dest_edit_var[3].setReadOnly(False)
+            self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_false))
+            self.paths_readonly_btn_3.setIconSize(QSize(8, 21))
 
-        elif settings_source_edit_var[3].isReadOnly() is False:
-            settings_source_edit_var[3].setReadOnly(True)
-            settings_dest_edit_var[3].setReadOnly(True)
-            paths_readonly_button_var[3].setIcon(QIcon(self.img_read_ony_true))
-            paths_readonly_button_var[3].setIconSize(QSize(8, 8))
+        elif self.settings_source_edit_var[3].isReadOnly() is False:
+            self.settings_source_edit_var[3].setReadOnly(True)
+            self.settings_dest_edit_var[3].setReadOnly(True)
+            self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_3.setIconSize(QSize(8, 8))
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 4
     def paths_readonly_button_funk_4(self):
-        print('-- plugged in: paths_readonly_button_funk_4')
-        global settings_source_edit_vars
+        global debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: paths_readonly_button_funk_4')
 
-        if settings_source_edit_var[4].isReadOnly() is True:
-            settings_source_edit_var[4].setReadOnly(False)
-            settings_dest_edit_var[4].setReadOnly(False)
-            paths_readonly_button_var[4].setIcon(QIcon(self.img_read_ony_false))
-            paths_readonly_button_var[4].setIconSize(QSize(8, 21))
+        if self.settings_source_edit_var[4].isReadOnly() is True:
+            self.settings_source_edit_var[4].setReadOnly(False)
+            self.settings_dest_edit_var[4].setReadOnly(False)
+            self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_false))
+            self.paths_readonly_btn_4.setIconSize(QSize(8, 21))
 
-        elif settings_source_edit_var[4].isReadOnly() is False:
-            settings_source_edit_var[4].setReadOnly(True)
-            settings_dest_edit_var[4].setReadOnly(True)
-            paths_readonly_button_var[4].setIcon(QIcon(self.img_read_ony_true))
-            paths_readonly_button_var[4].setIconSize(QSize(8, 8))
+        elif self.settings_source_edit_var[4].isReadOnly() is False:
+            self.settings_source_edit_var[4].setReadOnly(True)
+            self.settings_dest_edit_var[4].setReadOnly(True)
+            self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 5
     def paths_readonly_button_funk_5(self):
-        print('-- plugged in: paths_readonly_button_funk_5')
-        global settings_source_edit_vars
+        global debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: paths_readonly_button_funk_5')
 
-        if settings_source_edit_var[5].isReadOnly() is True:
-            settings_source_edit_var[5].setReadOnly(False)
-            settings_dest_edit_var[5].setReadOnly(False)
-            paths_readonly_button_var[5].setIcon(QIcon(self.img_read_ony_false))
-            paths_readonly_button_var[5].setIconSize(QSize(8, 21))
+        if self.settings_source_edit_var[5].isReadOnly() is True:
+            self.settings_source_edit_var[5].setReadOnly(False)
+            self.settings_dest_edit_var[5].setReadOnly(False)
+            self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_false))
+            self.paths_readonly_btn_5.setIconSize(QSize(8, 21))
 
-        elif settings_source_edit_var[5].isReadOnly() is False:
-            settings_source_edit_var[5].setReadOnly(True)
-            settings_dest_edit_var[5].setReadOnly(True)
-            paths_readonly_button_var[5].setIcon(QIcon(self.img_read_ony_true))
-            paths_readonly_button_var[5].setIconSize(QSize(8, 8))
+        elif self.settings_source_edit_var[5].isReadOnly() is False:
+            self.settings_source_edit_var[5].setReadOnly(True)
+            self.settings_dest_edit_var[5].setReadOnly(True)
+            self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
 
     # Sector 2 Funtion: Moves To Next Settings Page Left
     def scr_left_funk(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
         if settings_active_int is 0:
             settings_active_int = 5
             self.settings_funk5()
@@ -1384,7 +1268,7 @@ class App(QMainWindow):
 
     # Sector 2 Funtion: Moves To Next Settings Page Right
     def scr_right_funk(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
         if settings_active_int is 0:
             settings_active_int = 1
             self.settings_funk1()
@@ -1406,15 +1290,13 @@ class App(QMainWindow):
 
     # Sector 2 Funtion: Writes Source Changes To Configuration File
     def settings_source_funk(self):
-        global source_path_entered, source_selected, config_src_var, path_var, settings_source_edit_var
-        global settings_input_response_thread, settings_input_response_source_bool
+        global debug_enabled, source_path_entered, source_selected, config_src_var, path_var, settings_input_response_source_bool
         valid_len_bool = False
         valid_drive_bool = False
         valid_char_bool = False
         valid_non_win_res_nm_bool = False
 
         try:
-
             # Ensure Length Of String Is < 255 Characters & >= 3 Characters
             str_len = len(source_path_entered)
             if str_len < 255 and str_len >= 3:
@@ -1464,15 +1346,17 @@ class App(QMainWindow):
                 valid_non_win_res_nm_bool = True
 
             # Print Results
-            print('-- resutls:')
-            print('-- string length:', valid_len_bool)
-            print('-- drive letter:', valid_drive_bool)
-            print('-- valid characters:', valid_char_bool)
-            print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
+            if debug_enabled is True:
+                print('-- resutls:')
+                print('-- string length:', valid_len_bool)
+                print('-- drive letter:', valid_drive_bool)
+                print('-- valid characters:', valid_char_bool)
+                print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
 
             # Continue Only If Sanitization Checks All Return True
             if os.path.exists(source_path_entered) and valid_len_bool is True and valid_drive_bool is True and valid_char_bool is True and valid_non_win_res_nm_bool is True:
-                print('-- input source path passed current sanitization checks')
+                if debug_enabled is True:
+                    print('-- input source path passed current sanitization checks')
                 path_item = []
 
                 # Open & Read Configuration File
@@ -1520,39 +1404,39 @@ class App(QMainWindow):
                 elif source_selected is 5:
                     self.paths_readonly_button_funk_5()
 
-            # Do Not Write Configuration File Because Sanitization Failed
+            # Do Not Write Configuration File Because Sanitization Failed  self.btnx_settings_var
             else:
                 # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
                 print('-- input source path failed current sanitization checks')
-                settings_source_edit_var[source_selected].setText(path_var[source_selected])
+                self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
                 settings_input_response_source_bool = False
 
         # Handle Exceptions
         except Exception as e:
-            if self.debug_exception_enabled is True:
+            if debug_enabled is True:
                 print('-- exception:', str(e).strip().encode('utf8'))
             settings_input_response_source_bool = False
 
             # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
-            settings_source_edit_var[source_selected].setText(path_var[source_selected])
+            self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
 
         # If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
         if settings_input_response_source_bool is False:
-            settings_source_edit_var[source_selected].setText(path_var[source_selected])
+            self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
 
         # Start Input Response Thread
-        settings_input_response_thread.start()
+        self.settings_input_response_thread.start()
 
     # Sector 2 Funtion: Writes Destination Changes To Configuration File
     def settings_dest_funk(self):
-        global dest_path_entered, dest_selected, config_dst_var, dest_path_var, settings_dest_edit_var, path_var
-        global settings_input_response_thread, settings_input_response_dest_bool
+        global debug_enabled, dest_path_entered, dest_selected, config_dst_var, dest_path_var, path_var, settings_input_response_dest_bool
 
         settings_input_response_dest_bool = False
 
         # Destination Mode 0: User Only Enters Drive Letter For Destination
         if self.mirror_source_bool is True:
-            print('-- mirror_source_bool', self.mirror_source_bool)
+            if debug_enabled is True:
+                print('-- mirror_source_bool', self.mirror_source_bool)
             try:
                 # Destination Mode 0: Ensure The Drive String Is Only 3 Characters In Length & Assign Chars Index 0-2 To Variables That Can Be Checked
                 str_len = len(dest_path_entered)
@@ -1564,10 +1448,11 @@ class App(QMainWindow):
 
                     # Destination Mode 0: Determine If String Is Valid
                     if char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\' and os.path.exists(char_var3):
-                        print('-- input destination path passed current sanitization checks')
+                        if debug_enabled is True:
+                            print('-- input destination path passed current sanitization checks')
 
-                        # Destination Mode 0: Get Destination Input's Corresponding Source Path Using Destination Index Integer To Access Specific Source Path Item
-                        print('-- source path:', path_var[dest_selected])
+                            # Destination Mode 0: Get Destination Input's Corresponding Source Path Using Destination Index Integer To Access Specific Source Path Item
+                            print('-- source path:', path_var[dest_selected])
 
                         # Destination Mode 0: Slice Source Path
                         var = path_var[dest_selected][3:]
@@ -1577,7 +1462,8 @@ class App(QMainWindow):
 
                         # Destination Mode 0: Set Destination Path To Dest_Var
                         dest_path_entered = dest_var
-                        print('-- creating destination:', dest_path_entered)
+                        if debug_enabled is True:
+                            print('-- creating destination:', dest_path_entered)
 
                         # Destination Mode 0: Make Only Directories that Do Not Exist
                         distutils.dir_util.mkpath(dest_path_entered)
@@ -1620,18 +1506,19 @@ class App(QMainWindow):
 
             # Destination Mode 0: Handle Exception
             except Exception as e:
-                    if self.debug_exception_enabled is True:
+                    if debug_enabled is True:
                         print('-- exception:', str(e).strip().encode('utf8'))
+                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
                     settings_input_response_dest_bool = False
-                    settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
             # Destination Mode 0: If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
             if settings_input_response_dest_bool is False:
-                settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+                self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
         # Destination Mode 1: Set A Custom Path For Destination
         elif self.mirror_source_bool is False:
-            print('-- mirror_source_bool', self.mirror_source_bool)
+            if debug_enabled is True:
+                print('-- mirror_source_bool', self.mirror_source_bool)
             valid_len_bool = False
             valid_drive_bool = False
             valid_non_win_res_nm_bool = False
@@ -1687,16 +1574,18 @@ class App(QMainWindow):
                     valid_non_win_res_nm_bool = True
 
                 # Destination Mode 1: Print Results
-                print('-- resutls:')
-                print('-- string length:', valid_len_bool)
-                print('-- drive letter:', valid_drive_bool)
-                print('-- valid characters:', valid_char_bool)
-                print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
+                if debug_enabled is True:
+                    print('-- resutls:')
+                    print('-- string length:', valid_len_bool)
+                    print('-- drive letter:', valid_drive_bool)
+                    print('-- valid characters:', valid_char_bool)
+                    print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
 
                 # Destination Mode 1: Continue Only If Sanitization Checks All Return True
                 if valid_len_bool is True and valid_drive_bool is True and valid_non_win_res_nm_bool is True and valid_char_bool is True:
-                    print('-- input destination path passed current sanitization checks')
-                    print('-- creating destination:', dest_path_entered)
+                    if debug_enabled is True:
+                        print('-- input destination path passed current sanitization checks')
+                        print('-- creating destination:', dest_path_entered)
 
                     # Destination Mode 1: Make Only Directories that Do Not Exist
                     distutils.dir_util.mkpath(dest_path_entered)
@@ -1738,126 +1627,128 @@ class App(QMainWindow):
                         self.paths_readonly_button_funk_5()
 
                 else:
-                    print('-- input destination path failed current sanitization checks')
+                    if debug_enabled is True:
+                        print('-- input destination path failed current sanitization checks')
+                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
                     settings_input_response_dest_bool = False
-                    settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
 
             # Destination Mode 1: Handle Exception 
             except Exception as e:
-                    if self.debug_exception_enabled is True:
+                    if debug_enabled is True:
                         print('-- exception:', str(e).strip().encode('utf8'))
+                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
                     settings_input_response_dest_bool = False
-                    settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
         
         # Sector 2: Start Input Response Thread
-        settings_input_response_thread.start()
+        self.settings_input_response_thread.start()
 
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 0
     def settings_source_pre_funk0(self):
-        global source_path_entered, source_selected
+        global debug_enabled, source_path_entered, source_selected
         source_selected = 0
-        source_path_entered = self.settings_source0.text()
+        source_path_entered = self.settings_source_edit_var[0].text()
         self.settings_source_funk()
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 1
     def settings_source_pre_funk1(self):
-        global source_path_entered, source_selected
+        global debug_enabled, source_path_entered, source_selected
         source_selected = 1
-        source_path_entered = self.settings_source1.text()
+        source_path_entered = self.settings_source_edit_var[1].text()
         self.settings_source_funk()
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 2
     def settings_source_pre_funk2(self):
-        global source_path_entered, source_selected
+        global debug_enabled, source_path_entered, source_selected
         source_selected = 2
-        source_path_entered = self.settings_source2.text()
+        source_path_entered = self.settings_source_edit_var[2].text()
         self.settings_source_funk()
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 3
     def settings_source_pre_funk3(self):
-        global source_path_entered, source_selected
+        global debug_enabled, source_path_entered, source_selected
         source_selected = 3
-        source_path_entered = self.settings_source3.text()
+        source_path_entered = self.settings_source_edit_var[3].text()
         self.settings_source_funk()
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 4
     def settings_source_pre_funk4(self):
-        global source_path_entered, source_selected
+        global debug_enabled, source_path_entered, source_selected
         source_selected = 4
-        source_path_entered = self.settings_source4.text()
+        source_path_entered = self.settings_source_edit_var[4].text()
         self.settings_source_funk()
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 5
     def settings_source_pre_funk5(self):
-        global source_path_entered, source_selected
+        global debug_enabled, source_path_entered, source_selected
         source_selected = 5
-        source_path_entered = self.settings_source5.text()
+        source_path_entered = self.settings_source_edit_var[5].text()
         self.settings_source_funk()
 
     # Sector 2 Funtion: Provides settings_dest_funk With Information From Destination Path Edit 0
     def settings_dest_pre_funk0(self):
-        global dest_path_entered, dest_selected
+        global debug_enabled, dest_path_entered, dest_selected
         dest_selected = 0
-        dest_path_entered = self.settings_dest0.text()
+        dest_path_entered = self.settings_dest_edit_var[0].text()
         self.settings_dest_funk()
 
     # Sector 2 Funtion: Provides settings_dest_funk With Information From Destination Path Edit 1
     def settings_dest_pre_funk1(self):
-        global dest_path_entered, dest_selected
+        global debug_enabled, dest_path_entered, dest_selected
         dest_selected = 1
-        dest_path_entered = self.settings_dest1.text()
+        dest_path_entered = self.settings_dest_edit_var[1].text()
         self.settings_dest_funk()
 
     # Sector 2 Funtion: Provides settings_dest_funk With Information From Destination Path Edit 2
     def settings_dest_pre_funk2(self):
-        global dest_path_entered, dest_selected
+        global debug_enabled, dest_path_entered, dest_selected
         dest_selected = 2
-        dest_path_entered = self.settings_dest2.text()
+        dest_path_entered = self.settings_dest_edit_var[2].text()
         self.settings_dest_funk()
 
     # Sector 2 Funtion: Provides settings_dest_funk With Information From Destination Path Edit 3
     def settings_dest_pre_funk3(self):
-        global dest_path_entered, dest_selected
+        global debug_enabled, dest_path_entered, dest_selected
         dest_selected = 3
-        dest_path_entered = self.settings_dest3.text()
+        dest_path_entered = self.settings_dest_edit_var[3].text()
         self.settings_dest_funk()
 
     # Sector 2 Funtion: Provides settings_dest_funk With Information From Destination Path Edit 4
     def settings_dest_pre_funk4(self):
-        global dest_path_entered, dest_selected
+        global debug_enabled, dest_path_entered, dest_selected
         dest_selected = 4
-        dest_path_entered = self.settings_dest4.text()
+        dest_path_entered = self.settings_dest_edit_var[4].text()
         self.settings_dest_funk()
 
     # Sector 2 Funtion: Provides settings_dest_funk With Information From Destination Path Edit 5
     def settings_dest_pre_funk5(self):
-        global dest_path_entered, dest_selected
+        global debug_enabled, dest_path_entered, dest_selected
         dest_selected = 5
-        dest_path_entered = self.settings_dest5.text()
+        dest_path_entered = self.settings_dest_edit_var[5].text()
         self.settings_dest_funk()
 
     # Sector 2 Funtion: Hides Objects in Sector 2, Resizes Sector One Background Labels, Rotates Sector 1 Drop Down Settings Arrows
     def hide_settings_funk(self):
-        print('-- plugged in: hide_settings_funk')
+        if debug_enabled is True:
+            print('-- plugged in: hide_settings_funk')
         self.setting_title0.hide()
         self.setting_title1.hide()
         self.setting_title2.hide()
         self.setting_title3.hide()
         self.setting_title4.hide()
         self.setting_title5.hide()
-        self.settings_source0.hide()
-        self.settings_source1.hide()
-        self.settings_source2.hide()
-        self.settings_source3.hide()
-        self.settings_source4.hide()
-        self.settings_source5.hide()
-        self.settings_dest0.hide()
-        self.settings_dest1.hide()
-        self.settings_dest2.hide()
-        self.settings_dest3.hide()
-        self.settings_dest4.hide()
-        self.settings_dest5.hide()
+        self.settings_source_edit_var[0].hide()
+        self.settings_source_edit_var[1].hide()
+        self.settings_source_edit_var[2].hide()
+        self.settings_source_edit_var[3].hide()
+        self.settings_source_edit_var[4].hide()
+        self.settings_source_edit_var[5].hide()
+        self.settings_dest_edit_var[0].hide()
+        self.settings_dest_edit_var[1].hide()
+        self.settings_dest_edit_var[2].hide()
+        self.settings_dest_edit_var[3].hide()
+        self.settings_dest_edit_var[4].hide()
+        self.settings_dest_edit_var[5].hide()
 
         self.tb_0.hide()
         self.tb_1.hide()
@@ -1868,26 +1759,26 @@ class App(QMainWindow):
 
         self.tb_label_0.hide()
 
-        back_label_var[0].resize(95, 80)
-        back_label_var[1].resize(95, 80)
-        back_label_var[2].resize(95, 80)
-        back_label_var[3].resize(95, 80)
-        back_label_var[4].resize(95, 80)
-        back_label_var[5].resize(95, 80)
+        self.back_label_var[0].resize(95, 80)
+        self.back_label_var[1].resize(95, 80)
+        self.back_label_var[2].resize(95, 80)
+        self.back_label_var[3].resize(95, 80)
+        self.back_label_var[4].resize(95, 80)
+        self.back_label_var[5].resize(95, 80)
 
-        btnx_settings_var[0].setIcon(QIcon(self.img_show_menu_false))
-        btnx_settings_var[1].setIcon(QIcon(self.img_show_menu_false))
-        btnx_settings_var[2].setIcon(QIcon(self.img_show_menu_false))
-        btnx_settings_var[3].setIcon(QIcon(self.img_show_menu_false))
-        btnx_settings_var[4].setIcon(QIcon(self.img_show_menu_false))
-        btnx_settings_var[5].setIcon(QIcon(self.img_show_menu_false))
+        self.btnx_settings_0.setIcon(QIcon(self.img_show_menu_false))
+        self.btnx_settings_1.setIcon(QIcon(self.img_show_menu_false))
+        self.btnx_settings_2.setIcon(QIcon(self.img_show_menu_false))
+        self.btnx_settings_3.setIcon(QIcon(self.img_show_menu_false))
+        self.btnx_settings_4.setIcon(QIcon(self.img_show_menu_false))
+        self.btnx_settings_5.setIcon(QIcon(self.img_show_menu_false))
 
-        paths_readonly_button_var[0].hide()
-        paths_readonly_button_var[1].hide()
-        paths_readonly_button_var[2].hide()
-        paths_readonly_button_var[3].hide()
-        paths_readonly_button_var[4].hide()
-        paths_readonly_button_var[5].hide()
+        self.paths_readonly_btn_0.hide()
+        self.paths_readonly_btn_1.hide()
+        self.paths_readonly_btn_2.hide()
+        self.paths_readonly_btn_3.hide()
+        self.paths_readonly_btn_4.hide()
+        self.paths_readonly_btn_5.hide()
 
     # Sector 2: Funtion: Calls hide_settings_funk Then Hides Settings Page By Resizing Window
     def hide_settings_page_funk(self):
@@ -1896,509 +1787,506 @@ class App(QMainWindow):
 
     # Sector 1: Focus In Settings When Priming To Write 0
     def btnx_set_focus_funk_0(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
 
         settings_active_int = 0
         self.hide_settings_funk()
         self.setFixedSize(self.width, 320)
 
-        btnx_settings_var[0].setIcon(QIcon(self.img_show_menu_true))
-        back_label_var[0].resize(95, 85)
+        self.btnx_settings_0.setIcon(QIcon(self.img_show_menu_true))
+        self.back_label_var[0].resize(95, 85)
 
         self.setting_title0.show()
-        self.settings_source0.show()
-        self.settings_dest0.show()
+        self.settings_source_edit_var[0].show()
+        self.settings_dest_edit_var[0].show()
         self.tb_0.show()
         self.tb_label_0.setText('Archives Output')
         self.tb_label_0.show()
-        settings_source_edit_var[0].setReadOnly(True)
-        settings_dest_edit_var[0].setReadOnly(True)
-        paths_readonly_button_var[0].setIconSize(QSize(8, 8))
-        paths_readonly_button_var[0].setIcon(QIcon(self.img_read_ony_true))
-        paths_readonly_button_var[0].show()
-        paths_readonly_button_var[0].setEnabled(False)
+        self.settings_source_edit_var[0].setReadOnly(True)
+        self.settings_dest_edit_var[0].setReadOnly(True)
+        self.paths_readonly_btn_0.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
+        self.paths_readonly_btn_0.show()
+        self.paths_readonly_btn_0.setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 1
     def btnx_set_focus_funk_1(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
 
         settings_active_int = 1
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[1].setIcon(QIcon(self.img_show_menu_true))
-        back_label_var[1].resize(95, 85)
+        self.btnx_settings_1.setIcon(QIcon(self.img_show_menu_true))
+        self.back_label_var[1].resize(95, 85)
 
         self.setting_title1.show()
-        self.settings_source1.show()
-        self.settings_dest1.show()
+        self.settings_source_edit_var[1].show()
+        self.settings_dest_edit_var[1].show()
         self.tb_1.show()
         self.tb_label_0.setText('Documents Output')
         self.tb_label_0.show()
-        settings_source_edit_var[1].setReadOnly(True)
-        settings_dest_edit_var[1].setReadOnly(True)
-        paths_readonly_button_var[1].setIconSize(QSize(8, 8))
-        paths_readonly_button_var[1].setIcon(QIcon(self.img_read_ony_true))
-        paths_readonly_button_var[1].show()
-        paths_readonly_button_var[1].setEnabled(False)
+        self.settings_source_edit_var[1].setReadOnly(True)
+        self.settings_dest_edit_var[1].setReadOnly(True)
+        self.paths_readonly_btn_1.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
+        self.paths_readonly_btn_1.show()
+        self.paths_readonly_btn_1.setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 2
     def btnx_set_focus_funk_2(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
 
         settings_active_int = 2
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[2].setIcon(QIcon(self.img_show_menu_true))
-        back_label_var[2].resize(95, 85)
+        self.btnx_settings_2.setIcon(QIcon(self.img_show_menu_true))
+        self.back_label_var[2].resize(95, 85)
 
         self.setting_title2.show()
-        self.settings_source2.show()
-        self.settings_dest2.show()
+        self.settings_source_edit_var[2].show()
+        self.settings_dest_edit_var[2].show()
         self.tb_2.show()
         self.tb_label_0.setText('Music Output')
         self.tb_label_0.show()
-        settings_source_edit_var[2].setReadOnly(True)
-        settings_dest_edit_var[2].setReadOnly(True)
-        paths_readonly_button_var[2].setIconSize(QSize(8, 8))
-        paths_readonly_button_var[2].setIcon(QIcon(self.img_read_ony_true))
-        paths_readonly_button_var[2].show()
-        paths_readonly_button_var[2].setEnabled(False)
+        self.settings_source_edit_var[2].setReadOnly(True)
+        self.settings_dest_edit_var[2].setReadOnly(True)
+        self.paths_readonly_btn_2.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
+        self.paths_readonly_btn_2.show()
+        self.paths_readonly_btn_2.setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 3
     def btnx_set_focus_funk_3(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
 
         settings_active_int = 3
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[3].setIcon(QIcon(self.img_show_menu_true))
-        back_label_var[3].resize(95, 85)
+        self.btnx_settings_3.setIcon(QIcon(self.img_show_menu_true))
+        self.back_label_var[3].resize(95, 85)
 
         self.setting_title3.show()
-        self.settings_source3.show()
-        self.settings_dest3.show()
+        self.settings_source_edit_var[3].show()
+        self.settings_dest_edit_var[3].show()
         self.tb_3.show()
         self.tb_label_0.setText('Pictures Output')
         self.tb_label_0.show()
-        settings_source_edit_var[3].setReadOnly(True)
-        settings_dest_edit_var[3].setReadOnly(True)
-        paths_readonly_button_var[3].setIconSize(QSize(8, 8))
-        paths_readonly_button_var[3].setIcon(QIcon(self.img_read_ony_true))
-        paths_readonly_button_var[3].show()
-        paths_readonly_button_var[3].setEnabled(False)
+        self.settings_source_edit_var[3].setReadOnly(True)
+        self.settings_dest_edit_var[3].setReadOnly(True)
+        self.paths_readonly_btn_3.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
+        self.paths_readonly_btn_3.show()
+        self.paths_readonly_btn_3.setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 4
     def btnx_set_focus_funk_4(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
 
         settings_active_int = 4
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[4].setIcon(QIcon(self.img_show_menu_true))
-        back_label_var[4].resize(95, 85)
+        self.btnx_settings_4.setIcon(QIcon(self.img_show_menu_true))
+        self.back_label_var[4].resize(95, 85)
 
         self.setting_title4.show()
-        self.settings_source4.show()
-        self.settings_dest4.show()
+        self.settings_source_edit_var[4].show()
+        self.settings_dest_edit_var[4].show()
         self.tb_4.show()
         self.tb_label_0.setText('Video Output')
         self.tb_label_0.show()
-        settings_source_edit_var[4].setReadOnly(True)
-        settings_dest_edit_var[4].setReadOnly(True)
-        paths_readonly_button_var[4].setIconSize(QSize(8, 8))
-        paths_readonly_button_var[4].setIcon(QIcon(self.img_read_ony_true))
-        paths_readonly_button_var[4].show()
-        paths_readonly_button_var[4].setEnabled(False)
+        self.settings_source_edit_var[4].setReadOnly(True)
+        self.settings_dest_edit_var[4].setReadOnly(True)
+        self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
+        self.paths_readonly_btn_4.show()
+        self.paths_readonly_btn_4.setEnabled(False)
 
     # Sector 1: Focus In Settings When Priming To Write 5
     def btnx_set_focus_funk_5(self):
-        global settings_active_int
+        global debug_enabled, settings_active_int
 
         settings_active_int = 5
         self.hide_settings_funk()
 
         self.setFixedSize(self.width, 320)
-        btnx_settings_var[5].setIcon(QIcon(self.img_show_menu_true))
-        back_label_var[5].resize(95, 85)
+        self.btnx_settings_5.setIcon(QIcon(self.img_show_menu_true))
+        self.back_label_var[5].resize(95, 85)
 
         self.setting_title5.show()
-        self.settings_source5.show()
-        self.settings_dest5.show()
+        self.settings_source_edit_var[5].show()
+        self.settings_dest_edit_var[5].show()
         self.tb_5.show()
         self.tb_label_0.setText('Programs Output')
         self.tb_label_0.show()
-        settings_source_edit_var[5].setReadOnly(True)
-        settings_dest_edit_var[5].setReadOnly(True)
-        paths_readonly_button_var[5].setIconSize(QSize(8, 8))
-        paths_readonly_button_var[5].setIcon(QIcon(self.img_read_ony_true))
-        paths_readonly_button_var[5].show()
-        paths_readonly_button_var[5].setEnabled(False)
+        self.settings_source_edit_var[5].setReadOnly(True)
+        self.settings_dest_edit_var[5].setReadOnly(True)
+        self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
+        self.paths_readonly_btn_5.show()
+        self.paths_readonly_btn_5.setEnabled(False)
 
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 0
     def settings_funk0(self):
-        global settings_active, settings_active_int, settings_active_int_prev
+        global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 0
         self.hide_settings_funk()
-        if settings_active is False:
-            if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 320)
+        if settings_active_int != settings_active_int_prev:
+            self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[0].setIcon(QIcon(self.img_show_menu_true))
+            self.btnx_settings_0.setIcon(QIcon(self.img_show_menu_true))
 
-                back_label_var[0].resize(95, 85)
+            self.back_label_var[0].resize(95, 85)
 
-                self.setting_title0.show()
-                self.settings_source0.show()
-                self.settings_dest0.show()
+            self.setting_title0.show()
+            self.settings_source_edit_var[0].show()
+            self.settings_dest_edit_var[0].show()
 
-                self.tb_0.show()
-                self.tb_label_0.setText('Archives Output')
-                self.tb_label_0.show()
+            self.tb_0.show()
+            self.tb_label_0.setText('Archives Output')
+            self.tb_label_0.show()
 
-                paths_readonly_button_var[0].show()
+            self.paths_readonly_btn_0.show()
 
-                settings_active_int_prev = settings_active_int
+            settings_active_int_prev = settings_active_int
 
-            elif settings_active_int == settings_active_int_prev:
-                self.hide_settings_page_funk()
-                settings_active_int_prev = ()
+        elif settings_active_int == settings_active_int_prev:
+            self.hide_settings_page_funk()
+            settings_active_int_prev = ()
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 1
     def settings_funk1(self):
-        global settings_active, settings_active_int, settings_active_int_prev
+        global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 1
         self.hide_settings_funk()
-        if settings_active is False:
-            if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 320)
+        if settings_active_int != settings_active_int_prev:
+            self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[1].setIcon(QIcon(self.img_show_menu_true))
+            self.btnx_settings_1.setIcon(QIcon(self.img_show_menu_true))
 
-                back_label_var[1].resize(95, 85)
+            self.back_label_var[1].resize(95, 85)
 
-                self.setting_title1.show()
-                self.settings_source1.show()
-                self.settings_dest1.show()
+            self.setting_title1.show()
+            self.settings_source_edit_var[1].show()
+            self.settings_dest_edit_var[1].show()
 
-                self.tb_1.show()
-                self.tb_label_0.setText('Documents Output')
-                self.tb_label_0.show()
+            self.tb_1.show()
+            self.tb_label_0.setText('Documents Output')
+            self.tb_label_0.show()
 
-                paths_readonly_button_var[1].show()
+            self.paths_readonly_btn_1.show()
 
-                settings_active_int_prev = settings_active_int
+            settings_active_int_prev = settings_active_int
 
-            elif settings_active_int == settings_active_int_prev:
-                self.hide_settings_page_funk()
-                settings_active_int_prev = ()
+        elif settings_active_int == settings_active_int_prev:
+            self.hide_settings_page_funk()
+            settings_active_int_prev = ()
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 2
     def settings_funk2(self):
-        global settings_active, settings_active_int, settings_active_int_prev
+        global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 2
         self.hide_settings_funk()
-        if settings_active is False:
-            if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 320)
+        if settings_active_int != settings_active_int_prev:
+            self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[2].setIcon(QIcon(self.img_show_menu_true))
+            self.btnx_settings_2.setIcon(QIcon(self.img_show_menu_true))
 
-                back_label_var[2].resize(95, 85)
+            self.back_label_var[2].resize(95, 85)
 
-                self.setting_title2.show()
-                self.settings_source2.show()
-                self.settings_dest2.show()
+            self.setting_title2.show()
+            self.settings_source_edit_var[2].show()
+            self.settings_dest_edit_var[2].show()
 
-                self.tb_2.show()
-                self.tb_label_0.setText('Music Output')
-                self.tb_label_0.show()
+            self.tb_2.show()
+            self.tb_label_0.setText('Music Output')
+            self.tb_label_0.show()
 
-                paths_readonly_button_var[2].show()
+            self.paths_readonly_btn_2.show()
 
-                settings_active_int_prev = settings_active_int
+            settings_active_int_prev = settings_active_int
 
-            elif settings_active_int == settings_active_int_prev:
-                self.hide_settings_page_funk()
-                settings_active_int_prev = ()
+        elif settings_active_int == settings_active_int_prev:
+            self.hide_settings_page_funk()
+            settings_active_int_prev = ()
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 3
     def settings_funk3(self):
-        global settings_active, settings_active_int, settings_active_int_prev
+        global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 3
         self.hide_settings_funk()
-        if settings_active is False:
-            if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 320)
+        if settings_active_int != settings_active_int_prev:
+            self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[3].setIcon(QIcon(self.img_show_menu_true))
+            self.btnx_settings_3.setIcon(QIcon(self.img_show_menu_true))
 
-                back_label_var[3].resize(95, 85)
+            self.back_label_var[3].resize(95, 85)
 
-                self.setting_title3.show()
-                self.settings_source3.show()
-                self.settings_dest3.show()
+            self.setting_title3.show()
+            self.settings_source_edit_var[3].show()
+            self.settings_dest_edit_var[3].show()
 
-                self.tb_3.show()
-                self.tb_label_0.setText('Pictures Output')
-                self.tb_label_0.show()
+            self.tb_3.show()
+            self.tb_label_0.setText('Pictures Output')
+            self.tb_label_0.show()
 
-                paths_readonly_button_var[3].show()
+            self.paths_readonly_btn_3.show()
 
-                settings_active_int_prev = settings_active_int
+            settings_active_int_prev = settings_active_int
 
-            elif settings_active_int == settings_active_int_prev:
-                self.hide_settings_page_funk()
-                settings_active_int_prev = ()
+        elif settings_active_int == settings_active_int_prev:
+            self.hide_settings_page_funk()
+            settings_active_int_prev = ()
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 4
     def settings_funk4(self):
-        global settings_active, settings_active_int, settings_active_int_prev
+        global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 4
         self.hide_settings_funk()
-        if settings_active is False:
-            if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 320)
+        if settings_active_int != settings_active_int_prev:
+            self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[4].setIcon(QIcon(self.img_show_menu_true))
+            self.btnx_settings_4.setIcon(QIcon(self.img_show_menu_true))
 
-                back_label_var[4].resize(95, 85)
+            self.back_label_var[4].resize(95, 85)
 
-                self.setting_title4.show()
-                self.settings_source4.show()
-                self.settings_dest4.show()
+            self.setting_title4.show()
+            self.settings_source_edit_var[4].show()
+            self.settings_dest_edit_var[4].show()
 
-                self.tb_4.show()
-                self.tb_label_0.setText('Videos Output')
-                self.tb_label_0.show()
+            self.tb_4.show()
+            self.tb_label_0.setText('Videos Output')
+            self.tb_label_0.show()
 
-                paths_readonly_button_var[4].show()
+            self.paths_readonly_btn_4.show()
 
-                settings_active_int_prev = settings_active_int
+            settings_active_int_prev = settings_active_int
 
-            elif settings_active_int == settings_active_int_prev:
-                self.hide_settings_page_funk()
-                settings_active_int_prev = ()
+        elif settings_active_int == settings_active_int_prev:
+            self.hide_settings_page_funk()
+            settings_active_int_prev = ()
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 5
     def settings_funk5(self):
-        global settings_active, settings_active_int, settings_active_int_prev
+        global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 5
         self.hide_settings_funk()
-        if settings_active is False:
-            if settings_active_int != settings_active_int_prev:
-                self.setFixedSize(self.width, 320)
+        if settings_active_int != settings_active_int_prev:
+            self.setFixedSize(self.width, 320)
 
-                btnx_settings_var[5].setIcon(QIcon(self.img_show_menu_true))
+            self.btnx_settings_5.setIcon(QIcon(self.img_show_menu_true))
 
-                back_label_var[5].resize(95, 85)
+            self.back_label_var[5].resize(95, 85)
 
-                self.setting_title5.show()
-                self.settings_source5.show()
-                self.settings_dest5.show()
-                self.settings_dest5.show()
+            self.setting_title5.show()
+            self.settings_source_edit_var[5].show()
+            self.settings_dest_edit_var[5].show()
+            self.settings_dest_edit_var[5].show()
 
-                self.tb_5.show()
-                self.tb_label_0.setText('Programs Output')
-                self.tb_label_0.show()
+            self.tb_5.show()
+            self.tb_label_0.setText('Programs Output')
+            self.tb_label_0.show()
 
-                paths_readonly_button_var[5].show()
+            self.paths_readonly_btn_5.show()
 
-                settings_active_int_prev = settings_active_int
+            settings_active_int_prev = settings_active_int
 
-            elif settings_active_int == settings_active_int_prev:
-                self.hide_settings_page_funk()
-                settings_active_int_prev = ()
+        elif settings_active_int == settings_active_int_prev:
+            self.hide_settings_page_funk()
+            settings_active_int_prev = ()
 
     # Sector 1 Function: Starts Main Sector 1 Thread 0
     def thread_funk_0(self):
-        thread_var[0].start()
+        self.thread_0.start()
 
     # Sector 1 Function: Starts Main Sector 1 Thread 1
     def thread_funk_1(self):
-        thread_var[1].start()
+        self.thread_1.start()
 
     # Sector 1 Function: Starts Main Sector 1 Thread 2
     def thread_funk_2(self):
-        thread_var[2].start()
+        self.thread_2.start()
 
     # Sector 1 Function: Starts Main Sector 1 Thread 3
     def thread_funk_3(self):
-        thread_var[3].start()
+        self.thread_3.start()
 
     # Sector 1 Function: Starts Main Sector 1 Thread 4
     def thread_funk_4(self):
-        thread_var[4].start()
+        self.thread_4.start()
 
     # Sector 1 Function: Starts Main Sector 1 Thread 5
     def thread_funk_5(self):
-        thread_var[5].start()
+        self.thread_5.start()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 0
     def set_comp_bool_pre_funk0(self):
-        global compare_clicked
+        global debug_enabled, compare_clicked
         compare_clicked = 0
         self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 1
     def set_comp_bool_pre_funk1(self):
-        global compare_clicked
+        global debug_enabled, compare_clicked
         compare_clicked = 1
         self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 2
     def set_comp_bool_pre_funk2(self):
-        global compare_clicked
+        global debug_enabled, compare_clicked
         compare_clicked = 2
         self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 3
     def set_comp_bool_pre_funk3(self):
-        global compare_clicked
+        global debug_enabled, compare_clicked
         compare_clicked = 3
         self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 4
     def set_comp_bool_pre_funk4(self):
-        global compare_clicked
+        global debug_enabled, compare_clicked
         compare_clicked = 4
         self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 5
     def set_comp_bool_pre_funk5(self):
-        global compare_clicked
+        global debug_enabled, compare_clicked
         compare_clicked = 5
         self.set_comp_bool_funk()
 
     # Sector 1 Function: Uses Integer To Switch Main Function Mode Relative To Mode Button Clicked
     def set_comp_bool_funk(self):
-        global compare_bool_var, compare_clicked, thread_engaged_var 
-
+        global debug_enabled, compare_bool_var, compare_clicked, thread_engaged_var
         if thread_engaged_var[compare_clicked] is False:
             if compare_bool_var[compare_clicked] is False:
                 compare_bool_var[compare_clicked] = True
-                comp_cont_button_var[compare_clicked].setIcon(QIcon(self.img_mode_1))
-                comp_cont_button_var[compare_clicked].setStyleSheet(self.default_qpbtn_prsd_style)
+                self.btnx_mode_btn_var[compare_clicked].setIcon(QIcon(self.img_mode_1))
+                self.btnx_mode_btn_var[compare_clicked].setStyleSheet(self.default_qpbtn_prsd_style)
             elif compare_bool_var[compare_clicked] is True:
                 compare_bool_var[compare_clicked] = False
-                comp_cont_button_var[compare_clicked].setIcon(QIcon(self.img_mode_0))
-                comp_cont_button_var[compare_clicked].setStyleSheet(self.default_qpbtn_style)
-        if thread_engaged_var[compare_clicked] is True:
-            print('-- thread engaged: setting mode unavailable')
+                self.btnx_mode_btn_var[compare_clicked].setIcon(QIcon(self.img_mode_0))
+                self.btnx_mode_btn_var[compare_clicked].setStyleSheet(self.default_qpbtn_style)
+        elif thread_engaged_var[compare_clicked] is True:
+            if debug_enabled is True:
+                print('-- thread engaged: setting mode unavailable')
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 0
     def stop_thr_funk0(self):
-        global thread_var
-        thread_var[0].stop_thr()
+        global debug_enabled
+        self.thread_0.stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 1
     def stop_thr_funk1(self):
-        global thread_var
-        thread_var[1].stop_thr()
+        global debug_enabled
+        self.thread_1.stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 2
     def stop_thr_funk2(self):
-        global thread_var
-        thread_var[2].stop_thr()
+        global debug_enabled
+        self.thread_2.stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 3
     def stop_thr_funk3(self):
-        global thread_var
-        thread_var[3].stop_thr()
+        global debug_enabled
+        self.thread_3.stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 4
     def stop_thr_funk4(self):
-        global thread_var
-        thread_var[4].stop_thr()
+        global debug_enabled
+        self.thread_4.stop_thr()
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 5
     def stop_thr_funk5(self):
-        global thread_var
-        thread_var[5].stop_thr()
+        global debug_enabled
+        self.thread_5.stop_thr()
 
 
 # Scaling Class: Automatically Adjusts Form's Geometry Accounting For Changes In Display Scaling Settings
 class ScalingClass(QThread):
-    def __init__(self, setGeometry, width, height, pos, debug_exception_enabled):
+    def __init__(self, setGeometry, width, height, pos):
         QThread.__init__(self)
         self.setGeometry = setGeometry
         self.width = width
         self.height = height
         self.pos = pos
-        self.debug_exception_enabled = debug_exception_enabled
 
     def run(self):
-        print('-- plugged in: ScalingClass')
-        while True:
-            time.sleep(0.01)
-            self.setGeometry(self.pos().x(), self.pos().y(), self.width, self.height)
+        global debug_enabled
+        if debug_enabled is True:
+            print('-- plugged in: ScalingClass')
+        #while True:
+        #    time.sleep(0.01)
+            #self.setGeometry(self.pos().x(), self.pos().y(), self.width, self.height)
 
 # Input Respons Class: LED's Dsilpay Valid/Invalid Paths Attempted At Being Set In Sector 2 Source & Destination Path Configuration
 class SettingsInputResponse(QThread):
-    def __init__(self, default_valid_path_led_green, default_valid_path_led_red, default_valid_path_led, debug_exception_enabled):
+    def __init__(self, default_valid_path_led_green, default_valid_path_led_red, default_valid_path_led, settings_input_response_label_src, settings_input_response_label_dst):
         QThread.__init__(self)
         self.default_valid_path_led_green = default_valid_path_led_green
         self.default_valid_path_led_red = default_valid_path_led_red
         self.default_valid_path_led = default_valid_path_led
-        self.debug_exception_enabled = debug_exception_enabled
+        self.settings_input_response_label_src = settings_input_response_label_src
+        self.settings_input_response_label_dst = settings_input_response_label_dst
 
     def run(self):
-        global settings_input_response_source_bool, settings_input_response_dest_bool
-        global settings_input_response_label
+        global debug_enabled, settings_input_response_source_bool, settings_input_response_dest_bool
 
         if settings_input_response_source_bool is True:
-            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led_green)
+            self.settings_input_response_label_src.setStyleSheet(self.default_valid_path_led_green)
             settings_input_response_source_bool = None
             time.sleep(1)
-            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led)
+            self.settings_input_response_label_src.setStyleSheet(self.default_valid_path_led)
 
         elif settings_input_response_source_bool is False:
-            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led_red)
+            self.settings_input_response_label_src.setStyleSheet(self.default_valid_path_led_red)
             settings_input_response_source_bool = None
             time.sleep(1)
-            settings_input_response_label[0].setStyleSheet(self.default_valid_path_led)
+            self.settings_input_response_label_src.setStyleSheet(self.default_valid_path_led)
 
         elif settings_input_response_dest_bool is True:
-            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led_green)
+            self.settings_input_response_label_dst.setStyleSheet(self.default_valid_path_led_green)
             settings_input_response_dest_bool = None
             time.sleep(1)
-            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led)
+            self.settings_input_response_label_dst.setStyleSheet(self.default_valid_path_led)
 
         elif settings_input_response_dest_bool is False:
-            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led_red)
+            self.settings_input_response_label_dst.setStyleSheet(self.default_valid_path_led_red)
             settings_input_response_dest_bool = None
             time.sleep(1)
-            settings_input_response_label[1].setStyleSheet(self.default_valid_path_led)
+            self.settings_input_response_label_dst.setStyleSheet(self.default_valid_path_led)
 
 # Update Sector 2 Settings Window: Sources & Destination Paths Displayed Only When Last Valid Path Entered Still Actually Exists
 class UpdateSettingsWindow(QThread):
-    def __init__(self, debug_exception_enabled):
+    def __init__(self, settings_source_edit_var, settings_dest_edit_var):
         QThread.__init__(self)
-        self.debug_exception_enabled = debug_exception_enabled
+        self.settings_source_edit_var = settings_source_edit_var
+        self.settings_dest_edit_var = settings_dest_edit_var
 
     # Run This Thread While Program Is Alive And Read Configuration File
     def run(self):
+        global debug_enabled
         while __name__ == '__main__':
             self.get_conf_funk()
             time.sleep(1)
 
     # While Source And Destination Path Configuration Edit ReadOnly, Check Configured Paths Existance And Set Boolean Accordingly
     def get_conf_funk(self):
-        global path_var, dest_path_var, settings_source_edit_var,\
-            settings_dest_edit_var, configuration_engaged
+        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
         configuration_engaged = True
 
         # Only Update Displayed Source & Destination Paths If Source & Destination Paths Not Being Edited
         check_var = []
+
         i = 0
-        for settings_source_edit_vars in settings_source_edit_var:
-            if settings_source_edit_var[i].isReadOnly() is False:
+        for self.settings_source_edit_vars in self.settings_source_edit_var:
+            if self.settings_source_edit_var[i].isReadOnly() is False:
                 check_var.append(False)
-            elif settings_source_edit_var[i].isReadOnly() is True:
+            elif self.settings_source_edit_var[i].isReadOnly() is True:
                 check_var.append(True)
             i += 1
 
@@ -2523,24 +2411,42 @@ class UpdateSettingsWindow(QThread):
 
                 # Set Displayed Source Path(s)
                 i = 0
-                for settings_source_edit_vars in settings_source_edit_var:
-                    if path_var[i] != settings_source_edit_var[i]:
-                        settings_source_edit_var[i].setText(path_var[i])
+                for self.settings_source_edit_vars in self.settings_source_edit_var:
+                    if path_var[i] != self.settings_source_edit_var[i]:
+                        self.settings_source_edit_var[i].setText(path_var[i])
                     i += 1
 
                 # Set Displayed Destination Path(s)
                 i = 0
-                for settings_dest_edit_vars in settings_dest_edit_var:
-                    if dest_path_var[i] != settings_dest_edit_var[i]:
-                        settings_dest_edit_var[i].setText(dest_path_var[i])
+                for self.settings_dest_edit_vars in self.settings_dest_edit_var:
+                    if dest_path_var[i] != self.settings_dest_edit_var[i]:
+                        self.settings_dest_edit_var[i].setText(dest_path_var[i])
                     i += 1
+
+            # Write A New Configuration File
+            elif not os.path.exists(cfg_f):
+                if debug_enabled is True:
+                    print('-- creating new configuration file')
+                open(cfg_f, 'w').close()
+                with open(cfg_f, 'a') as fo:
+                    i = 0
+                    for config_src_vars in config_src_var:
+                        fo.writelines(config_src_var[i] + ' x' + '\n')
+                        i += 1
+                    i = 0
+                    for config_dst_vars in config_dst_var:
+                        fo.writelines(config_dst_var[i] + ' x' + '\n')
+                        i += 1
+                    fo.writelines('IMAGE PATH: ./image/default/')
+                fo.close()
 
         configuration_engaged = False
 
 
 # Sector 1 Class: Main Function Button Thread 0
 class ThreadClass0(QThread):
-    def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
+    def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
+                 output_verbosity, btnx_main_0, stop_thread_btn_0, paths_readonly_btn_0):
         QThread.__init__(self)
         self.tb_0 = tb_0
         self.confirm_op0_tru = confirm_op0_tru
@@ -2552,11 +2458,12 @@ class ThreadClass0(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
-        self.debug_exception_enabled = debug_exception_enabled
+        self.btnx_main_0 = btnx_main_0
+        self.stop_thread_btn_0 = stop_thread_btn_0
+        self.paths_readonly_btn_0 = paths_readonly_btn_0
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
+        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2569,13 +2476,13 @@ class ThreadClass0(QThread):
             compare_bool = compare_bool_var[0]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_1))
+            self.btnx_main_0.setIcon(QIcon(self.img_btnx_led_1))
             self.confirm_op0_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op0_tru.setEnabled(True)
 
             # Enable Stop thread Button
-            stop_thr_button_var[0].setEnabled(True)
-            stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_true))
+            self.stop_thread_btn_0.setEnabled(True)
+            self.stop_thread_btn_0.setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op0_wait is True:
                 time.sleep(0.3)
@@ -2587,8 +2494,9 @@ class ThreadClass0(QThread):
 
             # If Confirmed Run Main Function
             if confirm_op0_bool is True:
-                print('-- ThreadClass0: confirm_op0_bool: accepted')
-                btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_2))
+                if debug_enabled is True:
+                    print('-- ThreadClass0: confirm_op0_bool: accepted')
+                self.btnx_main_0.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2612,20 +2520,20 @@ class ThreadClass0(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        if self.debug_exception_enabled is True:
+                                        if debug_enabled is True:
                                             print('-- exception:', str(e).strip().encode('utf8'))
 
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_0.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
 
                                     # Mode 0: Check File
@@ -2641,16 +2549,16 @@ class ThreadClass0(QThread):
                                             try:
                                                 self.tb_0.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             try:
                                                 self.tb_0.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_fail_count += 1
 
@@ -2659,7 +2567,7 @@ class ThreadClass0(QThread):
                                         try:
                                             self.tb_0.append(output_str)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
 
                                         cp0_fail_count += 1
@@ -2674,19 +2582,19 @@ class ThreadClass0(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_0.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
 
                                             # Mode 1: Check File
@@ -2704,16 +2612,16 @@ class ThreadClass0(QThread):
                                                     try:
                                                         self.tb_0.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
                                                     cp1_count += 1
-                                                elif mb < ma or siz_src != siz_dest:  # DEV Account For False negative where os.stat.getsize returns zero when file size != zero
+                                                elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
-                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                                         try:
                                                             self.tb_0.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
@@ -2721,7 +2629,7 @@ class ThreadClass0(QThread):
                                                         try:
                                                             self.tb_0.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
@@ -2729,7 +2637,7 @@ class ThreadClass0(QThread):
                                                 try:
                                                     self.tb_0.append(output_str)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                 cp1_fail_count += 1
 
@@ -2740,41 +2648,43 @@ class ThreadClass0(QThread):
             cp1_fail_count_str = str(cp1_fail_count)
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
-            print('-- ThreadClass0: ' + output_sum)
+            if debug_enabled is True:
+                print('-- ThreadClass0: ' + output_sum)
             try:
                 self.tb_0.append(output_sum)
             except Exception as e:
-                if self.debug_exception_enabled is True:
+                if debug_enabled is True:
                     print('-- exception:', str(e).strip().encode('utf8'))
 
             # Disengage
-            btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
-            stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_false))
-            stop_thr_button_var[0].setEnabled(False)
+            self.btnx_main_0.setIcon(QIcon(self.img_btnx_led_0))
+            self.stop_thread_btn_0.setIcon(QIcon(self.img_stop_thread_false))
+            self.stop_thread_btn_0.setEnabled(False)
             thread_engaged_var[0] = False
-            paths_readonly_button_var[0].setEnabled(True)
+            self.paths_readonly_btn_0.setEnabled(True)
 
     def stop_thr(self):
-        global btnx_main_var
-        global confirm_op0_bool, confirm_op0_wait
+        global debug_enabled, confirm_op0_bool, confirm_op0_wait
         
         confirm_op0_bool = False
         confirm_op0_wait = True
-        print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
-        btnx_main_var[0].setIcon(QIcon(self.img_btnx_led_0))
+        if debug_enabled is True:
+            print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
+        self.btnx_main_0.setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op0_tru.setEnabled(False)
         self.confirm_op0_tru.setIcon(QIcon(self.img_execute_false))
-        stop_thr_button_var[0].setIcon(QIcon(self.img_stop_thread_false))
-        stop_thr_button_var[0].setEnabled(False)
+        self.stop_thread_btn_0.setIcon(QIcon(self.img_stop_thread_false))
+        self.stop_thread_btn_0.setEnabled(False)
         thread_engaged_var[0] = False
-        paths_readonly_button_var[0].setEnabled(True)
+        self.paths_readonly_btn_0.setEnabled(True)
 
         self.terminate()
 
 
 # Sector 1 Class: Main Function Button Thread 1
 class ThreadClass1(QThread):
-    def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
+    def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
+                 output_verbosity, btnx_main_1, stop_thread_btn_1, paths_readonly_btn_1):
         QThread.__init__(self)
         self.tb_1 = tb_1
         self.confirm_op1_tru = confirm_op1_tru
@@ -2786,11 +2696,12 @@ class ThreadClass1(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
-        self.debug_exception_enabled = debug_exception_enabled
+        self.btnx_main_1 = btnx_main_1
+        self.stop_thread_btn_1 = stop_thread_btn_1
+        self.paths_readonly_btn_1 = paths_readonly_btn_1
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
+        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op1_wait, confirm_op1_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -2803,13 +2714,13 @@ class ThreadClass1(QThread):
             compare_bool = compare_bool_var[1]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_1))
+            self.btnx_main_1.setIcon(QIcon(self.img_btnx_led_1))
             self.confirm_op1_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op1_tru.setEnabled(True)
 
             # Enable Stop thread Button
-            stop_thr_button_var[1].setEnabled(True)
-            stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_true))
+            self.stop_thread_btn_1.setEnabled(True)
+            self.stop_thread_btn_1.setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op1_wait is True:
                 time.sleep(0.3)
@@ -2821,8 +2732,9 @@ class ThreadClass1(QThread):
 
             # If Confirmed Run Main Function
             if confirm_op1_bool is True:
-                print('-- ThreadClass1: confirm_op1_bool: accepted')
-                btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_2))
+                if debug_enabled is True:
+                    print('-- ThreadClass1: confirm_op1_bool: accepted')
+                self.btnx_main_1.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -2846,19 +2758,19 @@ class ThreadClass1(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        if self.debug_exception_enabled is True:
+                                        if debug_enabled is True:
                                             print('-- exception:', str(e).strip().encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_1.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
 
                                     # Mode 0: Check File
@@ -2874,16 +2786,16 @@ class ThreadClass1(QThread):
                                             try:
                                                 self.tb_1.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             try:
                                                 self.tb_1.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_fail_count += 1
 
@@ -2892,7 +2804,7 @@ class ThreadClass1(QThread):
                                         try:
                                             self.tb_1.append(output_str)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                         cp0_fail_count += 1
 
@@ -2906,19 +2818,19 @@ class ThreadClass1(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_1.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
 
                                             # Mode 1: Check File
@@ -2936,16 +2848,16 @@ class ThreadClass1(QThread):
                                                     try:
                                                         self.tb_1.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
-                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                                         try:
                                                             self.tb_1.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
@@ -2953,7 +2865,7 @@ class ThreadClass1(QThread):
                                                         try:
                                                             self.tb_1.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
@@ -2961,7 +2873,7 @@ class ThreadClass1(QThread):
                                                 try:
                                                     self.tb_1.append(output_str)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                 cp1_fail_count += 1
 
@@ -2972,41 +2884,43 @@ class ThreadClass1(QThread):
             cp1_fail_count_str = str(cp1_fail_count)
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
-            print('-- ThreadClass1: ' + output_sum)
+            if debug_enabled is True:
+                print('-- ThreadClass1: ' + output_sum)
             try:
                 self.tb_1.append(output_sum)
             except Exception as e:
-                if self.debug_exception_enabled is True:
+                if debug_enabled is True:
                     print('-- exception:', str(e).strip().encode('utf8'))
 
             # Disengage
-            btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
-            stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_false))
-            stop_thr_button_var[1].setEnabled(False)
+            self.btnx_main_1.setIcon(QIcon(self.img_btnx_led_0))
+            self.stop_thread_btn_1.setIcon(QIcon(self.img_stop_thread_false))
+            self.stop_thread_btn_1.setEnabled(False)
             thread_engaged_var[1] = False
-            paths_readonly_button_var[1].setEnabled(True)
+            self.paths_readonly_btn_1.setEnabled(True)
 
     def stop_thr(self):
-        global btnx_main_var
-        global confirm_op1_bool, confirm_op1_wait
+        global debug_enabled, confirm_op1_bool, confirm_op1_wait
         
         confirm_op1_bool = False
         confirm_op1_wait = True
-        print('-- confirm_op1 declined: (confirm_op1_bool)', confirm_op1_bool)
-        btnx_main_var[1].setIcon(QIcon(self.img_btnx_led_0))
+        if debug_enabled is True:
+            print('-- confirm_op1 declined: (confirm_op1_bool)', confirm_op1_bool)
+        self.btnx_main_1.setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op1_tru.setEnabled(False)
         self.confirm_op1_tru.setIcon(QIcon(self.img_execute_false))
-        stop_thr_button_var[1].setIcon(QIcon(self.img_stop_thread_false))
-        stop_thr_button_var[1].setEnabled(False)
+        self.stop_thread_btn_1.setIcon(QIcon(self.img_stop_thread_false))
+        self.stop_thread_btn_1.setEnabled(False)
         thread_engaged_var[1] = False
-        paths_readonly_button_var[1].setEnabled(True)
+        self.paths_readonly_btn_1.setEnabled(True)
 
         self.terminate()
 
 
 # Sector 1 Class: Main Function Button Thread 2
 class ThreadClass2(QThread):
-    def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
+    def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
+                 output_verbosity, btnx_main_2, stop_thread_btn_2, paths_readonly_btn_2):
         QThread.__init__(self)
         self.tb_2 = tb_2
         self.confirm_op2_tru = confirm_op2_tru
@@ -3018,11 +2932,12 @@ class ThreadClass2(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
-        self.debug_exception_enabled = debug_exception_enabled
+        self.btnx_main_2 = btnx_main_2
+        self.stop_thread_btn_2 = stop_thread_btn_2
+        self.paths_readonly_btn_2 = paths_readonly_btn_2
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
+        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op2_wait, confirm_op2_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -3035,13 +2950,13 @@ class ThreadClass2(QThread):
             compare_bool = compare_bool_var[2]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_1))
+            self.btnx_main_2.setIcon(QIcon(self.img_btnx_led_1))
             self.confirm_op2_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op2_tru.setEnabled(True)
 
             # Enable Stop thread Button
-            stop_thr_button_var[2].setEnabled(True)
-            stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_true))
+            self.stop_thread_btn_2.setEnabled(True)
+            self.stop_thread_btn_2.setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op2_wait is True:
                 time.sleep(0.3)
@@ -3053,8 +2968,9 @@ class ThreadClass2(QThread):
 
             # If Confirmed Run Main Function
             if confirm_op2_bool is True:
-                print('-- ThreadClass2: confirm_op2_bool: accepted')
-                btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_2))
+                if debug_enabled is True:
+                    print('-- ThreadClass2: confirm_op2_bool: accepted')
+                self.btnx_main_2.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -3077,19 +2993,19 @@ class ThreadClass2(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        if self.debug_exception_enabled is True:
+                                        if debug_enabled is True:
                                             print('-- exception:', str(e).strip().encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_2.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
 
                                     # Mode 0: Check File
@@ -3105,16 +3021,16 @@ class ThreadClass2(QThread):
                                             try:
                                                 self.tb_2.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             try:
                                                 self.tb_2.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_fail_count += 1
 
@@ -3123,7 +3039,7 @@ class ThreadClass2(QThread):
                                         try:
                                             self.tb_2.append(output_str)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                         cp0_fail_count += 1
 
@@ -3137,19 +3053,19 @@ class ThreadClass2(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_2.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
 
                                             # Mode 1: Check File
@@ -3167,16 +3083,16 @@ class ThreadClass2(QThread):
                                                     try:
                                                         self.tb_2.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
-                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                                         try:
                                                             self.tb_2.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
@@ -3184,7 +3100,7 @@ class ThreadClass2(QThread):
                                                         try:
                                                             self.tb_2.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
@@ -3192,7 +3108,7 @@ class ThreadClass2(QThread):
                                                 try:
                                                     self.tb_2.append(output_str)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                 cp1_fail_count += 1
 
@@ -3203,41 +3119,43 @@ class ThreadClass2(QThread):
             cp1_fail_count_str = str(cp1_fail_count)
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
-            print('-- ThreadClass2: ' + output_sum)
+            if debug_enabled is True:
+                print('-- ThreadClass2: ' + output_sum)
             try:
                 self.tb_2.append(output_sum)
             except Exception as e:
-                if self.debug_exception_enabled is True:
+                if debug_enabled is True:
                     print('-- exception:', str(e).strip().encode('utf8'))
 
             # Disengage
-            btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
-            stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_false))
-            stop_thr_button_var[2].setEnabled(False)
+            self.btnx_main_2.setIcon(QIcon(self.img_btnx_led_0))
+            self.stop_thread_btn_2.setIcon(QIcon(self.img_stop_thread_false))
+            self.stop_thread_btn_2.setEnabled(False)
             thread_engaged_var[2] = False
-            paths_readonly_button_var[2].setEnabled(True)
+            self.paths_readonly_btn_2.setEnabled(True)
 
     def stop_thr(self):
-        global btnx_main_var
-        global confirm_op2_bool, confirm_op2_wait
+        global debug_enabled, confirm_op2_bool, confirm_op2_wait
         
         confirm_op2_bool = False
         confirm_op2_wait = True
-        print('-- confirm_op2 declined: (confirm_op2_bool)', confirm_op2_bool)
-        btnx_main_var[2].setIcon(QIcon(self.img_btnx_led_0))
+        if debug_enabled is True:
+            print('-- confirm_op2 declined: (confirm_op2_bool)', confirm_op2_bool)
+        self.btnx_main_2.setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op2_tru.setEnabled(False)
         self.confirm_op2_tru.setIcon(QIcon(self.img_execute_false))
-        stop_thr_button_var[2].setIcon(QIcon(self.img_stop_thread_false))
-        stop_thr_button_var[2].setEnabled(False)
+        self.stop_thread_btn_2.setIcon(QIcon(self.img_stop_thread_false))
+        self.stop_thread_btn_2.setEnabled(False)
         thread_engaged_var[2] = False
-        paths_readonly_button_var[2].setEnabled(True)
+        self.paths_readonly_btn_2.setEnabled(True)
 
         self.terminate()
 
 
 # Sector 1 Class: Main Function Button Thread 3
 class ThreadClass3(QThread):
-    def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
+    def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
+                 output_verbosity, btnx_main_3, stop_thread_btn_3, paths_readonly_btn_3):
         QThread.__init__(self)
         self.tb_3 = tb_3
         self.confirm_op3_tru = confirm_op3_tru
@@ -3249,11 +3167,12 @@ class ThreadClass3(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
-        self.debug_exception_enabled = debug_exception_enabled
+        self.btnx_main_3 = btnx_main_3
+        self.stop_thread_btn_3 = stop_thread_btn_3
+        self.paths_readonly_btn_3 = paths_readonly_btn_3
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
+        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op3_wait, confirm_op3_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -3266,13 +3185,13 @@ class ThreadClass3(QThread):
             compare_bool = compare_bool_var[3]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_1))
+            self.btnx_main_3.setIcon(QIcon(self.img_btnx_led_1))
             self.confirm_op3_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op3_tru.setEnabled(True)
 
             # Enable Stop thread Button
-            stop_thr_button_var[3].setEnabled(True)
-            stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_true))
+            self.stop_thread_btn_3.setEnabled(True)
+            self.stop_thread_btn_3.setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op3_wait is True:
                 time.sleep(0.3)
@@ -3284,8 +3203,9 @@ class ThreadClass3(QThread):
 
             # If Confirmed Run Main Function
             if confirm_op3_bool is True:
-                print('-- ThreadClass3: confirm_op3_bool: accepted')
-                btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_2))
+                if debug_enabled is True:
+                    print('-- ThreadClass3: confirm_op3_bool: accepted')
+                self.btnx_main_3.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -3308,19 +3228,19 @@ class ThreadClass3(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        if self.debug_exception_enabled is True:
+                                        if debug_enabled is True:
                                             print('-- exception:', str(e).strip().encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_3.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
 
                                     # Mode 0: Check File
@@ -3336,16 +3256,16 @@ class ThreadClass3(QThread):
                                             try:
                                                 self.tb_3.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             try:
                                                 self.tb_3.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_fail_count += 1
 
@@ -3354,7 +3274,7 @@ class ThreadClass3(QThread):
                                         try:
                                             self.tb_3.append(output_str)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                         cp0_fail_count += 1
 
@@ -3368,19 +3288,19 @@ class ThreadClass3(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_3.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
 
                                             # Mode 1: Check File
@@ -3398,16 +3318,16 @@ class ThreadClass3(QThread):
                                                     try:
                                                         self.tb_3.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
-                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                                         try:
                                                             self.tb_3.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
@@ -3415,7 +3335,7 @@ class ThreadClass3(QThread):
                                                         try:
                                                             self.tb_3.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
@@ -3423,7 +3343,7 @@ class ThreadClass3(QThread):
                                                 try:
                                                     self.tb_3.append(output_str)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                 cp1_fail_count += 1
 
@@ -3434,41 +3354,43 @@ class ThreadClass3(QThread):
             cp1_fail_count_str = str(cp1_fail_count)
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
-            print('-- ThreadClass3: ' + output_sum)
+            if debug_enabled is True:
+                print('-- ThreadClass3: ' + output_sum)
             try:
                 self.tb_3.append(output_sum)
             except Exception as e:
-                if self.debug_exception_enabled is True:
+                if debug_enabled is True:
                     print('-- exception:', str(e).strip().encode('utf8'))
 
             # Disengage
-            btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
-            stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_false))
-            stop_thr_button_var[3].setEnabled(False)
+            self.btnx_main_3.setIcon(QIcon(self.img_btnx_led_0))
+            self.stop_thread_btn_3.setIcon(QIcon(self.img_stop_thread_false))
+            self.stop_thread_btn_3.setEnabled(False)
             thread_engaged_var[3] = False
-            paths_readonly_button_var[3].setEnabled(True)
+            self.paths_readonly_btn_3.setEnabled(True)
 
     def stop_thr(self):
-        global btnx_main_var
-        global confirm_op3_bool, confirm_op3_wait
+        global debug_enabled, confirm_op3_bool, confirm_op3_wait
         
         confirm_op3_bool = False
         confirm_op3_wait = True
-        print('-- confirm_op3 declined: (confirm_op3_bool)', confirm_op3_bool)
-        btnx_main_var[3].setIcon(QIcon(self.img_btnx_led_0))
+        if debug_enabled is True:
+            print('-- confirm_op3 declined: (confirm_op3_bool)', confirm_op3_bool)
+        self.btnx_main_3.setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op3_tru.setEnabled(False)
         self.confirm_op3_tru.setIcon(QIcon(self.img_execute_false))
-        stop_thr_button_var[3].setIcon(QIcon(self.img_stop_thread_false))
-        stop_thr_button_var[3].setEnabled(False)
+        self.stop_thread_btn_3.setIcon(QIcon(self.img_stop_thread_false))
+        self.stop_thread_btn_3.setEnabled(False)
         thread_engaged_var[3] = False
-        paths_readonly_button_var[3].setEnabled(True)
+        self.paths_readonly_btn_3.setEnabled(True)
 
         self.terminate()
 
 
 # Sector 1 Class: Main Function Button Thread 4
 class ThreadClass4(QThread):
-    def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
+    def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
+                 output_verbosity, btnx_main_4, stop_thread_btn_4, paths_readonly_btn_4):
         QThread.__init__(self)
         self.tb_4 = tb_4
         self.confirm_op4_tru = confirm_op4_tru
@@ -3480,11 +3402,12 @@ class ThreadClass4(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
-        self.debug_exception_enabled = debug_exception_enabled
+        self.btnx_main_4 = btnx_main_4
+        self.stop_thread_btn_4 = stop_thread_btn_4
+        self.paths_readonly_btn_4 = paths_readonly_btn_4
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
+        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op4_wait, confirm_op4_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -3497,13 +3420,13 @@ class ThreadClass4(QThread):
             compare_bool = compare_bool_var[4]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_1))
+            self.btnx_main_4.setIcon(QIcon(self.img_btnx_led_1))
             self.confirm_op4_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op4_tru.setEnabled(True)
 
             # Enable Stop thread Button
-            stop_thr_button_var[4].setEnabled(True)
-            stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_true))
+            self.stop_thread_btn_4.setEnabled(True)
+            self.stop_thread_btn_4.setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op4_wait is True:
                 time.sleep(0.3)
@@ -3515,8 +3438,9 @@ class ThreadClass4(QThread):
 
             # If Confirmed Run Main Function
             if confirm_op4_bool is True:
-                print('-- ThreadClass4: confirm_op4_bool: accepted')
-                btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_2))
+                if debug_enabled is True:
+                    print('-- ThreadClass4: confirm_op4_bool: accepted')
+                self.btnx_main_4.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -3539,19 +3463,19 @@ class ThreadClass4(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        if self.debug_exception_enabled is True:
+                                        if debug_enabled is True:
                                             print('-- exception:', str(e).strip().encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_4.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
 
                                     # Mode 0: Check File
@@ -3567,16 +3491,16 @@ class ThreadClass4(QThread):
                                             try:
                                                 self.tb_4.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             try:
                                                 self.tb_4.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_fail_count += 1
 
@@ -3585,7 +3509,7 @@ class ThreadClass4(QThread):
                                         try:
                                             self.tb_4.append(output_str)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                         cp0_fail_count += 1
 
@@ -3599,19 +3523,19 @@ class ThreadClass4(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_4.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
 
                                             # Mode 1: Check File
@@ -3629,16 +3553,16 @@ class ThreadClass4(QThread):
                                                     try:
                                                         self.tb_4.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
-                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                                         try:
                                                             self.tb_4.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
@@ -3646,7 +3570,7 @@ class ThreadClass4(QThread):
                                                         try:
                                                             self.tb_4.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
@@ -3654,7 +3578,7 @@ class ThreadClass4(QThread):
                                                 try:
                                                     self.tb_4.append(output_str)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                 cp1_fail_count += 1
 
@@ -3665,41 +3589,43 @@ class ThreadClass4(QThread):
             cp1_fail_count_str = str(cp1_fail_count)
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
-            print('-- ThreadClass4: ' + output_sum)
+            if debug_enabled is True:
+                print('-- ThreadClass4: ' + output_sum)
             try:
                 self.tb_4.append(output_sum)
             except Exception as e:
-                if self.debug_exception_enabled is True:
+                if debug_enabled is True:
                     print('-- exception:', str(e).strip().encode('utf8'))
 
             # Disengage
-            btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
-            stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_false))
-            stop_thr_button_var[4].setEnabled(False)
+            self.btnx_main_4.setIcon(QIcon(self.img_btnx_led_0))
+            self.stop_thread_btn_4.setIcon(QIcon(self.img_stop_thread_false))
+            self.stop_thread_btn_4.setEnabled(False)
             thread_engaged_var[4] = False
-            paths_readonly_button_var[4].setEnabled(True)
+            self.paths_readonly_btn_4.setEnabled(True)
 
     def stop_thr(self):
-        global btnx_main_var
-        global confirm_op4_bool, confirm_op4_wait
+        global debug_enabled, confirm_op4_bool, confirm_op4_wait
         
         confirm_op4_bool = False
         confirm_op4_wait = True
-        print('-- confirm_op4 declined: (confirm_op4_bool)', confirm_op4_bool)
-        btnx_main_var[4].setIcon(QIcon(self.img_btnx_led_0))
+        if debug_enabled is True:
+            print('-- confirm_op4 declined: (confirm_op4_bool)', confirm_op4_bool)
+        self.btnx_main_4.setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op4_tru.setEnabled(False)
         self.confirm_op4_tru.setIcon(QIcon(self.img_execute_false))
-        stop_thr_button_var[4].setIcon(QIcon(self.img_stop_thread_false))
-        stop_thr_button_var[4].setEnabled(False)
+        self.stop_thread_btn_4.setIcon(QIcon(self.img_stop_thread_false))
+        self.stop_thread_btn_4.setEnabled(False)
         thread_engaged_var[4] = False
-        paths_readonly_button_var[4].setEnabled(True)
+        self.paths_readonly_btn_4.setEnabled(True)
 
         self.terminate()
 
 
 # Sector 1 Class: Main Function Button Thread 5
 class ThreadClass5(QThread):
-    def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true, output_verbosity, debug_exception_enabled):
+    def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
+                 output_verbosity, btnx_main_5, stop_thread_btn_5, paths_readonly_btn_5):
         QThread.__init__(self)
         self.tb_5 = tb_5
         self.confirm_op5_tru = confirm_op5_tru
@@ -3711,11 +3637,12 @@ class ThreadClass5(QThread):
         self.img_stop_thread_false = img_stop_thread_false
         self.img_stop_thread_true = img_stop_thread_true
         self.output_verbosity = output_verbosity
-        self.debug_exception_enabled = debug_exception_enabled
+        self.btnx_main_5 = btnx_main_5
+        self.stop_thread_btn_5 = stop_thread_btn_5
+        self.paths_readonly_btn_5 = paths_readonly_btn_5
 
     def run(self):
-        global btnx_main_var, path_var, dest_path_var, stop_thr_button_var
-        global configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var, settings_source_edit_var, paths_readonly_button_var
+        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op5_wait, confirm_op5_bool, thread_engaged_var
 
         # If Source & Destination Configuration Is Disengaged Then Continue
         if configuration_engaged is False:
@@ -3728,13 +3655,13 @@ class ThreadClass5(QThread):
             compare_bool = compare_bool_var[5]
 
             # Provide Confirmation/Declination Buttons & Wait For Confirmation/Declination Then Reset Global confirm_op0_wait Boolean Back to True
-            btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_1))
+            self.btnx_main_5.setIcon(QIcon(self.img_btnx_led_1))
             self.confirm_op5_tru.setIcon(QIcon(self.img_execute_true))
             self.confirm_op5_tru.setEnabled(True)
 
             # Enable Stop thread Button
-            stop_thr_button_var[5].setEnabled(True)
-            stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_true))
+            self.stop_thread_btn_5.setEnabled(True)
+            self.stop_thread_btn_5.setIcon(QIcon(self.img_stop_thread_true))
 
             while confirm_op5_wait is True:
                 time.sleep(0.3)
@@ -3746,8 +3673,9 @@ class ThreadClass5(QThread):
 
             # If Confirmed Run Main Function
             if confirm_op5_bool is True:
-                print('-- ThreadClass5: confirm_op5_bool: accepted')
-                btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_2))
+                if debug_enabled is True:
+                    print('-- ThreadClass5: confirm_op5_bool: accepted')
+                self.btnx_main_5.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
                 # Set Counters For Output Summary
@@ -3770,19 +3698,19 @@ class ThreadClass5(QThread):
                                     try:
                                         shutil.copy2(fullpath, t_path)
                                     except Exception as e:
-                                        if self.debug_exception_enabled is True:
+                                        if debug_enabled is True:
                                             print('-- exception:', str(e).strip().encode('utf8'))
                                         try:
                                             os.makedirs(os.path.dirname(t_path))
                                             shutil.copy2(fullpath, t_path)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                             output_str = str('error: ' + t_path).strip()
                                             try:
                                                 self.tb_5.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
 
                                     # Mode 0: Check File
@@ -3798,16 +3726,16 @@ class ThreadClass5(QThread):
                                             try:
                                                 self.tb_5.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_count += 1
 
                                         elif siz_src != siz_dest:
-                                            output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             try:
                                                 self.tb_5.append(output_str)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                             cp0_fail_count += 1
 
@@ -3816,7 +3744,7 @@ class ThreadClass5(QThread):
                                         try:
                                             self.tb_5.append(output_str)
                                         except Exception as e:
-                                            if self.debug_exception_enabled is True:
+                                            if debug_enabled is True:
                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                         cp0_fail_count += 1
 
@@ -3830,19 +3758,19 @@ class ThreadClass5(QThread):
                                             try:
                                                 shutil.copy2(fullpath, t_path)
                                             except Exception as e:
-                                                if self.debug_exception_enabled is True:
+                                                if debug_enabled is True:
                                                     print('-- exception:', str(e).strip().encode('utf8'))
                                                 try:
                                                     os.makedirs(os.path.dirname(t_path))
                                                     shutil.copy2(fullpath, t_path)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                     output_str = str('error: ' + t_path).strip()
                                                     try:
                                                         self.tb_5.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
 
                                             # Mode 1: Check File
@@ -3860,16 +3788,16 @@ class ThreadClass5(QThread):
                                                     try:
                                                         self.tb_5.append(output_str)
                                                     except Exception as e:
-                                                        if self.debug_exception_enabled is True:
+                                                        if debug_enabled is True:
                                                             print('-- exception:', str(e).strip().encode('utf8'))
                                                     cp1_count += 1
                                                 elif mb < ma or siz_src != siz_dest:
                                                     if siz_src != siz_dest:
-                                                        output_str = str('failed to copy new (failed bytes check): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                                         try:
                                                             self.tb_5.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                                     elif mb < ma:
@@ -3877,7 +3805,7 @@ class ThreadClass5(QThread):
                                                         try:
                                                             self.tb_5.append(output_str)
                                                         except Exception as e:
-                                                            if self.debug_exception_enabled is True:
+                                                            if debug_enabled is True:
                                                                 print('-- exception:', str(e).strip().encode('utf8'))
                                                         cp1_fail_count += 1
                                             elif not os.path.exists(t_path):
@@ -3885,7 +3813,7 @@ class ThreadClass5(QThread):
                                                 try:
                                                     self.tb_5.append(output_str)
                                                 except Exception as e:
-                                                    if self.debug_exception_enabled is True:
+                                                    if debug_enabled is True:
                                                         print('-- exception:', str(e).strip().encode('utf8'))
                                                 cp1_fail_count += 1
 
@@ -3896,34 +3824,35 @@ class ThreadClass5(QThread):
             cp1_fail_count_str = str(cp1_fail_count)
 
             output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
-            print('-- ThreadClass5: ' + output_sum)
+            if debug_enabled is True:
+                print('-- ThreadClass5: ' + output_sum)
             try:
                 self.tb_5.append(output_sum)
             except Exception as e:
-                if self.debug_exception_enabled is True:
+                if debug_enabled is True:
                     print('-- exception:', str(e).strip().encode('utf8'))
 
             # Disengage
-            btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
-            stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_false))
-            stop_thr_button_var[5].setEnabled(False)
+            self.btnx_main_5.setIcon(QIcon(self.img_btnx_led_0))
+            self.stop_thread_btn_5.setIcon(QIcon(self.img_stop_thread_false))
+            self.stop_thread_btn_5.setEnabled(False)
             thread_engaged_var[5] = False
-            paths_readonly_button_var[5].setEnabled(True)
+            self.paths_readonly_btn_5.setEnabled(True)
 
     def stop_thr(self):
-        global btnx_main_var
-        global confirm_op5_bool, confirm_op5_wait
+        global debug_enabled, confirm_op5_bool, confirm_op5_wait
         
         confirm_op5_bool = False
         confirm_op5_wait = True
-        print('-- confirm_op5 declined: (confirm_op5_bool)', confirm_op5_bool)
-        btnx_main_var[5].setIcon(QIcon(self.img_btnx_led_0))
+        if debug_enabled is True:
+            print('-- confirm_op5 declined: (confirm_op5_bool)', confirm_op5_bool)
+        self.btnx_main_5.setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op5_tru.setEnabled(False)
         self.confirm_op5_tru.setIcon(QIcon(self.img_execute_false))
-        stop_thr_button_var[5].setIcon(QIcon(self.img_stop_thread_false))
-        stop_thr_button_var[5].setEnabled(False)
+        self.stop_thread_btn_5.setIcon(QIcon(self.img_stop_thread_false))
+        self.stop_thread_btn_5.setEnabled(False)
         thread_engaged_var[5] = False
-        paths_readonly_button_var[5].setEnabled(True)
+        self.paths_readonly_btn_5.setEnabled(True)
 
         self.terminate()
 
