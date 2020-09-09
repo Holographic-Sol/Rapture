@@ -10,7 +10,7 @@ import distutils.dir_util
 from win32api import GetSystemMetrics
 from PyQt5.QtCore import Qt, QThread, QSize, QTimer, QPoint, QCoreApplication
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit, QDesktopWidget, QTextBrowser
-from PyQt5.QtGui import QIcon, QFont, QPixmap
+from PyQt5.QtGui import QIcon, QFont, QPixmap, QTextCursor
 
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
@@ -633,6 +633,8 @@ class App(QMainWindow):
         self.tb_0.setStyleSheet(self.default_qtbb_style)
         self.tb_0.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_0.horizontalScrollBar().setValue(0)
+        
+        self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
 
         # Sector 3: Output Text Browser 1
         self.tb_1 = QTextBrowser(self)
@@ -787,7 +789,7 @@ class App(QMainWindow):
                                      self.output_verbosity,
                                      self.btnx_main_0,
                                      self.stop_thread_btn_0,
-                                     self.paths_readonly_btn_0)
+                                     self.paths_readonly_btn_0,)
 
         # Thread: Main Function Thread - Read/Write Thread 1
         self.thread_1 = ThreadClass1(self.tb_1,
@@ -2508,6 +2510,7 @@ class ThreadClass0(QThread):
                 if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
                         for fname in filelist:
+                            self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
 
                             fullpath = os.path.join(dirname, fname)
                             t_path = fullpath.replace(path, '')
@@ -2662,6 +2665,10 @@ class ThreadClass0(QThread):
             self.stop_thread_btn_0.setEnabled(False)
             thread_engaged_var[0] = False
             self.paths_readonly_btn_0.setEnabled(True)
+            try:
+                self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
+            except Exception as e:
+                print('-- exception:', str(e).strip().encode('utf8'))
 
     def stop_thr(self):
         global debug_enabled, confirm_op0_bool, confirm_op0_wait
@@ -2677,6 +2684,11 @@ class ThreadClass0(QThread):
         self.stop_thread_btn_0.setEnabled(False)
         thread_engaged_var[0] = False
         self.paths_readonly_btn_0.setEnabled(True)
+        self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
+        try:
+            self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
+        except Exception as e:
+            print('-- exception:', str(e).strip().encode('utf8'))
 
         self.terminate()
 
@@ -2745,7 +2757,9 @@ class ThreadClass1(QThread):
 
                 if os.path.exists(path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(path):
+
                         for fname in filelist:
+
                             fullpath = os.path.join(dirname, fname)
                             t_path = fullpath.replace(path, '')
                             t_path = dest + t_path
@@ -2781,6 +2795,7 @@ class ThreadClass1(QThread):
                                         if siz_src == siz_dest:
                                             if self.output_verbosity is 0:
                                                 output_str = str('copied new: ' + t_path).strip()
+                                                
                                             elif self.output_verbosity is 1:
                                                 output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
                                             try:
@@ -2898,6 +2913,10 @@ class ThreadClass1(QThread):
             self.stop_thread_btn_1.setEnabled(False)
             thread_engaged_var[1] = False
             self.paths_readonly_btn_1.setEnabled(True)
+            try:
+                self.tb_1.verticalScrollBar().setValue(self.tb_1.verticalScrollBar().maximum())
+            except Exception as e:
+                print('-- exception:', str(e).strip().encode('utf8'))
 
     def stop_thr(self):
         global debug_enabled, confirm_op1_bool, confirm_op1_wait
@@ -2913,7 +2932,10 @@ class ThreadClass1(QThread):
         self.stop_thread_btn_1.setEnabled(False)
         thread_engaged_var[1] = False
         self.paths_readonly_btn_1.setEnabled(True)
-
+        try:
+            self.tb_1.verticalScrollBar().setValue(self.tb_1.verticalScrollBar().maximum())
+        except Exception as e:
+            print('-- exception:', str(e).strip().encode('utf8'))
         self.terminate()
 
 
@@ -3133,6 +3155,10 @@ class ThreadClass2(QThread):
             self.stop_thread_btn_2.setEnabled(False)
             thread_engaged_var[2] = False
             self.paths_readonly_btn_2.setEnabled(True)
+            try:
+                self.tb_2.verticalScrollBar().setValue(self.tb_2.verticalScrollBar().maximum())
+            except Exception as e:
+                print('-- exception:', str(e).strip().encode('utf8'))
 
     def stop_thr(self):
         global debug_enabled, confirm_op2_bool, confirm_op2_wait
@@ -3148,6 +3174,10 @@ class ThreadClass2(QThread):
         self.stop_thread_btn_2.setEnabled(False)
         thread_engaged_var[2] = False
         self.paths_readonly_btn_2.setEnabled(True)
+        try:
+            self.tb_2.verticalScrollBar().setValue(self.tb_2.verticalScrollBar().maximum())
+        except Exception as e:
+            print('-- exception:', str(e).strip().encode('utf8'))
 
         self.terminate()
 
@@ -3368,6 +3398,10 @@ class ThreadClass3(QThread):
             self.stop_thread_btn_3.setEnabled(False)
             thread_engaged_var[3] = False
             self.paths_readonly_btn_3.setEnabled(True)
+            try:
+                self.tb_3.verticalScrollBar().setValue(self.tb_3.verticalScrollBar().maximum())
+            except Exception as e:
+                print('-- exception:', str(e).strip().encode('utf8'))
 
     def stop_thr(self):
         global debug_enabled, confirm_op3_bool, confirm_op3_wait
@@ -3383,6 +3417,10 @@ class ThreadClass3(QThread):
         self.stop_thread_btn_3.setEnabled(False)
         thread_engaged_var[3] = False
         self.paths_readonly_btn_3.setEnabled(True)
+        try:
+            self.tb_3.verticalScrollBar().setValue(self.tb_3.verticalScrollBar().maximum())
+        except Exception as e:
+            print('-- exception:', str(e).strip().encode('utf8'))
 
         self.terminate()
 
@@ -3603,6 +3641,10 @@ class ThreadClass4(QThread):
             self.stop_thread_btn_4.setEnabled(False)
             thread_engaged_var[4] = False
             self.paths_readonly_btn_4.setEnabled(True)
+            try:
+                self.tb_4.verticalScrollBar().setValue(self.tb_4.verticalScrollBar().maximum())
+            except Exception as e:
+                print('-- exception:', str(e).strip().encode('utf8'))
 
     def stop_thr(self):
         global debug_enabled, confirm_op4_bool, confirm_op4_wait
@@ -3618,6 +3660,10 @@ class ThreadClass4(QThread):
         self.stop_thread_btn_4.setEnabled(False)
         thread_engaged_var[4] = False
         self.paths_readonly_btn_4.setEnabled(True)
+        try:
+            self.tb_4.verticalScrollBar().setValue(self.tb_4.verticalScrollBar().maximum())
+        except Exception as e:
+            print('-- exception:', str(e).strip().encode('utf8'))
 
         self.terminate()
 
@@ -3838,6 +3884,10 @@ class ThreadClass5(QThread):
             self.stop_thread_btn_5.setEnabled(False)
             thread_engaged_var[5] = False
             self.paths_readonly_btn_5.setEnabled(True)
+            try:
+                self.tb_5.verticalScrollBar().setValue(self.tb_5.verticalScrollBar().maximum())
+            except Exception as e:
+                print('-- exception:', str(e).strip().encode('utf8'))
 
     def stop_thr(self):
         global debug_enabled, confirm_op5_bool, confirm_op5_wait
@@ -3853,6 +3903,10 @@ class ThreadClass5(QThread):
         self.stop_thread_btn_5.setEnabled(False)
         thread_engaged_var[5] = False
         self.paths_readonly_btn_5.setEnabled(True)
+        try:
+            self.tb_5.verticalScrollBar().setValue(self.tb_5.verticalScrollBar().maximum())
+        except Exception as e:
+            print('-- exception:', str(e).strip().encode('utf8'))
 
         self.terminate()
 
