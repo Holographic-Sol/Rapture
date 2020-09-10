@@ -830,12 +830,12 @@ class App(QMainWindow):
         self.btnx_main_5.clicked.connect(self.thread_funk_5)
 
         # Sector 1: Plug Main Function Buttons Into Drop Down Settings Functions
-        self.btnx_main_0.clicked.connect(self.btnx_set_focus_funk_0)
-        self.btnx_main_1.clicked.connect(self.btnx_set_focus_funk_1)
-        self.btnx_main_2.clicked.connect(self.btnx_set_focus_funk_2)
-        self.btnx_main_3.clicked.connect(self.btnx_set_focus_funk_3)
-        self.btnx_main_4.clicked.connect(self.btnx_set_focus_funk_4)
-        self.btnx_main_5.clicked.connect(self.btnx_set_focus_funk_5)
+        self.btnx_main_0.clicked.connect(self.btnx_set_focus_pre_funk_0)
+        self.btnx_main_1.clicked.connect(self.btnx_set_focus_pre_funk_1)
+        self.btnx_main_2.clicked.connect(self.btnx_set_focus_pre_funk_2)
+        self.btnx_main_3.clicked.connect(self.btnx_set_focus_pre_funk_3)
+        self.btnx_main_4.clicked.connect(self.btnx_set_focus_pre_funk_4)
+        self.btnx_main_5.clicked.connect(self.btnx_set_focus_pre_funk_5)
 
         # Sector 1: Plug Drop Down Settings Buttons Into Functions
         self.btnx_settings_0.clicked.connect(self.settings_drop_down_pre_funk_0)
@@ -1508,149 +1508,198 @@ class App(QMainWindow):
         self.hide_settings_funk()
         self.setFixedSize(self.width, 110)
 
-    # Sector 1: Focus In Settings When Priming To Write 0
-    def btnx_set_focus_funk_0(self):
+    def btnx_set_focus_pre_funk_0(self):
         global debug_enabled, settings_active_int
-
         settings_active_int = 0
-        self.hide_settings_funk()
-        self.setFixedSize(self.width, 320)
+        self.btnx_set_focus_funk()
 
-        self.btnx_settings_0.setIcon(QIcon(self.img_show_menu_true))
-        self.back_label_var[0].resize(95, 85)
-
-        self.setting_title0.show()
-        self.settings_source_edit_var[0].show()
-        self.settings_dest_edit_var[0].show()
-        self.tb_0.show()
-        self.tb_label_0.setText(name_tile[0] + ' Output')
-        self.tb_label_0.show()
-        self.settings_source_edit_var[0].setReadOnly(True)
-        self.settings_dest_edit_var[0].setReadOnly(True)
-        self.paths_readonly_btn_0.setIconSize(QSize(8, 8))
-        self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
-        self.paths_readonly_btn_0.show()
-        self.paths_readonly_btn_0.setEnabled(False)
-
-    # Sector 1: Focus In Settings When Priming To Write 1
-    def btnx_set_focus_funk_1(self):
+    def btnx_set_focus_pre_funk_1(self):
         global debug_enabled, settings_active_int
-
         settings_active_int = 1
-        self.hide_settings_funk()
+        self.btnx_set_focus_funk()
 
-        self.setFixedSize(self.width, 320)
-        self.btnx_settings_1.setIcon(QIcon(self.img_show_menu_true))
-        self.back_label_var[1].resize(95, 85)
-
-        self.setting_title1.show()
-        self.settings_source_edit_var[1].show()
-        self.settings_dest_edit_var[1].show()
-        self.tb_1.show()
-        self.tb_label_0.setText(name_tile[1] + ' Output')
-        self.tb_label_0.show()
-        self.settings_source_edit_var[1].setReadOnly(True)
-        self.settings_dest_edit_var[1].setReadOnly(True)
-        self.paths_readonly_btn_1.setIconSize(QSize(8, 8))
-        self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
-        self.paths_readonly_btn_1.show()
-        self.paths_readonly_btn_1.setEnabled(False)
-
-    # Sector 1: Focus In Settings When Priming To Write 2
-    def btnx_set_focus_funk_2(self):
+    def btnx_set_focus_pre_funk_2(self):
         global debug_enabled, settings_active_int
-
         settings_active_int = 2
-        self.hide_settings_funk()
+        self.btnx_set_focus_funk()
 
-        self.setFixedSize(self.width, 320)
-        self.btnx_settings_2.setIcon(QIcon(self.img_show_menu_true))
-        self.back_label_var[2].resize(95, 85)
-
-        self.setting_title2.show()
-        self.settings_source_edit_var[2].show()
-        self.settings_dest_edit_var[2].show()
-        self.tb_2.show()
-        self.tb_label_0.setText(name_tile[2] + ' Output')
-        self.tb_label_0.show()
-        self.settings_source_edit_var[2].setReadOnly(True)
-        self.settings_dest_edit_var[2].setReadOnly(True)
-        self.paths_readonly_btn_2.setIconSize(QSize(8, 8))
-        self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
-        self.paths_readonly_btn_2.show()
-        self.paths_readonly_btn_2.setEnabled(False)
-
-    # Sector 1: Focus In Settings When Priming To Write 3
-    def btnx_set_focus_funk_3(self):
+    def btnx_set_focus_pre_funk_3(self):
         global debug_enabled, settings_active_int
-
         settings_active_int = 3
-        self.hide_settings_funk()
+        self.btnx_set_focus_funk()
 
-        self.setFixedSize(self.width, 320)
-        self.btnx_settings_3.setIcon(QIcon(self.img_show_menu_true))
-        self.back_label_var[3].resize(95, 85)
-
-        self.setting_title3.show()
-        self.settings_source_edit_var[3].show()
-        self.settings_dest_edit_var[3].show()
-        self.tb_3.show()
-        self.tb_label_0.setText(name_tile[3] + ' Output')
-        self.tb_label_0.show()
-        self.settings_source_edit_var[3].setReadOnly(True)
-        self.settings_dest_edit_var[3].setReadOnly(True)
-        self.paths_readonly_btn_3.setIconSize(QSize(8, 8))
-        self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
-        self.paths_readonly_btn_3.show()
-        self.paths_readonly_btn_3.setEnabled(False)
-
-    # Sector 1: Focus In Settings When Priming To Write 4
-    def btnx_set_focus_funk_4(self):
+    def btnx_set_focus_pre_funk_4(self):
         global debug_enabled, settings_active_int
-
         settings_active_int = 4
-        self.hide_settings_funk()
+        self.btnx_set_focus_funk()
 
-        self.setFixedSize(self.width, 320)
-        self.btnx_settings_4.setIcon(QIcon(self.img_show_menu_true))
-        self.back_label_var[4].resize(95, 85)
-
-        self.setting_title4.show()
-        self.settings_source_edit_var[4].show()
-        self.settings_dest_edit_var[4].show()
-        self.tb_4.show()
-        self.tb_label_0.setText(name_tile[4] + ' Output')
-        self.tb_label_0.show()
-        self.settings_source_edit_var[4].setReadOnly(True)
-        self.settings_dest_edit_var[4].setReadOnly(True)
-        self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
-        self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
-        self.paths_readonly_btn_4.show()
-        self.paths_readonly_btn_4.setEnabled(False)
-
-    # Sector 1: Focus In Settings When Priming To Write 5
-    def btnx_set_focus_funk_5(self):
+    def btnx_set_focus_pre_funk_5(self):
         global debug_enabled, settings_active_int
-
         settings_active_int = 5
+        self.btnx_set_focus_funk()
+
+    def btnx_set_focus_funk(self):
+        global debug_enabled, settings_active_int
         self.hide_settings_funk()
-
         self.setFixedSize(self.width, 320)
-        self.btnx_settings_5.setIcon(QIcon(self.img_show_menu_true))
-        self.back_label_var[5].resize(95, 85)
-
-        self.setting_title5.show()
-        self.settings_source_edit_var[5].show()
-        self.settings_dest_edit_var[5].show()
-        self.tb_5.show()
-        self.tb_label_0.setText(name_tile[5] + ' Output')
+        self.btnx_settings_var[settings_active_int].setIcon(QIcon(self.img_show_menu_true))
+        self.back_label_var[settings_active_int].resize(95, 85)
+        self.settings_title_var[settings_active_int].show()
+        self.settings_source_edit_var[settings_active_int].show()
+        self.settings_dest_edit_var[settings_active_int].show()
+        self.tb_var[settings_active_int].show()
+        self.tb_label_0.setText(name_tile[settings_active_int] + ' Output')
         self.tb_label_0.show()
-        self.settings_source_edit_var[5].setReadOnly(True)
-        self.settings_dest_edit_var[5].setReadOnly(True)
-        self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
-        self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
-        self.paths_readonly_btn_5.show()
-        self.paths_readonly_btn_5.setEnabled(False)
+        self.settings_source_edit_var[settings_active_int].setReadOnly(True)
+        self.settings_dest_edit_var[settings_active_int].setReadOnly(True)
+        self.paths_readonly_btn_var[settings_active_int].setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_var[settings_active_int].setIcon(QIcon(self.img_read_ony_true))
+        self.paths_readonly_btn_var[settings_active_int].show()
+        self.paths_readonly_btn_var[settings_active_int].setEnabled(False)
+
+    ## Sector 1: Focus In Settings When Priming To Write 0
+    #def btnx_set_focus_funk_0(self):
+    #    global debug_enabled, settings_active_int
+
+    #    settings_active_int = 0
+    #    self.hide_settings_funk()
+    #    self.setFixedSize(self.width, 320)
+
+    #    self.btnx_settings_0.setIcon(QIcon(self.img_show_menu_true))
+    #    self.back_label_var[0].resize(95, 85)
+
+    #    self.setting_title0.show()
+    #    self.settings_source_edit_var[0].show()
+    #    self.settings_dest_edit_var[0].show()
+    #    self.tb_0.show()
+    #    self.tb_label_0.setText(name_tile[0] + ' Output')
+    #    self.tb_label_0.show()
+    #    self.settings_source_edit_var[0].setReadOnly(True)
+    #    self.settings_dest_edit_var[0].setReadOnly(True)
+    #    self.paths_readonly_btn_0.setIconSize(QSize(8, 8))
+    #    self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
+    #    self.paths_readonly_btn_0.show()
+    #    self.paths_readonly_btn_0.setEnabled(False)
+
+    ## Sector 1: Focus In Settings When Priming To Write 1
+    #def btnx_set_focus_funk_1(self):
+    #    global debug_enabled, settings_active_int
+
+    #    settings_active_int = 1
+    #    self.hide_settings_funk()
+
+    #    self.setFixedSize(self.width, 320)
+    #    self.btnx_settings_1.setIcon(QIcon(self.img_show_menu_true))
+    #    self.back_label_var[1].resize(95, 85)
+
+    #    self.setting_title1.show()
+    #    self.settings_source_edit_var[1].show()
+    #    self.settings_dest_edit_var[1].show()
+    #    self.tb_1.show()
+    #    self.tb_label_0.setText(name_tile[1] + ' Output')
+    #    self.tb_label_0.show()
+    #    self.settings_source_edit_var[1].setReadOnly(True)
+    #    self.settings_dest_edit_var[1].setReadOnly(True)
+    #    self.paths_readonly_btn_1.setIconSize(QSize(8, 8))
+    #    self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
+    #    self.paths_readonly_btn_1.show()
+    #    self.paths_readonly_btn_1.setEnabled(False)
+
+    ## Sector 1: Focus In Settings When Priming To Write 2
+    #def btnx_set_focus_funk_2(self):
+    #    global debug_enabled, settings_active_int
+
+    #    settings_active_int = 2
+    #    self.hide_settings_funk()
+
+    #    self.setFixedSize(self.width, 320)
+    #    self.btnx_settings_2.setIcon(QIcon(self.img_show_menu_true))
+    #    self.back_label_var[2].resize(95, 85)
+
+    #    self.setting_title2.show()
+    #    self.settings_source_edit_var[2].show()
+    #    self.settings_dest_edit_var[2].show()
+    #    self.tb_2.show()
+    #    self.tb_label_0.setText(name_tile[2] + ' Output')
+    #    self.tb_label_0.show()
+    #    self.settings_source_edit_var[2].setReadOnly(True)
+    #    self.settings_dest_edit_var[2].setReadOnly(True)
+    #    self.paths_readonly_btn_2.setIconSize(QSize(8, 8))
+    #    self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
+    #    self.paths_readonly_btn_2.show()
+    #    self.paths_readonly_btn_2.setEnabled(False)
+
+    ## Sector 1: Focus In Settings When Priming To Write 3
+    #def btnx_set_focus_funk_3(self):
+    #    global debug_enabled, settings_active_int
+
+    #    settings_active_int = 3
+    #    self.hide_settings_funk()
+
+    #    self.setFixedSize(self.width, 320)
+    #    self.btnx_settings_3.setIcon(QIcon(self.img_show_menu_true))
+    #    self.back_label_var[3].resize(95, 85)
+
+    #    self.setting_title3.show()
+    #    self.settings_source_edit_var[3].show()
+    #    self.settings_dest_edit_var[3].show()
+    #    self.tb_3.show()
+    #    self.tb_label_0.setText(name_tile[3] + ' Output')
+    #    self.tb_label_0.show()
+    #    self.settings_source_edit_var[3].setReadOnly(True)
+    #    self.settings_dest_edit_var[3].setReadOnly(True)
+    #    self.paths_readonly_btn_3.setIconSize(QSize(8, 8))
+    #    self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
+    #    self.paths_readonly_btn_3.show()
+    #    self.paths_readonly_btn_3.setEnabled(False)
+
+    ## Sector 1: Focus In Settings When Priming To Write 4
+    #def btnx_set_focus_funk_4(self):
+    #    global debug_enabled, settings_active_int
+
+    #    settings_active_int = 4
+    #    self.hide_settings_funk()
+
+    #    self.setFixedSize(self.width, 320)
+    #    self.btnx_settings_4.setIcon(QIcon(self.img_show_menu_true))
+    #    self.back_label_var[4].resize(95, 85)
+
+    #    self.setting_title4.show()
+    #    self.settings_source_edit_var[4].show()
+    #    self.settings_dest_edit_var[4].show()
+    #    self.tb_4.show()
+    #    self.tb_label_0.setText(name_tile[4] + ' Output')
+    #    self.tb_label_0.show()
+    #    self.settings_source_edit_var[4].setReadOnly(True)
+    #    self.settings_dest_edit_var[4].setReadOnly(True)
+    #    self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
+    #    self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
+    #    self.paths_readonly_btn_4.show()
+    #    self.paths_readonly_btn_4.setEnabled(False)
+
+    ## Sector 1: Focus In Settings When Priming To Write 5
+    #def btnx_set_focus_funk_5(self):
+    #    global debug_enabled, settings_active_int
+
+    #    settings_active_int = 5
+    #    self.hide_settings_funk()
+
+    #    self.setFixedSize(self.width, 320)
+    #    self.btnx_settings_5.setIcon(QIcon(self.img_show_menu_true))
+    #    self.back_label_var[5].resize(95, 85)
+
+    #    self.setting_title5.show()
+    #    self.settings_source_edit_var[5].show()
+    #    self.settings_dest_edit_var[5].show()
+    #    self.tb_5.show()
+    #    self.tb_label_0.setText(name_tile[5] + ' Output')
+    #    self.tb_label_0.show()
+    #    self.settings_source_edit_var[5].setReadOnly(True)
+    #    self.settings_dest_edit_var[5].setReadOnly(True)
+    #    self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
+    #    self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
+    #    self.paths_readonly_btn_5.show()
+    #    self.paths_readonly_btn_5.setEnabled(False)
 
     def dest_src_readonly_funk(self):
         self.settings_source_edit_var[0].setReadOnly(False)
@@ -2119,7 +2168,6 @@ class App(QMainWindow):
                     settings_input_response_dest_bool = True
                     # Destination Mode 1: Set Pertaining QLineEdits ReadOnly On Enter
                     self.paths_readonly_button_funk()
-
                 else:
                     if debug_enabled is True:
                         print('-- input destination path failed current sanitization checks')
@@ -3140,7 +3188,7 @@ class ThreadClass2(QThread):
 
     def stop_thr(self):
         global debug_enabled, confirm_op2_bool, confirm_op2_wait
-        self.tb_3.verticalScrollBar().setValue(self.tb_3.verticalScrollBar().maximum())
+        self.tb_2.verticalScrollBar().setValue(self.tb_2.verticalScrollBar().maximum())
         confirm_op2_bool = False
         confirm_op2_wait = True
         if debug_enabled is True:
