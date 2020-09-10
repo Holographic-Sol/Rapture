@@ -1175,11 +1175,12 @@ class App(QMainWindow):
         global tile_int
 
         print('tile_int:', tile_int)
-        name_str = 'NAME ' + str(tile_int) + ': '
-        name_tile[tile_int] = self.setting_title_B_var[tile_int].text()
 
         if len(self.setting_title_B_var[tile_int].text()) <= 16:
-            self.settings_title_var[tile_int].setText(self.setting_title_B_var[tile_int].text())
+            print('True')
+            name_str = 'NAME ' + str(tile_int) + ': '
+            name_tile[tile_int] = self.setting_title_B_var[tile_int].text().strip()
+            self.settings_title_var[tile_int].setText(self.setting_title_B_var[tile_int].text().strip())
             self.tb_label_0.setText(name_tile[tile_int] + ' Output')
 
             if os.path.exists(cfg_f):
@@ -1190,7 +1191,7 @@ class App(QMainWindow):
                         if not line.startswith(name_str):
                             path_item.append(line)
                         elif line.startswith(name_str):
-                            new_line = name_str + ' ' + self.setting_title_B_var[tile_int].text()
+                            new_line = name_str + self.setting_title_B_var[tile_int].text().strip()
                             path_item.append(new_line)
                 open(cfg_f, 'w').close()
                 with open(cfg_f, 'a') as fo:
@@ -1277,6 +1278,7 @@ class App(QMainWindow):
             self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_0.setIconSize(QSize(8, 21))
             self.settings_title_var[tile_int].hide()
+            self.settings_title_var[tile_int].setAlignment(Qt.AlignLeft)
             self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
             self.setting_title_B_var[tile_int].show()
 
@@ -1893,6 +1895,7 @@ class App(QMainWindow):
 
     # Sector 2 Funtion: Hides Objects in Sector 2, Resizes Sector One Background Labels, Rotates Sector 1 Drop Down Settings Arrows
     def hide_settings_funk(self):
+        global tile_int
         if debug_enabled is True:
             print('-- plugged in: hide_settings_funk')
         self.setting_title0.hide()
@@ -1901,6 +1904,13 @@ class App(QMainWindow):
         self.setting_title3.hide()
         self.setting_title4.hide()
         self.setting_title5.hide()
+        self.setting_title_B_0.hide()
+        self.setting_title_B_1.hide()
+        self.setting_title_B_2.hide()
+        self.setting_title_B_3.hide()
+        self.setting_title_B_4.hide()
+        self.setting_title_B_5.hide()
+
         self.settings_source_edit_var[0].hide()
         self.settings_source_edit_var[1].hide()
         self.settings_source_edit_var[2].hide()
@@ -1943,6 +1953,7 @@ class App(QMainWindow):
         self.paths_readonly_btn_3.hide()
         self.paths_readonly_btn_4.hide()
         self.paths_readonly_btn_5.hide()
+
 
     # Sector 2: Funtion: Calls hide_settings_funk Then Hides Settings Page By Resizing Window
     def hide_settings_page_funk(self):
@@ -2651,8 +2662,8 @@ class UpdateSettingsWindow(QThread):
                 i = 0
                 for self.settings_title_vars in self.settings_title_var:
                     if name_tile[i] != self.settings_title_var[i]:
-                        self.settings_title_var[i].setText(name_tile[i])
                         self.settings_title_var[i].setAlignment(Qt.AlignCenter)
+                        self.settings_title_var[i].setText(name_tile[i])
                     i += 1
 
             # Write A New Configuration File
