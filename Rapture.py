@@ -130,6 +130,7 @@ class App(QMainWindow):
         self.settings_dest_edit_var = []
         self.settings_title_var = []
         self.setting_title_B_var = []
+        self.tb_var = []
 
         # Set A Fixed Window Size
         self.setWindowTitle(self.title)
@@ -715,6 +716,7 @@ class App(QMainWindow):
         self.tb_0.setStyleSheet(self.default_qtbb_style)
         self.tb_0.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_0.horizontalScrollBar().setValue(0)
+        self.tb_var.append(self.tb_0)
 
         # Sector 3: Output Text Browser 1
         self.tb_1 = QTextBrowser(self)
@@ -725,6 +727,7 @@ class App(QMainWindow):
         self.tb_1.setStyleSheet(self.default_qtbb_style)
         self.tb_1.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_1.horizontalScrollBar().setValue(0)
+        self.tb_var.append(self.tb_1)
 
         # Sector 3: Output Text Browser 2
         self.tb_2 = QTextBrowser(self)
@@ -735,6 +738,7 @@ class App(QMainWindow):
         self.tb_2.setStyleSheet(self.default_qtbb_style)
         self.tb_2.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_2.horizontalScrollBar().setValue(0)
+        self.tb_var.append(self.tb_2)
 
         # Sector 3: Output Text Browser 3
         self.tb_3 = QTextBrowser(self)
@@ -745,6 +749,7 @@ class App(QMainWindow):
         self.tb_3.setStyleSheet(self.default_qtbb_style)
         self.tb_3.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_3.horizontalScrollBar().setValue(0)
+        self.tb_var.append(self.tb_3)
 
         # Sector 3: Output Text Browser 4
         self.tb_4 = QTextBrowser(self)
@@ -755,6 +760,7 @@ class App(QMainWindow):
         self.tb_4.setStyleSheet(self.default_qtbb_style)
         self.tb_4.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_4.horizontalScrollBar().setValue(0)
+        self.tb_var.append(self.tb_4)
 
         # Sector 3: Output Text Browser 5
         self.tb_5 = QTextBrowser(self)
@@ -765,6 +771,7 @@ class App(QMainWindow):
         self.tb_5.setStyleSheet(self.default_qtbb_style)
         self.tb_5.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_5.horizontalScrollBar().setValue(0)
+        self.tb_var.append(self.tb_5)
 
         # Sector 1: Attatch Main Function Buttons To Background Tiles Position
         self.btnx_main_0.move((back_label_ankor_w0 + 5), (back_label_ankor_h0 + 5))
@@ -831,12 +838,12 @@ class App(QMainWindow):
         self.btnx_main_5.clicked.connect(self.btnx_set_focus_funk_5)
 
         # Sector 1: Plug Drop Down Settings Buttons Into Functions
-        self.btnx_settings_0.clicked.connect(self.settings_funk0)
-        self.btnx_settings_1.clicked.connect(self.settings_funk1)
-        self.btnx_settings_2.clicked.connect(self.settings_funk2)
-        self.btnx_settings_3.clicked.connect(self.settings_funk3)
-        self.btnx_settings_4.clicked.connect(self.settings_funk4)
-        self.btnx_settings_5.clicked.connect(self.settings_funk5)
+        self.btnx_settings_0.clicked.connect(self.settings_drop_down_pre_funk_0)
+        self.btnx_settings_1.clicked.connect(self.settings_drop_down_pre_funk_1)
+        self.btnx_settings_2.clicked.connect(self.settings_drop_down_pre_funk_2)
+        self.btnx_settings_3.clicked.connect(self.settings_drop_down_pre_funk_3)
+        self.btnx_settings_4.clicked.connect(self.settings_drop_down_pre_funk_4)
+        self.btnx_settings_5.clicked.connect(self.settings_drop_down_pre_funk_5)
 
         # Sector 2: Plug Read Only Buttons Into Read Only Functions
         self.paths_readonly_btn_0.clicked.connect(self.paths_readonly_button_funk_0)
@@ -1415,44 +1422,44 @@ class App(QMainWindow):
         global debug_enabled, settings_active_int
         if settings_active_int is 0:
             settings_active_int = 5
-            self.settings_funk5()
+            self.settings_drop_down_funk()
         elif settings_active_int is 1:
             settings_active_int = 0
-            self.settings_funk0()
+            self.settings_drop_down_funk()
         elif settings_active_int is 2:
             settings_active_int = 1
-            self.settings_funk1()
+            self.settings_drop_down_funk()
         elif settings_active_int is 3:
             settings_active_int = 2
-            self.settings_funk2()
+            self.settings_drop_down_funk()
         elif settings_active_int is 4:
             settings_active_int = 3
-            self.settings_funk3()
+            self.settings_drop_down_funk()
         elif settings_active_int is 5:
             settings_active_int = 4
-            self.settings_funk4()
+            self.settings_drop_down_funk()
 
     # Sector 2 Funtion: Moves To Next Settings Page Right
     def scr_right_funk(self):
         global debug_enabled, settings_active_int
         if settings_active_int is 0:
             settings_active_int = 1
-            self.settings_funk1()
+            self.settings_drop_down_funk()
         elif settings_active_int is 1:
             settings_active_int = 2
-            self.settings_funk2()
+            self.settings_drop_down_funk()
         elif settings_active_int is 2:
             settings_active_int = 3
-            self.settings_funk3()
+            self.settings_drop_down_funk()
         elif settings_active_int is 3:
             settings_active_int = 4
-            self.settings_funk4()
+            self.settings_drop_down_funk()
         elif settings_active_int is 4:
             settings_active_int = 5
-            self.settings_funk5()
+            self.settings_drop_down_funk()
         elif settings_active_int is 5:
             settings_active_int = 0
-            self.settings_funk0()
+            self.settings_drop_down_funk()
 
     # Sector 2 Funtion: Writes Source Changes To Configuration File
     def settings_source_funk(self):
@@ -2130,201 +2137,56 @@ class App(QMainWindow):
         self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
         self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
 
-    # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 0
-    def settings_funk0(self):
-        global debug_enabled, settings_active_int, settings_active_int_prev, name_tile
+    def settings_drop_down_pre_funk_0(self):
+        global settings_active_int
         settings_active_int = 0
-        self.hide_settings_funk()
-        self.dest_src_readonly_funk()
-        if settings_active_int != settings_active_int_prev:
-            self.setFixedSize(self.width, 320)
+        self.settings_drop_down_funk()
 
-            self.btnx_settings_0.setIcon(QIcon(self.img_show_menu_true))
-
-            self.back_label_var[0].resize(95, 85)
-
-            self.setting_title0.show()
-            self.settings_source_edit_var[0].show()
-            self.settings_dest_edit_var[0].show()
-
-            self.settings_source_edit_var[0].setReadOnly(True)
-            self.settings_dest_edit_var[0].setReadOnly(True)
-            self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
-
-            self.tb_0.show()
-            self.tb_label_0.setText(name_tile[0] + ' Output')
-            self.tb_label_0.show()
-
-            self.paths_readonly_btn_0.show()
-
-            settings_active_int_prev = settings_active_int
-
-        elif settings_active_int == settings_active_int_prev:
-            self.hide_settings_page_funk()
-            settings_active_int_prev = ()
-
-    # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 1
-    def settings_funk1(self):
-        global debug_enabled, settings_active_int, settings_active_int_prev
+    def settings_drop_down_pre_funk_1(self):
+        global settings_active_int
         settings_active_int = 1
-        self.hide_settings_funk()
-        self.dest_src_readonly_funk()
-        if settings_active_int != settings_active_int_prev:
-            self.setFixedSize(self.width, 320)
+        self.settings_drop_down_funk()
 
-            self.btnx_settings_1.setIcon(QIcon(self.img_show_menu_true))
-
-            self.back_label_var[1].resize(95, 85)
-
-            self.setting_title1.show()
-            self.settings_source_edit_var[1].show()
-            self.settings_dest_edit_var[1].show()
-
-            self.settings_source_edit_var[1].setReadOnly(True)
-            self.settings_dest_edit_var[1].setReadOnly(True)
-            self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
-
-            self.tb_1.show()
-            self.tb_label_0.setText(name_tile[1] + ' Output')
-            self.tb_label_0.show()
-
-            self.paths_readonly_btn_1.show()
-
-            settings_active_int_prev = settings_active_int
-
-        elif settings_active_int == settings_active_int_prev:
-            self.hide_settings_page_funk()
-            settings_active_int_prev = ()
-
-    # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 2
-    def settings_funk2(self):
-        global debug_enabled, settings_active_int, settings_active_int_prev
+    def settings_drop_down_pre_funk_2(self):
+        global settings_active_int
         settings_active_int = 2
-        self.hide_settings_funk()
-        self.dest_src_readonly_funk()
-        if settings_active_int != settings_active_int_prev:
-            self.setFixedSize(self.width, 320)
+        self.settings_drop_down_funk()
 
-            self.btnx_settings_2.setIcon(QIcon(self.img_show_menu_true))
-
-            self.back_label_var[2].resize(95, 85)
-
-            self.setting_title2.show()
-            self.settings_source_edit_var[2].show()
-            self.settings_dest_edit_var[2].show()
-
-            self.settings_source_edit_var[2].setReadOnly(True)
-            self.settings_dest_edit_var[2].setReadOnly(True)
-            self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
-
-            self.tb_2.show()
-            self.tb_label_0.setText(name_tile[2] + ' Output')
-            self.tb_label_0.show()
-
-            self.paths_readonly_btn_2.show()
-
-            settings_active_int_prev = settings_active_int
-
-        elif settings_active_int == settings_active_int_prev:
-            self.hide_settings_page_funk()
-            settings_active_int_prev = ()
-
-    # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 3
-    def settings_funk3(self):
-        global debug_enabled, settings_active_int, settings_active_int_prev
+    def settings_drop_down_pre_funk_3(self):
+        global settings_active_int
         settings_active_int = 3
-        self.hide_settings_funk()
-        self.dest_src_readonly_funk()
-        if settings_active_int != settings_active_int_prev:
-            self.setFixedSize(self.width, 320)
+        self.settings_drop_down_funk()
 
-            self.btnx_settings_3.setIcon(QIcon(self.img_show_menu_true))
-
-            self.back_label_var[3].resize(95, 85)
-
-            self.setting_title3.show()
-            self.settings_source_edit_var[3].show()
-            self.settings_dest_edit_var[3].show()
-
-            self.settings_source_edit_var[3].setReadOnly(True)
-            self.settings_dest_edit_var[3].setReadOnly(True)
-            self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
-
-            self.tb_3.show()
-            self.tb_label_0.setText(name_tile[3] + ' Output')
-            self.tb_label_0.show()
-
-            self.paths_readonly_btn_3.show()
-
-            settings_active_int_prev = settings_active_int
-
-        elif settings_active_int == settings_active_int_prev:
-            self.hide_settings_page_funk()
-            settings_active_int_prev = ()
-
-    # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 4
-    def settings_funk4(self):
-        global debug_enabled, settings_active_int, settings_active_int_prev
+    def settings_drop_down_pre_funk_4(self):
+        global settings_active_int
         settings_active_int = 4
-        self.hide_settings_funk()
-        self.dest_src_readonly_funk()
-        if settings_active_int != settings_active_int_prev:
-            self.setFixedSize(self.width, 320)
+        self.settings_drop_down_funk()
 
-            self.btnx_settings_4.setIcon(QIcon(self.img_show_menu_true))
-
-            self.back_label_var[4].resize(95, 85)
-
-            self.setting_title4.show()
-            self.settings_source_edit_var[4].show()
-            self.settings_dest_edit_var[4].show()
-
-            self.settings_source_edit_var[4].setReadOnly(True)
-            self.settings_dest_edit_var[4].setReadOnly(True)
-            self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
-
-            self.tb_4.show()
-            self.tb_label_0.setText(name_tile[4] + ' Output')
-            self.tb_label_0.show()
-
-            self.paths_readonly_btn_4.show()
-
-            settings_active_int_prev = settings_active_int
-
-        elif settings_active_int == settings_active_int_prev:
-            self.hide_settings_page_funk()
-            settings_active_int_prev = ()
-
-    # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 5
-    def settings_funk5(self):
-        global debug_enabled, settings_active_int, settings_active_int_prev
+    def settings_drop_down_pre_funk_5(self):
+        global settings_active_int
         settings_active_int = 5
+        self.settings_drop_down_funk()
+
+    def settings_drop_down_funk(self):
+        global debug_enabled, settings_active_int, settings_active_int_prev, name_tile
         self.hide_settings_funk()
         self.dest_src_readonly_funk()
+        self.setFixedSize(self.width, 320)
         if settings_active_int != settings_active_int_prev:
-            self.setFixedSize(self.width, 320)
-
-            self.btnx_settings_5.setIcon(QIcon(self.img_show_menu_true))
-
-            self.back_label_var[5].resize(95, 85)
-
-            self.setting_title5.show()
-            self.settings_source_edit_var[5].show()
-            self.settings_dest_edit_var[5].show()
-            self.settings_dest_edit_var[5].show()
-
-            self.settings_source_edit_var[5].setReadOnly(True)
-            self.settings_dest_edit_var[5].setReadOnly(True)
-            self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
-
-            self.tb_5.show()
-            self.tb_label_0.setText(name_tile[5] + ' Output')
+            print('setting:', str(settings_active_int))
+            self.btnx_settings_var[settings_active_int].setIcon(QIcon(self.img_show_menu_true))
+            self.back_label_var[settings_active_int].resize(95, 85)
+            self.settings_title_var[settings_active_int].show()
+            self.settings_source_edit_var[settings_active_int].show()
+            self.settings_dest_edit_var[settings_active_int].show()
+            self.settings_source_edit_var[settings_active_int].setReadOnly(True)
+            self.settings_dest_edit_var[settings_active_int].setReadOnly(True)
+            self.paths_readonly_btn_var[settings_active_int].setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_var[settings_active_int].show()
+            self.tb_var[settings_active_int].show()
+            self.tb_label_0.setText(name_tile[settings_active_int] + ' Output')
             self.tb_label_0.show()
-
-            self.paths_readonly_btn_5.show()
-
             settings_active_int_prev = settings_active_int
-
         elif settings_active_int == settings_active_int_prev:
             self.hide_settings_page_funk()
             settings_active_int_prev = ()
