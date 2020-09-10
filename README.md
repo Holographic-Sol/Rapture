@@ -15,6 +15,8 @@ Time to Rapture the game: approx. 2 seconds.
 Result: The Raptured games plays.
 Conclusion: I will keep working on project rapture as many Steam libraries are TB's and this makes updating backups of files including large games, extremely fast.
 
+1.24TB Steam Library Backup not updated for 9 months+ took 40 minutes using timestanp compare mode. Games Play :)
+
 Example Source: D:\Documents
 Example Destination: X:\Documents
 
