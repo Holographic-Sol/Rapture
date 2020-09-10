@@ -7,11 +7,10 @@ import win32con
 import win32api
 import win32process
 import distutils.dir_util
-import subprocess
 from win32api import GetSystemMetrics
 from PyQt5.QtCore import Qt, QThread, QSize, QTimer, QPoint, QCoreApplication
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QLineEdit, QDesktopWidget, QTextBrowser
-from PyQt5.QtGui import QIcon, QFont, QPixmap, QTextCursor
+from PyQt5.QtGui import QIcon, QFont, QPixmap
 
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
@@ -75,37 +74,6 @@ config_dst_var = ['DESTINATION 0:',
                   'DESTINATION 4:',
                   'DESTINATION 5:']
 
-distutils.dir_util.mkpath('./tmp/')
-
-open('./tmp/sub_proc_data_0.tmp', 'w').close()
-with open('./tmp/sub_proc_data_0.tmp', 'a') as fo:
-    fo.writelines('0')
-fo.close()
-
-open('./tmp/sub_proc_data_1.tmp', 'w').close()
-with open('./tmp/sub_proc_data_1.tmp', 'a') as fo:
-    fo.writelines('0')
-fo.close()
-
-open('./tmp/sub_proc_data_2.tmp', 'w').close()
-with open('./tmp/sub_proc_data_2.tmp', 'a') as fo:
-    fo.writelines('0')
-fo.close()
-
-open('./tmp/sub_proc_data_3.tmp', 'w').close()
-with open('./tmp/sub_proc_data_3.tmp', 'a') as fo:
-    fo.writelines('0')
-fo.close()
-
-open('./tmp/sub_proc_data_4.tmp', 'w').close()
-with open('./tmp/sub_proc_data_4.tmp', 'a') as fo:
-    fo.writelines('0')
-fo.close()
-
-open('./tmp/sub_proc_data_5.tmp', 'w').close()
-with open('./tmp/sub_proc_data_5.tmp', 'a') as fo:
-    fo.writelines('0')
-fo.close()
 
 class App(QMainWindow):
     def __init__(self):
@@ -665,8 +633,6 @@ class App(QMainWindow):
         self.tb_0.setStyleSheet(self.default_qtbb_style)
         self.tb_0.setLineWrapMode(QTextBrowser.NoWrap)
         self.tb_0.horizontalScrollBar().setValue(0)
-        
-        self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
 
         # Sector 3: Output Text Browser 1
         self.tb_1 = QTextBrowser(self)
@@ -821,7 +787,7 @@ class App(QMainWindow):
                                      self.output_verbosity,
                                      self.btnx_main_0,
                                      self.stop_thread_btn_0,
-                                     self.paths_readonly_btn_0,)
+                                     self.paths_readonly_btn_0)
 
         # Thread: Main Function Thread - Read/Write Thread 1
         self.thread_1 = ThreadClass1(self.tb_1,
@@ -1448,7 +1414,7 @@ class App(QMainWindow):
         # Handle Exceptions
         except Exception as e:
             if debug_enabled is True:
-                print('-- exception:', str(e).strip().encode('utf8'))
+                print('-- exception:', str(e).strip().encode('utf-8'))
             settings_input_response_source_bool = False
 
             # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
@@ -1541,7 +1507,7 @@ class App(QMainWindow):
             # Destination Mode 0: Handle Exception
             except Exception as e:
                     if debug_enabled is True:
-                        print('-- exception:', str(e).strip().encode('utf8'))
+                        print('-- exception:', str(e).strip().encode('utf-8'))
                     self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
                     settings_input_response_dest_bool = False
 
@@ -1669,7 +1635,7 @@ class App(QMainWindow):
             # Destination Mode 1: Handle Exception 
             except Exception as e:
                     if debug_enabled is True:
-                        print('-- exception:', str(e).strip().encode('utf8'))
+                        print('-- exception:', str(e).strip().encode('utf-8'))
                     self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
                     settings_input_response_dest_bool = False
         
@@ -2160,194 +2126,38 @@ class App(QMainWindow):
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 0
     def set_comp_bool_pre_funk0(self):
         global debug_enabled, compare_clicked
-        self.btnx_mode_btn_var[0].setEnabled(False)
         compare_clicked = 0
-
-        data_file = './tmp/sub_proc_data_0.tmp'
-        open(data_file, 'w').close()
-
-        if compare_bool_var[0] is False:
-            with open(data_file, 'a') as fo:
-                fo.writelines('1')
-            fo.close()
-
-        elif compare_bool_var[0] is True:
-            with open(data_file, 'a') as fo:
-                fo.writelines('0')
-            fo.close()
-
-        var0 = False
-        var1 = False
-        with open(data_file, 'r') as fo:
-            for line in fo:
-                line = line.strip()
-                if line is '1' and compare_bool_var[0] is False:
-                    var0 = True
-                elif line is '0' and compare_bool_var[0] is True:
-                    var1 = True
-
-        if var0 or var1 is True:
-            self.set_comp_bool_funk()
+        self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 1
     def set_comp_bool_pre_funk1(self):
         global debug_enabled, compare_clicked
-        self.btnx_mode_btn_var[1].setEnabled(False)
         compare_clicked = 1
-
-        data_file = './tmp/sub_proc_data_1.tmp'
-        open(data_file, 'w').close()
-
-        if compare_bool_var[1] is False:
-            with open(data_file, 'a') as fo:
-                fo.writelines('1')
-            fo.close()
-
-        elif compare_bool_var[1] is True:
-            with open(data_file, 'a') as fo:
-                fo.writelines('0')
-            fo.close()
-
-        var0 = False
-        var1 = False
-        with open(data_file, 'r') as fo:
-            for line in fo:
-                line = line.strip()
-                if line is '1' and compare_bool_var[1] is False:
-                    var0 = True
-                elif line is '0' and compare_bool_var[1] is True:
-                    var1 = True
-
-        if var0 or var1 is True:
-            self.set_comp_bool_funk()
+        self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 2
     def set_comp_bool_pre_funk2(self):
         global debug_enabled, compare_clicked
-        self.btnx_mode_btn_var[2].setEnabled(False)
         compare_clicked = 2
-
-        data_file = './tmp/sub_proc_data_2.tmp'
-        open(data_file, 'w').close()
-
-        if compare_bool_var[2] is False:
-            with open(data_file, 'a') as fo:
-                fo.writelines('1')
-            fo.close()
-
-        elif compare_bool_var[2] is True:
-            with open(data_file, 'a') as fo:
-                fo.writelines('0')
-            fo.close()
-
-        var0 = False
-        var1 = False
-        with open(data_file, 'r') as fo:
-            for line in fo:
-                line = line.strip()
-                if line is '1' and compare_bool_var[2] is False:
-                    var0 = True
-                elif line is '0' and compare_bool_var[2] is True:
-                    var1 = True
-
-        if var0 or var1 is True:
-            self.set_comp_bool_funk()
+        self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 3
     def set_comp_bool_pre_funk3(self):
         global debug_enabled, compare_clicked
-        self.btnx_mode_btn_var[3].setEnabled(False)
         compare_clicked = 3
-
-        data_file = './tmp/sub_proc_data_3.tmp'
-        open(data_file, 'w').close()
-
-        if compare_bool_var[3] is False:
-            with open(data_file, 'a') as fo:
-                fo.writelines('1')
-            fo.close()
-
-        elif compare_bool_var[3] is True:
-            with open(data_file, 'a') as fo:
-                fo.writelines('0')
-            fo.close()
-
-        var0 = False
-        var1 = False
-        with open(data_file, 'r') as fo:
-            for line in fo:
-                line = line.strip()
-                if line is '1' and compare_bool_var[3] is False:
-                    var0 = True
-                elif line is '0' and compare_bool_var[3] is True:
-                    var1 = True
-
-        if var0 or var1 is True:
-            self.set_comp_bool_funk()
+        self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 4
     def set_comp_bool_pre_funk4(self):
         global debug_enabled, compare_clicked
-        self.btnx_mode_btn_var[4].setEnabled(False)
         compare_clicked = 4
-
-        data_file = './tmp/sub_proc_data_4.tmp'
-        open(data_file, 'w').close()
-
-        if compare_bool_var[4] is False:
-            with open(data_file, 'a') as fo:
-                fo.writelines('1')
-            fo.close()
-
-        elif compare_bool_var[4] is True:
-            with open(data_file, 'a') as fo:
-                fo.writelines('0')
-            fo.close()
-
-        var0 = False
-        var1 = False
-        with open(data_file, 'r') as fo:
-            for line in fo:
-                line = line.strip()
-                if line is '1' and compare_bool_var[4] is False:
-                    var0 = True
-                elif line is '0' and compare_bool_var[4] is True:
-                    var1 = True
-
-        if var0 or var1 is True:
-            self.set_comp_bool_funk()
+        self.set_comp_bool_funk()
 
     # Sector 1 Function: Provides Relative Information To set_comp_bool_funk From Section 1 Main Function Mode Switch Button 5
     def set_comp_bool_pre_funk5(self):
         global debug_enabled, compare_clicked
-        self.btnx_mode_btn_var[5].setEnabled(False)
         compare_clicked = 5
-
-        data_file = './tmp/sub_proc_data_5.tmp'
-        open(data_file, 'w').close()
-
-        if compare_bool_var[5] is False:
-            with open(data_file, 'a') as fo:
-                fo.writelines('1')
-            fo.close()
-
-        elif compare_bool_var[5] is True:
-            with open(data_file, 'a') as fo:
-                fo.writelines('0')
-            fo.close()
-
-        var0 = False
-        var1 = False
-        with open(data_file, 'r') as fo:
-            for line in fo:
-                line = line.strip()
-                if line is '1' and compare_bool_var[5] is False:
-                    var0 = True
-                elif line is '0' and compare_bool_var[5] is True:
-                    var1 = True
-
-        if var0 or var1 is True:
-            self.set_comp_bool_funk()
+        self.set_comp_bool_funk()
 
     # Sector 1 Function: Uses Integer To Switch Main Function Mode Relative To Mode Button Clicked
     def set_comp_bool_funk(self):
@@ -2364,7 +2174,6 @@ class App(QMainWindow):
         elif thread_engaged_var[compare_clicked] is True:
             if debug_enabled is True:
                 print('-- thread engaged: setting mode unavailable')
-        self.btnx_mode_btn_var[compare_clicked].setEnabled(True)
 
     # Sector 1 Function: Stops Sector 1 Main Function Thread 0
     def stop_thr_funk0(self):
@@ -2598,7 +2407,6 @@ class UpdateSettingsWindow(QThread):
                             elif not os.path.exists(line) and len(dest_path_var) <= 6:
                                 # print('config destination path does not exist', line)
                                 dest_path_var.append('')
-
                 fo.close()
 
                 # Set Displayed Source Path(s)
@@ -2663,7 +2471,7 @@ class ThreadClass0(QThread):
             thread_engaged_var[0] = True
 
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
-            path_ = path_var[0]
+            local_path = path_var[0]
             dest = dest_path_var[0]
             compare_bool = compare_bool_var[0]
 
@@ -2691,32 +2499,162 @@ class ThreadClass0(QThread):
                 self.btnx_main_0.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
-                if os.path.exists('./sub_proc_0.py'):
-                    info = subprocess.STARTUPINFO()
-                    info.dwFlags = 1
-                    info.wShowWindow = 0
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
 
-                    cmd = ('python ./sub_proc_0.py')
-                    print('-- attempting to run subprocess:', cmd)
-                    xcmd = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                if os.path.exists(local_path) and os.path.exists(dest):
+                    for dirname, subdirlist, filelist in os.walk(local_path):
+                        for fname in filelist:
 
-                    while True:
-                        output = xcmd.stdout.readline()
-                        if output == '' or xcmd.poll() is not None:
-                            break
-                        if output:
-                            print(output.decode("utf-8").strip())
-                            output_str = output.decode("utf-8").strip()
-                            output_str = output_str.replace("'", "")
-                            #output_str = output_str[1:]
-                            try:
-                                self.tb_0.append(output_str)
-                                self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
-                            except Exception as e:
-                                if debug_enabled is True:
-                                    print('-- exception:', str(e).strip().encode('utf8'))
-                    print('-- subprocess', cmd, ': end')
-                    xcmd.poll()
+                            fullpath = os.path.join(dirname, fname)
+                            t_path = fullpath.replace(local_path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+
+                                # Mode 0: Write Missing Files Only
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy2(fullpath, t_path)
+                                    except Exception as e:
+                                        if debug_enabled is True:
+                                            print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                        try:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy2(fullpath, t_path)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                            output_str = str('error: ' + t_path).strip()
+                                            try:
+                                                self.tb_0.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
+
+                                        if siz_src == siz_dest:
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_0.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_count += 1
+
+                                        elif siz_src != siz_dest:
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_0.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_fail_count += 1
+
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        try:
+                                            self.tb_0.append(output_str)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy2(fullpath, t_path)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                                try:
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    output_str = str('error: ' + t_path).strip()
+                                                    try:
+                                                        self.tb_0.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                            # Mode 1: Check File
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    try:
+                                                        self.tb_0.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        try:
+                                                            self.tb_0.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        try:
+                                                            self.tb_0.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
+                                                try:
+                                                    self.tb_0.append(output_str)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                cp1_fail_count += 1
+
+            # Output Summary
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            if debug_enabled is True:
+                print('-- ThreadClass0: ' + output_sum)
+            try:
+                self.tb_0.append(output_sum)
+                self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
+            except Exception as e:
+                if debug_enabled is True:
+                    print('-- exception:', str(e).strip().encode('utf-8'))
 
             # Disengage
             self.btnx_main_0.setIcon(QIcon(self.img_btnx_led_0))
@@ -2727,11 +2665,12 @@ class ThreadClass0(QThread):
 
     def stop_thr(self):
         global debug_enabled, confirm_op0_bool, confirm_op0_wait
-        
+        self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
         confirm_op0_bool = False
         confirm_op0_wait = True
         if debug_enabled is True:
             print('-- confirm_op0 declined: (confirm_op0_bool)', confirm_op0_bool)
+        self.tb_0.verticalScrollBar().setValue(self.tb_0.verticalScrollBar().maximum())
         self.btnx_main_0.setIcon(QIcon(self.img_btnx_led_0))
         self.confirm_op0_tru.setEnabled(False)
         self.confirm_op0_tru.setIcon(QIcon(self.img_execute_false))
@@ -2770,7 +2709,7 @@ class ThreadClass1(QThread):
             thread_engaged_var[1] = True
 
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
-            path = path_var[1]
+            local_path = path_var[1]
             dest = dest_path_var[1]
             compare_bool = compare_bool_var[1]
 
@@ -2798,32 +2737,166 @@ class ThreadClass1(QThread):
                 self.btnx_main_1.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
-                if os.path.exists('./sub_proc_1.py'):
-                    info = subprocess.STARTUPINFO()
-                    info.dwFlags = 1
-                    info.wShowWindow = 0
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
 
-                    cmd = ('python ./sub_proc_1.py')
-                    print('-- attempting to run subprocess:', cmd)
-                    xcmd = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                if os.path.exists(local_path) and os.path.exists(dest):
+                    for dirname, subdirlist, filelist in os.walk(local_path):
+                        for fname in filelist:
 
-                    while True:
-                        output = xcmd.stdout.readline()
-                        if output == '' or xcmd.poll() is not None:
-                            break
-                        if output:
-                            print(output.decode("utf-8").strip())
-                            output_str = output.decode("utf-8").strip()
-                            output_str = output_str.replace("'", "")
-                            output_str = output_str[1:]
-                            try:
-                                self.tb_1.append(output_str)
-                                self.tb_1.verticalScrollBar().setValue(self.tb_1.verticalScrollBar().maximum())
-                            except Exception as e:
-                                if debug_enabled is True:
-                                    print('-- exception:', str(e).strip().encode('utf8'))
-                    print('-- subprocess', cmd, ': end')
-                    xcmd.poll()
+                            fullpath = os.path.join(dirname, fname)
+                            t_path = fullpath.replace(local_path, '')
+                            t_path = dest + t_path
+
+                            if not fullpath.endswith('.ini'):
+
+                                #try:
+                                #    self.tb_1.verticalScrollBar().setValue(self.tb_1.verticalScrollBar().maximum())
+                                #except Exception as e:
+                                #    print('-- exception:', str(e).strip().encode('utf-8'))
+                                # Mode 0: Write Missing Files Only
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy2(fullpath, t_path)
+                                    except Exception as e:
+                                        if debug_enabled is True:
+                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                        try:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy2(fullpath, t_path)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                            output_str = str('error: ' + t_path).strip()
+                                            try:
+                                                self.tb_1.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
+
+                                        if siz_src == siz_dest:
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_1.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_count += 1
+
+                                        elif siz_src != siz_dest:
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_1.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_fail_count += 1
+
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        try:
+                                            self.tb_1.append(output_str)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy2(fullpath, t_path)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                                try:
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    output_str = str('error: ' + t_path).strip()
+                                                    try:
+                                                        self.tb_1.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                            # Mode 1: Check File
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    try:
+                                                        self.tb_1.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        try:
+                                                            self.tb_1.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        try:
+                                                            self.tb_1.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
+                                                try:
+                                                    self.tb_1.append(output_str)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                cp1_fail_count += 1
+
+
+            # Output Summary
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            if debug_enabled is True:
+                print('-- ThreadClass1: ' + output_sum)
+            try:
+                self.tb_1.append(output_sum)
+                self.tb_1.verticalScrollBar().setValue(self.tb_1.verticalScrollBar().maximum())
+            except Exception as e:
+                if debug_enabled is True:
+                    print('-- exception:', str(e).strip().encode('utf-8'))
 
             # Disengage
             self.btnx_main_1.setIcon(QIcon(self.img_btnx_led_0))
@@ -2834,7 +2907,7 @@ class ThreadClass1(QThread):
 
     def stop_thr(self):
         global debug_enabled, confirm_op1_bool, confirm_op1_wait
-        
+        self.tb_1.verticalScrollBar().setValue(self.tb_1.verticalScrollBar().maximum())
         confirm_op1_bool = False
         confirm_op1_wait = True
         if debug_enabled is True:
@@ -2877,7 +2950,7 @@ class ThreadClass2(QThread):
             thread_engaged_var[2] = True
 
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
-            path = path_var[2]
+            local_path = path_var[2]
             dest = dest_path_var[2]
             compare_bool = compare_bool_var[2]
 
@@ -2905,32 +2978,159 @@ class ThreadClass2(QThread):
                 self.btnx_main_2.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
-                if os.path.exists('./sub_proc_2.py'):
-                    info = subprocess.STARTUPINFO()
-                    info.dwFlags = 1
-                    info.wShowWindow = 0
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
 
-                    cmd = ('python ./sub_proc_2.py')
-                    print('-- attempting to run subprocess:', cmd)
-                    xcmd = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                if os.path.exists(local_path) and os.path.exists(dest):
+                    for dirname, subdirlist, filelist in os.walk(local_path):
+                        for fname in filelist:
+                            fullpath = os.path.join(dirname, fname)
+                            t_path = fullpath.replace(local_path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
 
-                    while True:
-                        output = xcmd.stdout.readline()
-                        if output == '' or xcmd.poll() is not None:
-                            break
-                        if output:
-                            print(output.decode("utf-8").strip())
-                            output_str = output.decode("utf-8").strip()
-                            output_str = output_str.replace("'", "")
-                            output_str = output_str[1:]
-                            try:
-                                self.tb_2.append(output_str)
-                                self.tb_2.verticalScrollBar().setValue(self.tb_2.verticalScrollBar().maximum())
-                            except Exception as e:
-                                if debug_enabled is True:
-                                    print('-- exception:', str(e).strip().encode('utf8'))
-                    print('-- subprocess', cmd, ': end')
-                    xcmd.poll()
+                                # Mode 0: Write Missing Files Only
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy2(fullpath, t_path)
+                                    except Exception as e:
+                                        if debug_enabled is True:
+                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                        try:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy2(fullpath, t_path)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                            output_str = str('error: ' + t_path).strip()
+                                            try:
+                                                self.tb_2.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
+
+                                        if siz_src == siz_dest:
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_2.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_count += 1
+
+                                        elif siz_src != siz_dest:
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_2.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_fail_count += 1
+
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        try:
+                                            self.tb_2.append(output_str)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy2(fullpath, t_path)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                                try:
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    output_str = str('error: ' + t_path).strip()
+                                                    try:
+                                                        self.tb_2.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                            # Mode 1: Check File
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    try:
+                                                        self.tb_2.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        try:
+                                                            self.tb_2.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        try:
+                                                            self.tb_2.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
+                                                try:
+                                                    self.tb_2.append(output_str)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                cp1_fail_count += 1
+
+            # Output Summary
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            if debug_enabled is True:
+                print('-- ThreadClass2: ' + output_sum)
+            try:
+                self.tb_2.append(output_sum)
+                self.tb_2.verticalScrollBar().setValue(self.tb_2.verticalScrollBar().maximum())
+            except Exception as e:
+                if debug_enabled is True:
+                    print('-- exception:', str(e).strip().encode('utf-8'))
 
             # Disengage
             self.btnx_main_2.setIcon(QIcon(self.img_btnx_led_0))
@@ -2941,7 +3141,7 @@ class ThreadClass2(QThread):
 
     def stop_thr(self):
         global debug_enabled, confirm_op2_bool, confirm_op2_wait
-        
+        self.tb_3.verticalScrollBar().setValue(self.tb_3.verticalScrollBar().maximum())
         confirm_op2_bool = False
         confirm_op2_wait = True
         if debug_enabled is True:
@@ -2984,7 +3184,7 @@ class ThreadClass3(QThread):
             thread_engaged_var[3] = True
 
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
-            path = path_var[3]
+            local_path = path_var[3]
             dest = dest_path_var[3]
             compare_bool = compare_bool_var[3]
 
@@ -3012,32 +3212,159 @@ class ThreadClass3(QThread):
                 self.btnx_main_3.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
-                if os.path.exists('./sub_proc_3.py'):
-                    info = subprocess.STARTUPINFO()
-                    info.dwFlags = 1
-                    info.wShowWindow = 0
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
 
-                    cmd = ('python ./sub_proc_3.py')
-                    print('-- attempting to run subprocess:', cmd)
-                    xcmd = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                if os.path.exists(local_path) and os.path.exists(dest):
+                    for dirname, subdirlist, filelist in os.walk(local_path):
+                        for fname in filelist:
+                            fullpath = os.path.join(dirname, fname)
+                            t_path = fullpath.replace(local_path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
 
-                    while True:
-                        output = xcmd.stdout.readline()
-                        if output == '' or xcmd.poll() is not None:
-                            break
-                        if output:
-                            print(output.decode("utf-8").strip())
-                            output_str = output.decode("utf-8").strip()
-                            output_str = output_str.replace("'", "")
-                            output_str = output_str[1:]
-                            try:
-                                self.tb_3.append(output_str)
-                                self.tb_3.verticalScrollBar().setValue(self.tb_3.verticalScrollBar().maximum())
-                            except Exception as e:
-                                if debug_enabled is True:
-                                    print('-- exception:', str(e).strip().encode('utf8'))
-                    print('-- subprocess', cmd, ': end')
-                    xcmd.poll()
+                                # Mode 0: Write Missing Files Only
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy2(fullpath, t_path)
+                                    except Exception as e:
+                                        if debug_enabled is True:
+                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                        try:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy2(fullpath, t_path)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                            output_str = str('error: ' + t_path).strip()
+                                            try:
+                                                self.tb_3.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
+
+                                        if siz_src == siz_dest:
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_3.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_count += 1
+
+                                        elif siz_src != siz_dest:
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_3.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_fail_count += 1
+
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        try:
+                                            self.tb_3.append(output_str)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy2(fullpath, t_path)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                                try:
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    output_str = str('error: ' + t_path).strip()
+                                                    try:
+                                                        self.tb_3.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                            # Mode 1: Check File
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    try:
+                                                        self.tb_3.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        try:
+                                                            self.tb_3.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        try:
+                                                            self.tb_3.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
+                                                try:
+                                                    self.tb_3.append(output_str)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                cp1_fail_count += 1
+
+            # Output Summary
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            if debug_enabled is True:
+                print('-- ThreadClass3: ' + output_sum)
+            try:
+                self.tb_3.append(output_sum)
+                self.tb_3.verticalScrollBar().setValue(self.tb_3.verticalScrollBar().maximum())
+            except Exception as e:
+                if debug_enabled is True:
+                    print('-- exception:', str(e).strip().encode('utf-8'))
 
             # Disengage
             self.btnx_main_3.setIcon(QIcon(self.img_btnx_led_0))
@@ -3048,7 +3375,7 @@ class ThreadClass3(QThread):
 
     def stop_thr(self):
         global debug_enabled, confirm_op3_bool, confirm_op3_wait
-        
+        self.tb_3.verticalScrollBar().setValue(self.tb_3.verticalScrollBar().maximum())
         confirm_op3_bool = False
         confirm_op3_wait = True
         if debug_enabled is True:
@@ -3060,6 +3387,7 @@ class ThreadClass3(QThread):
         self.stop_thread_btn_3.setEnabled(False)
         thread_engaged_var[3] = False
         self.paths_readonly_btn_3.setEnabled(True)
+
         self.terminate()
 
 
@@ -3091,7 +3419,7 @@ class ThreadClass4(QThread):
             thread_engaged_var[4] = True
 
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
-            path = path_var[4]
+            local_path = path_var[4]
             dest = dest_path_var[4]
             compare_bool = compare_bool_var[4]
 
@@ -3119,32 +3447,159 @@ class ThreadClass4(QThread):
                 self.btnx_main_4.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
-                if os.path.exists('./sub_proc_4.py'):
-                    info = subprocess.STARTUPINFO()
-                    info.dwFlags = 1
-                    info.wShowWindow = 0
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
 
-                    cmd = ('python ./sub_proc_4.py')
-                    print('-- attempting to run subprocess:', cmd)
-                    xcmd = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                if os.path.exists(local_path) and os.path.exists(dest):
+                    for dirname, subdirlist, filelist in os.walk(local_path):
+                        for fname in filelist:
+                            fullpath = os.path.join(dirname, fname)
+                            t_path = fullpath.replace(local_path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
 
-                    while True:
-                        output = xcmd.stdout.readline()
-                        if output == '' or xcmd.poll() is not None:
-                            break
-                        if output:
-                            print(output.decode("utf-8").strip())
-                            output_str = output.decode("utf-8").strip()
-                            output_str = output_str.replace("'", "")
-                            output_str = output_str[1:]
-                            try:
-                                self.tb_4.append(output_str)
-                                self.tb_4.verticalScrollBar().setValue(self.tb_4.verticalScrollBar().maximum())
-                            except Exception as e:
-                                if debug_enabled is True:
-                                    print('-- exception:', str(e).strip().encode('utf8'))
-                    print('-- subprocess', cmd, ': end')
-                    xcmd.poll()
+                                # Mode 0: Write Missing Files Only
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy2(fullpath, t_path)
+                                    except Exception as e:
+                                        if debug_enabled is True:
+                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                        try:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy2(fullpath, t_path)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                            output_str = str('error: ' + t_path).strip()
+                                            try:
+                                                self.tb_4.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
+
+                                        if siz_src == siz_dest:
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_4.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_count += 1
+
+                                        elif siz_src != siz_dest:
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_4.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_fail_count += 1
+
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        try:
+                                            self.tb_4.append(output_str)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy2(fullpath, t_path)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                                try:
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    output_str = str('error: ' + t_path).strip()
+                                                    try:
+                                                        self.tb_4.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                            # Mode 1: Check File
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    try:
+                                                        self.tb_4.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        try:
+                                                            self.tb_4.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        try:
+                                                            self.tb_4.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
+                                                try:
+                                                    self.tb_4.append(output_str)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                cp1_fail_count += 1
+
+            # Output Summary
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            self.tb_4.verticalScrollBar().setValue(self.tb_4.verticalScrollBar().maximum())
+            if debug_enabled is True:
+                print('-- ThreadClass4: ' + output_sum)
+            try:
+                self.tb_4.append(output_sum)
+            except Exception as e:
+                if debug_enabled is True:
+                    print('-- exception:', str(e).strip().encode('utf-8'))
 
             # Disengage
             self.btnx_main_4.setIcon(QIcon(self.img_btnx_led_0))
@@ -3155,7 +3610,7 @@ class ThreadClass4(QThread):
 
     def stop_thr(self):
         global debug_enabled, confirm_op4_bool, confirm_op4_wait
-        
+        self.tb_4.verticalScrollBar().setValue(self.tb_4.verticalScrollBar().maximum())
         confirm_op4_bool = False
         confirm_op4_wait = True
         if debug_enabled is True:
@@ -3198,7 +3653,7 @@ class ThreadClass5(QThread):
             thread_engaged_var[5] = True
 
             # Set Paths In Stone Before Continuing. Asigns Source & Destination Variables To New Variables That Cannot Be Changed Once Function Exectutes
-            path = path_var[5]
+            local_path = path_var[5]
             dest = dest_path_var[5]
             compare_bool = compare_bool_var[5]
 
@@ -3226,32 +3681,163 @@ class ThreadClass5(QThread):
                 self.btnx_main_5.setIcon(QIcon(self.img_btnx_led_2))
                 change_var = False
 
-                if os.path.exists('./sub_proc_5.py'):
-                    info = subprocess.STARTUPINFO()
-                    info.dwFlags = 1
-                    info.wShowWindow = 0
+                # Set Counters For Output Summary
+                cp0_count = 0
+                cp0_fail_count = 0
+                cp1_count = 0
+                cp1_fail_count = 0
 
-                    cmd = ('python ./sub_proc_5.py')
-                    print('-- attempting to run subprocess:', cmd)
-                    xcmd = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                if os.path.exists(local_path) and os.path.exists(dest):
+                    for dirname, subdirlist, filelist in os.walk(local_path):
+                        for fname in filelist:
 
-                    while True:
-                        output = xcmd.stdout.readline()
-                        if output == '' or xcmd.poll() is not None:
-                            break
-                        if output:
-                            print(output.decode("utf-8").strip())
-                            output_str = output.decode("utf-8").strip()
-                            output_str = output_str.replace("'", "")
-                            output_str = output_str[1:]
-                            try:
-                                self.tb_5.append(output_str)
-                                self.tb_5.verticalScrollBar().setValue(self.tb_5.verticalScrollBar().maximum())
-                            except Exception as e:
-                                if debug_enabled is True:
-                                    print('-- exception:', str(e).strip().encode('utf8'))
-                    print('-- subprocess', cmd, ': end')
-                    xcmd.poll()
+                            #sb = self.verticalScrollBar()
+                            #sb.setValue(sb.maximum())
+
+                            fullpath = os.path.join(dirname, fname)
+                            t_path = fullpath.replace(local_path, '')
+                            t_path = dest + t_path
+                            if not fullpath.endswith('.ini'):
+
+                                # Mode 0: Write Missing Files Only
+                                if not os.path.exists(t_path):
+                                    change_var = True
+                                    try:
+                                        shutil.copy2(fullpath, t_path)
+                                    except Exception as e:
+                                        if debug_enabled is True:
+                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                        try:
+                                            os.makedirs(os.path.dirname(t_path))
+                                            shutil.copy2(fullpath, t_path)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                            output_str = str('error: ' + t_path).strip()
+                                            try:
+                                                self.tb_5.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                    # Mode 0: Check File
+                                    if os.path.exists(t_path) and os.path.exists(fullpath):
+                                        siz_src = str(os.path.getsize(fullpath))
+                                        siz_dest = str(os.path.getsize(t_path))
+
+                                        if siz_src == siz_dest:
+                                            if self.output_verbosity is 0:
+                                                output_str = str('copied new: ' + t_path).strip()
+                                            elif self.output_verbosity is 1:
+                                                output_str = str('copied new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_5.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_count += 1
+
+                                        elif siz_src != siz_dest:
+                                            output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                            try:
+                                                self.tb_5.append(output_str)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                            cp0_fail_count += 1
+
+                                    elif not os.path.exists(t_path):
+                                        output_str = str('failed to copy new (file does no exist in destination): ' + t_path).strip()
+                                        try:
+                                            self.tb_5.append(output_str)
+                                        except Exception as e:
+                                            if debug_enabled is True:
+                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                        cp0_fail_count += 1
+
+                                # Mode 1: Write Missing & Write Predicated Upon Time Stamp Comparison Results
+                                elif os.path.exists(t_path):
+                                    if compare_bool is True:
+                                        ma = os.path.getmtime(fullpath)
+                                        mb = os.path.getmtime(t_path)
+                                        if mb < ma:
+                                            change_var = True
+                                            try:
+                                                shutil.copy2(fullpath, t_path)
+                                            except Exception as e:
+                                                if debug_enabled is True:
+                                                    print('-- exception:', str(e).strip().encode('utf-8'))
+                                                try:
+                                                    os.makedirs(os.path.dirname(t_path))
+                                                    shutil.copy2(fullpath, t_path)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    output_str = str('error: ' + t_path).strip()
+                                                    try:
+                                                        self.tb_5.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+
+                                            # Mode 1: Check File
+                                            if os.path.exists(t_path) and os.path.exists(fullpath):
+                                                mb = os.path.getmtime(t_path)
+                                                ma_str = str(ma)
+                                                mb_str = str(mb)
+                                                siz_src = str(os.path.getsize(fullpath))
+                                                siz_dest = str(os.path.getsize(t_path))
+                                                if mb >= ma and siz_src == siz_dest:
+                                                    if self.output_verbosity is 0:
+                                                        output_str = str('updated new: ' + t_path).strip()
+                                                    elif self.output_verbosity is 1:
+                                                        output_str = str('updated new: (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                    try:
+                                                        self.tb_5.append(output_str)
+                                                    except Exception as e:
+                                                        if debug_enabled is True:
+                                                            print('-- exception:', str(e).strip().encode('utf-8'))
+                                                    cp1_count += 1
+                                                elif mb < ma or siz_src != siz_dest:
+                                                    if siz_src != siz_dest:
+                                                        output_str = str('failed to copy new (failed bytes check, possible false negative as file exists): (' + siz_dest + '/' + siz_src + ' bytes) ' + t_path).strip()
+                                                        try:
+                                                            self.tb_5.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                                    elif mb < ma:
+                                                        output_str = str('failed to copy new (failed timestamp check): (Source: ' + ma_str + ' Destination:' + mb_str + ') ' + t_path).strip()
+                                                        try:
+                                                            self.tb_5.append(output_str)
+                                                        except Exception as e:
+                                                            if debug_enabled is True:
+                                                                print('-- exception:', str(e).strip().encode('utf-8'))
+                                                        cp1_fail_count += 1
+                                            elif not os.path.exists(t_path):
+                                                output_str = str('failed to update file (file does no exist in destination): ' + t_path).strip()
+                                                try:
+                                                    self.tb_5.append(output_str)
+                                                except Exception as e:
+                                                    if debug_enabled is True:
+                                                        print('-- exception:', str(e).strip().encode('utf-8'))
+                                                cp1_fail_count += 1
+
+            # Output Summary
+            cp0_count_str = str(cp0_count)
+            cp0_fail_count_str = str(cp0_fail_count)
+            cp1_count_str = str(cp1_count)
+            cp1_fail_count_str = str(cp1_fail_count)
+            output_sum =  str('copied new: (' + cp0_count_str + ') | failed to copy new: (' + cp0_fail_count_str + ') | updated: (' + cp1_count_str + ')  | failed to update: (' + cp1_fail_count_str + ')').strip()
+            if debug_enabled is True:
+                print('-- ThreadClass5: ' + output_sum)
+            try:
+                self.tb_5.append(output_sum)
+                self.tb_5.verticalScrollBar().setValue(self.tb_5.verticalScrollBar().maximum())
+            except Exception as e:
+                if debug_enabled is True:
+                    print('-- exception:', str(e).strip().encode('utf-8'))
 
             # Disengage
             self.btnx_main_5.setIcon(QIcon(self.img_btnx_led_0))
@@ -3262,7 +3848,7 @@ class ThreadClass5(QThread):
 
     def stop_thr(self):
         global debug_enabled, confirm_op5_bool, confirm_op5_wait
-        
+        self.tb_5.verticalScrollBar().setValue(self.tb_5.verticalScrollBar().maximum())
         confirm_op5_bool = False
         confirm_op5_wait = True
         if debug_enabled is True:
