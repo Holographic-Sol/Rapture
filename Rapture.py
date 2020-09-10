@@ -1904,12 +1904,12 @@ class App(QMainWindow):
         self.setting_title3.hide()
         self.setting_title4.hide()
         self.setting_title5.hide()
-        self.setting_title_B_0.hide()
-        self.setting_title_B_1.hide()
-        self.setting_title_B_2.hide()
-        self.setting_title_B_3.hide()
-        self.setting_title_B_4.hide()
-        self.setting_title_B_5.hide()
+        self.setting_title_B_var[0].hide()
+        self.setting_title_B_var[1].hide()
+        self.setting_title_B_var[2].hide()
+        self.setting_title_B_var[3].hide()
+        self.setting_title_B_var[4].hide()
+        self.setting_title_B_var[5].hide()
 
         self.settings_source_edit_var[0].hide()
         self.settings_source_edit_var[1].hide()
@@ -2104,12 +2104,38 @@ class App(QMainWindow):
         self.paths_readonly_btn_5.show()
         self.paths_readonly_btn_5.setEnabled(False)
 
+    def dest_src_readonly_funk(self):
+        self.settings_source_edit_var[0].setReadOnly(False)
+        self.settings_source_edit_var[1].setReadOnly(False)
+        self.settings_source_edit_var[2].setReadOnly(False)
+        self.settings_source_edit_var[3].setReadOnly(False)
+        self.settings_source_edit_var[4].setReadOnly(False)
+        self.settings_source_edit_var[5].setReadOnly(False)
+        self.settings_dest_edit_var[0].setReadOnly(False)
+        self.settings_dest_edit_var[1].setReadOnly(False)
+        self.settings_dest_edit_var[2].setReadOnly(False)
+        self.settings_dest_edit_var[3].setReadOnly(False)
+        self.settings_dest_edit_var[4].setReadOnly(False)
+        self.settings_dest_edit_var[5].setReadOnly(False)
+        self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_false))
+        self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_false))
+        self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_false))
+        self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_false))
+        self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_false))
+        self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_false))
+        self.paths_readonly_btn_0.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_1.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_2.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_3.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
+        self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 0
     def settings_funk0(self):
         global debug_enabled, settings_active_int, settings_active_int_prev, name_tile
         settings_active_int = 0
         self.hide_settings_funk()
+        self.dest_src_readonly_funk()
         if settings_active_int != settings_active_int_prev:
             self.setFixedSize(self.width, 320)
 
@@ -2120,6 +2146,10 @@ class App(QMainWindow):
             self.setting_title0.show()
             self.settings_source_edit_var[0].show()
             self.settings_dest_edit_var[0].show()
+
+            self.settings_source_edit_var[0].setReadOnly(True)
+            self.settings_dest_edit_var[0].setReadOnly(True)
+            self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
 
             self.tb_0.show()
             self.tb_label_0.setText(name_tile[0] + ' Output')
@@ -2138,6 +2168,7 @@ class App(QMainWindow):
         global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 1
         self.hide_settings_funk()
+        self.dest_src_readonly_funk()
         if settings_active_int != settings_active_int_prev:
             self.setFixedSize(self.width, 320)
 
@@ -2148,6 +2179,10 @@ class App(QMainWindow):
             self.setting_title1.show()
             self.settings_source_edit_var[1].show()
             self.settings_dest_edit_var[1].show()
+
+            self.settings_source_edit_var[1].setReadOnly(True)
+            self.settings_dest_edit_var[1].setReadOnly(True)
+            self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
 
             self.tb_1.show()
             self.tb_label_0.setText(name_tile[1] + ' Output')
@@ -2166,6 +2201,7 @@ class App(QMainWindow):
         global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 2
         self.hide_settings_funk()
+        self.dest_src_readonly_funk()
         if settings_active_int != settings_active_int_prev:
             self.setFixedSize(self.width, 320)
 
@@ -2176,6 +2212,10 @@ class App(QMainWindow):
             self.setting_title2.show()
             self.settings_source_edit_var[2].show()
             self.settings_dest_edit_var[2].show()
+
+            self.settings_source_edit_var[2].setReadOnly(True)
+            self.settings_dest_edit_var[2].setReadOnly(True)
+            self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
 
             self.tb_2.show()
             self.tb_label_0.setText(name_tile[2] + ' Output')
@@ -2194,6 +2234,7 @@ class App(QMainWindow):
         global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 3
         self.hide_settings_funk()
+        self.dest_src_readonly_funk()
         if settings_active_int != settings_active_int_prev:
             self.setFixedSize(self.width, 320)
 
@@ -2204,6 +2245,10 @@ class App(QMainWindow):
             self.setting_title3.show()
             self.settings_source_edit_var[3].show()
             self.settings_dest_edit_var[3].show()
+
+            self.settings_source_edit_var[3].setReadOnly(True)
+            self.settings_dest_edit_var[3].setReadOnly(True)
+            self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
 
             self.tb_3.show()
             self.tb_label_0.setText(name_tile[3] + ' Output')
@@ -2222,6 +2267,7 @@ class App(QMainWindow):
         global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 4
         self.hide_settings_funk()
+        self.dest_src_readonly_funk()
         if settings_active_int != settings_active_int_prev:
             self.setFixedSize(self.width, 320)
 
@@ -2232,6 +2278,10 @@ class App(QMainWindow):
             self.setting_title4.show()
             self.settings_source_edit_var[4].show()
             self.settings_dest_edit_var[4].show()
+
+            self.settings_source_edit_var[4].setReadOnly(True)
+            self.settings_dest_edit_var[4].setReadOnly(True)
+            self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
 
             self.tb_4.show()
             self.tb_label_0.setText(name_tile[4] + ' Output')
@@ -2250,6 +2300,7 @@ class App(QMainWindow):
         global debug_enabled, settings_active_int, settings_active_int_prev
         settings_active_int = 5
         self.hide_settings_funk()
+        self.dest_src_readonly_funk()
         if settings_active_int != settings_active_int_prev:
             self.setFixedSize(self.width, 320)
 
@@ -2261,6 +2312,10 @@ class App(QMainWindow):
             self.settings_source_edit_var[5].show()
             self.settings_dest_edit_var[5].show()
             self.settings_dest_edit_var[5].show()
+
+            self.settings_source_edit_var[5].setReadOnly(True)
+            self.settings_dest_edit_var[5].setReadOnly(True)
+            self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
 
             self.tb_5.show()
             self.tb_label_0.setText(name_tile[5] + ' Output')
