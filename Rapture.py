@@ -1178,29 +1178,43 @@ class App(QMainWindow):
         name_str = 'NAME ' + str(tile_int) + ': '
         name_tile[tile_int] = self.setting_title_B_var[tile_int].text()
 
-        self.settings_title_var[tile_int].setText(self.setting_title_B_var[tile_int].text())
-        self.tb_label_0.setText(name_tile[tile_int] + ' Output')
+        if len(self.setting_title_B_var[tile_int].text()) <= 16:
+            self.settings_title_var[tile_int].setText(self.setting_title_B_var[tile_int].text())
+            self.tb_label_0.setText(name_tile[tile_int] + ' Output')
 
-        if os.path.exists(cfg_f):
-            path_item = []
-            with open(cfg_f, 'r') as fo:
-                for line in fo:
-                    line = line.strip()
-                    if not line.startswith(name_str):
-                        path_item.append(line)
-                    elif line.startswith(name_str):
-                        new_line = name_str + ' ' + self.setting_title_B_var[tile_int].text()
-                        path_item.append(new_line)
-            open(cfg_f, 'w').close()
-            with open(cfg_f, 'a') as fo:
-                i = 0
-                for path_items in path_item:
-                    fo.writelines(path_item[i] + '\n')
-                    i += 1
-            fo.close()
+            if os.path.exists(cfg_f):
+                path_item = []
+                with open(cfg_f, 'r') as fo:
+                    for line in fo:
+                        line = line.strip()
+                        if not line.startswith(name_str):
+                            path_item.append(line)
+                        elif line.startswith(name_str):
+                            new_line = name_str + ' ' + self.setting_title_B_var[tile_int].text()
+                            path_item.append(new_line)
+                open(cfg_f, 'w').close()
+                with open(cfg_f, 'a') as fo:
+                    i = 0
+                    for path_items in path_item:
+                        fo.writelines(path_item[i] + '\n')
+                        i += 1
+                fo.close()
 
-        self.setting_title_B_var[tile_int].hide()
-        self.settings_title_var[tile_int].show()
+            self.settings_title_var[tile_int].setAlignment(Qt.AlignCenter)
+            self.setting_title_B_var[tile_int].hide()
+            self.settings_title_var[tile_int].show()
+            if tile_int is 0:
+                self.paths_readonly_button_funk_0()
+            elif tile_int is 1:
+                self.paths_readonly_button_funk_1()
+            elif tile_int is 2:
+                self.paths_readonly_button_funk_2()
+            elif tile_int is 3:
+                self.paths_readonly_button_funk_3()
+            elif tile_int is 4:
+                self.paths_readonly_button_funk_4()
+            elif tile_int is 5:
+                self.paths_readonly_button_funk_5()
 
     # Section 1 Funtion: Main Function Confirmation 0
     def confirm_op0_funk0(self):
@@ -1263,6 +1277,7 @@ class App(QMainWindow):
             self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_0.setIconSize(QSize(8, 21))
             self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
             self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[0].isReadOnly() is False:
@@ -1286,6 +1301,7 @@ class App(QMainWindow):
             self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_1.setIconSize(QSize(8, 21))
             self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
             self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[1].isReadOnly() is False:
@@ -1309,6 +1325,7 @@ class App(QMainWindow):
             self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_2.setIconSize(QSize(8, 21))
             self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
             self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[2].isReadOnly() is False:
@@ -1332,6 +1349,7 @@ class App(QMainWindow):
             self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_3.setIconSize(QSize(8, 21))
             self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
             self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[3].isReadOnly() is False:
@@ -1355,6 +1373,7 @@ class App(QMainWindow):
             self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_4.setIconSize(QSize(8, 21))
             self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
             self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[4].isReadOnly() is False:
@@ -1378,6 +1397,7 @@ class App(QMainWindow):
             self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_5.setIconSize(QSize(8, 21))
             self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
             self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[5].isReadOnly() is False:
@@ -2500,7 +2520,7 @@ class UpdateSettingsWindow(QThread):
                                 name_tile.append(line)
                             elif not len(line) <= name_max_chars or len(name_tile) <= 6:
                                 # print('config name 5 does not exist or exeeds max character length', line)
-                                name_tile.append('Configuration 4')
+                                name_tile.append('Configuration 5')
 
 
                         if line.startswith('SOURCE 0: '):
@@ -2632,6 +2652,7 @@ class UpdateSettingsWindow(QThread):
                 for self.settings_title_vars in self.settings_title_var:
                     if name_tile[i] != self.settings_title_var[i]:
                         self.settings_title_var[i].setText(name_tile[i])
+                        self.settings_title_var[i].setAlignment(Qt.AlignCenter)
                     i += 1
 
             # Write A New Configuration File
@@ -2970,10 +2991,6 @@ class ThreadClass1(QThread):
 
                             if not fullpath.endswith('.ini'):
 
-                                #try:
-                                #    self.tb_1.verticalScrollBar().setValue(self.tb_1.verticalScrollBar().maximum())
-                                #except Exception as e:
-                                #    print('-- exception:', str(e).strip().encode('utf-8'))
                                 # Mode 0: Write Missing Files Only
                                 if not os.path.exists(t_path):
                                     change_var = True
