@@ -846,12 +846,12 @@ class App(QMainWindow):
         self.btnx_settings_5.clicked.connect(self.settings_drop_down_pre_funk_5)
 
         # Sector 2: Plug Read Only Buttons Into Read Only Functions
-        self.paths_readonly_btn_0.clicked.connect(self.paths_readonly_button_funk_0)
-        self.paths_readonly_btn_1.clicked.connect(self.paths_readonly_button_funk_1)
-        self.paths_readonly_btn_2.clicked.connect(self.paths_readonly_button_funk_2)
-        self.paths_readonly_btn_3.clicked.connect(self.paths_readonly_button_funk_3)
-        self.paths_readonly_btn_4.clicked.connect(self.paths_readonly_button_funk_4)
-        self.paths_readonly_btn_5.clicked.connect(self.paths_readonly_button_funk_5)
+        self.paths_readonly_btn_0.clicked.connect(self.paths_readonly_button_pre_funk_0)
+        self.paths_readonly_btn_1.clicked.connect(self.paths_readonly_button_pre_funk_1)
+        self.paths_readonly_btn_2.clicked.connect(self.paths_readonly_button_pre_funk_2)
+        self.paths_readonly_btn_3.clicked.connect(self.paths_readonly_button_pre_funk_3)
+        self.paths_readonly_btn_4.clicked.connect(self.paths_readonly_button_pre_funk_4)
+        self.paths_readonly_btn_5.clicked.connect(self.paths_readonly_button_pre_funk_5)
 
         # Thread: Adjusts App Geometry To Account For Display Re-Scaling
         self.oldPos = self.pos()
@@ -1177,19 +1177,16 @@ class App(QMainWindow):
         self.img_stop_thread_false = str(self.img_path + self.img_var[17])
         self.img_stop_thread_true = str(self.img_path + self.img_var[18])
 
-
+    # Sector 2: Set's Configuration Title(s)
     def setting_title_B_funk(self):
         global tile_int
-
         print('tile_int:', tile_int)
-
         if len(self.setting_title_B_var[tile_int].text()) <= 16:
             print('True')
             name_str = 'NAME ' + str(tile_int) + ': '
             name_tile[tile_int] = self.setting_title_B_var[tile_int].text().strip()
             self.settings_title_var[tile_int].setText(self.setting_title_B_var[tile_int].text().strip())
             self.tb_label_0.setText(name_tile[tile_int] + ' Output')
-
             if os.path.exists(cfg_f):
                 path_item = []
                 with open(cfg_f, 'r') as fo:
@@ -1207,22 +1204,23 @@ class App(QMainWindow):
                         fo.writelines(path_item[i] + '\n')
                         i += 1
                 fo.close()
-
             self.settings_title_var[tile_int].setAlignment(Qt.AlignCenter)
             self.setting_title_B_var[tile_int].hide()
             self.settings_title_var[tile_int].show()
-            if tile_int is 0:
-                self.paths_readonly_button_funk_0()
-            elif tile_int is 1:
-                self.paths_readonly_button_funk_1()
-            elif tile_int is 2:
-                self.paths_readonly_button_funk_2()
-            elif tile_int is 3:
-                self.paths_readonly_button_funk_3()
-            elif tile_int is 4:
-                self.paths_readonly_button_funk_4()
-            elif tile_int is 5:
-                self.paths_readonly_button_funk_5()
+
+            self.paths_readonly_button_funk()
+            #if tile_int is 0:
+            #    self.paths_readonly_button_funk_0()
+            #elif tile_int is 1:
+            #    self.paths_readonly_button_funk_1()
+            #elif tile_int is 2:
+            #    self.paths_readonly_button_funk_2()
+            #elif tile_int is 3:
+            #    self.paths_readonly_button_funk_3()
+            #elif tile_int is 4:
+            #    self.paths_readonly_button_funk_4()
+            #elif tile_int is 5:
+            #    self.paths_readonly_button_funk_5()
 
     # Section 1 Funtion: Main Function Confirmation 0
     def confirm_op0_funk0(self):
@@ -1272,150 +1270,60 @@ class App(QMainWindow):
         confirm_op5_bool = True
         confirm_op5_wait = False
 
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 0  # EDIT
-    def paths_readonly_button_funk_0(self):
-        global debug_enabled, tile_int
+    def paths_readonly_button_pre_funk_0(self):
+        global tile_int
         tile_int = 0
-        if debug_enabled is True:
-            print('-- plugged in: paths_readonly_button_funk_0')
+        self.paths_readonly_button_funk()
 
-        if self.settings_source_edit_var[0].isReadOnly() is True:
-            self.settings_source_edit_var[0].setReadOnly(False)
-            self.settings_dest_edit_var[0].setReadOnly(False)
-            self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_false))
-            self.paths_readonly_btn_0.setIconSize(QSize(8, 21))
-            self.settings_title_var[tile_int].hide()
-            self.settings_title_var[tile_int].setAlignment(Qt.AlignLeft)
-            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
-            self.setting_title_B_var[tile_int].show()
-
-        elif self.settings_source_edit_var[0].isReadOnly() is False:
-            self.settings_source_edit_var[0].setReadOnly(True)
-            self.settings_dest_edit_var[0].setReadOnly(True)
-            self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
-            self.paths_readonly_btn_0.setIconSize(QSize(8, 8))
-            self.settings_title_var[tile_int].show()
-            self.setting_title_B_var[tile_int].hide()
-
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 1
-    def paths_readonly_button_funk_1(self):
-        global debug_enabled, tile_int
+    def paths_readonly_button_pre_funk_1(self):
+        global tile_int
         tile_int = 1
-        if debug_enabled is True:
-            print('-- plugged in: paths_readonly_button_funk_1')
+        self.paths_readonly_button_funk()
 
-        if self.settings_source_edit_var[1].isReadOnly() is True:
-            self.settings_source_edit_var[1].setReadOnly(False)
-            self.settings_dest_edit_var[1].setReadOnly(False)
-            self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_false))
-            self.paths_readonly_btn_1.setIconSize(QSize(8, 21))
-            self.settings_title_var[tile_int].hide()
-            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
-            self.setting_title_B_var[tile_int].show()
-
-        elif self.settings_source_edit_var[1].isReadOnly() is False:
-            self.settings_source_edit_var[1].setReadOnly(True)
-            self.settings_dest_edit_var[1].setReadOnly(True)
-            self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
-            self.paths_readonly_btn_1.setIconSize(QSize(8, 8))
-            self.settings_title_var[tile_int].show()
-            self.setting_title_B_var[tile_int].hide()
-
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 2
-    def paths_readonly_button_funk_2(self):
-        global debug_enabled, tile_int
+    def paths_readonly_button_pre_funk_2(self):
+        global tile_int
         tile_int = 2
-        if debug_enabled is True:
-            print('-- plugged in: paths_readonly_button_funk_2')
+        self.paths_readonly_button_funk()
 
-        if self.settings_source_edit_var[2].isReadOnly() is True:
-            self.settings_source_edit_var[2].setReadOnly(False)
-            self.settings_dest_edit_var[2].setReadOnly(False)
-            self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_false))
-            self.paths_readonly_btn_2.setIconSize(QSize(8, 21))
-            self.settings_title_var[tile_int].hide()
-            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
-            self.setting_title_B_var[tile_int].show()
-
-        elif self.settings_source_edit_var[2].isReadOnly() is False:
-            self.settings_source_edit_var[2].setReadOnly(True)
-            self.settings_dest_edit_var[2].setReadOnly(True)
-            self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
-            self.paths_readonly_btn_2.setIconSize(QSize(8, 8))
-            self.settings_title_var[tile_int].show()
-            self.setting_title_B_var[tile_int].hide()
-
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 3
-    def paths_readonly_button_funk_3(self):
-        global debug_enabled, tile_int
+    def paths_readonly_button_pre_funk_3(self):
+        global tile_int
         tile_int = 3
-        if debug_enabled is True:
-            print('-- plugged in: paths_readonly_button_funk_3')
+        self.paths_readonly_button_funk()
 
-        if self.settings_source_edit_var[3].isReadOnly() is True:
-            self.settings_source_edit_var[3].setReadOnly(False)
-            self.settings_dest_edit_var[3].setReadOnly(False)
-            self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_false))
-            self.paths_readonly_btn_3.setIconSize(QSize(8, 21))
-            self.settings_title_var[tile_int].hide()
-            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
-            self.setting_title_B_var[tile_int].show()
-
-        elif self.settings_source_edit_var[3].isReadOnly() is False:
-            self.settings_source_edit_var[3].setReadOnly(True)
-            self.settings_dest_edit_var[3].setReadOnly(True)
-            self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
-            self.paths_readonly_btn_3.setIconSize(QSize(8, 8))
-            self.settings_title_var[tile_int].show()
-            self.setting_title_B_var[tile_int].hide()
-
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 4
-    def paths_readonly_button_funk_4(self):
-        global debug_enabled, tile_int
+    def paths_readonly_button_pre_funk_4(self):
+        global tile_int
         tile_int = 4
-        if debug_enabled is True:
-            print('-- plugged in: paths_readonly_button_funk_4')
+        self.paths_readonly_button_funk()
 
-        if self.settings_source_edit_var[4].isReadOnly() is True:
-            self.settings_source_edit_var[4].setReadOnly(False)
-            self.settings_dest_edit_var[4].setReadOnly(False)
-            self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_false))
-            self.paths_readonly_btn_4.setIconSize(QSize(8, 21))
-            self.settings_title_var[tile_int].hide()
-            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
-            self.setting_title_B_var[tile_int].show()
-
-        elif self.settings_source_edit_var[4].isReadOnly() is False:
-            self.settings_source_edit_var[4].setReadOnly(True)
-            self.settings_dest_edit_var[4].setReadOnly(True)
-            self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
-            self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
-            self.settings_title_var[tile_int].show()
-            self.setting_title_B_var[tile_int].hide()
-
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 5
-    def paths_readonly_button_funk_5(self):
-        global debug_enabled, tile_int
+    def paths_readonly_button_pre_funk_5(self):
+        global tile_int
         tile_int = 5
+        self.paths_readonly_button_funk()
+
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool
+    def paths_readonly_button_funk(self):
+        global debug_enabled, settings_active_int
+        print('settings_active_int', settings_active_int)
         if debug_enabled is True:
-            print('-- plugged in: paths_readonly_button_funk_5')
+            print('-- plugged in: paths_readonly_button_funk')
 
-        if self.settings_source_edit_var[5].isReadOnly() is True:
-            self.settings_source_edit_var[5].setReadOnly(False)
-            self.settings_dest_edit_var[5].setReadOnly(False)
-            self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_false))
-            self.paths_readonly_btn_5.setIconSize(QSize(8, 21))
-            self.settings_title_var[tile_int].hide()
-            self.setting_title_B_var[tile_int].setText(name_tile[tile_int])
-            self.setting_title_B_var[tile_int].show()
+        if self.settings_source_edit_var[settings_active_int].isReadOnly() is True:
+            self.settings_source_edit_var[settings_active_int].setReadOnly(False)
+            self.settings_dest_edit_var[settings_active_int].setReadOnly(False)
+            self.paths_readonly_btn_var[settings_active_int].setIcon(QIcon(self.img_read_ony_false))
+            self.paths_readonly_btn_var[settings_active_int].setIconSize(QSize(8, 21))
+            self.settings_title_var[settings_active_int].hide()
+            self.settings_title_var[settings_active_int].setAlignment(Qt.AlignLeft)
+            self.setting_title_B_var[settings_active_int].setText(name_tile[tile_int])
+            self.setting_title_B_var[settings_active_int].show()
 
-        elif self.settings_source_edit_var[5].isReadOnly() is False:
-            self.settings_source_edit_var[5].setReadOnly(True)
-            self.settings_dest_edit_var[5].setReadOnly(True)
-            self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
-            self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
-            self.settings_title_var[tile_int].show()
-            self.setting_title_B_var[tile_int].hide()
+        elif self.settings_source_edit_var[settings_active_int].isReadOnly() is False:
+            self.settings_source_edit_var[settings_active_int].setReadOnly(True)
+            self.settings_dest_edit_var[settings_active_int].setReadOnly(True)
+            self.paths_readonly_btn_var[settings_active_int].setIcon(QIcon(self.img_read_ony_true))
+            self.paths_readonly_btn_var[settings_active_int].setIconSize(QSize(8, 8))
+            self.settings_title_var[settings_active_int].show()
+            self.setting_title_B_var[settings_active_int].hide()
 
     # Sector 2 Funtion: Moves To Next Settings Page Left
     def scr_left_funk(self):
@@ -1460,361 +1368,6 @@ class App(QMainWindow):
         elif settings_active_int is 5:
             settings_active_int = 0
             self.settings_drop_down_funk()
-
-    # Sector 2 Funtion: Writes Source Changes To Configuration File
-    def settings_source_funk(self):
-        global debug_enabled, source_path_entered, source_selected, config_src_var, path_var, settings_input_response_source_bool
-        valid_len_bool = False
-        valid_drive_bool = False
-        valid_char_bool = False
-        valid_non_win_res_nm_bool = False
-
-        try:
-            # Ensure Length Of String Is < 255 Characters & >= 3 Characters
-            str_len = len(source_path_entered)
-            if str_len < 255 and str_len >= 3:
-                valid_len_bool = True
-            elif str_len >= 255:
-                valid_len_bool = False
-
-            # Determine Valid Drive Letter
-            if valid_len_bool is True:
-                char_var0 = source_path_entered[0]
-                char_var1 = source_path_entered[1]
-                char_var2 = source_path_entered[2]
-                char_var3 = str(char_var0 + char_var1 + char_var2)
-                if os.path.exists(char_var3) and char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\':
-                    valid_drive_bool = True
-                else:
-                    valid_drive_bool = False
-
-            # Check For Forbidden Chars
-            if valid_len_bool is True:
-                valid_char = []
-                invalid_char = ['<', '>', ':', '"', '/', '|', '?', '*', '.']
-                i = 0
-                for source_path_entereds in source_path_entered:
-                    if not i is 1:
-                        if source_path_entered[i] in invalid_char:
-                            valid_char.append(False)
-                    i += 1
-                if not False in valid_char:
-                    valid_char_bool = True
-
-            # Determine If The String Matches Windows Reserved Names
-            valid_var = []
-            win_res_nm = ['CON', 'PRN', 'AUX', 'NUL',
-                        'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
-                        'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
-            i = 0
-            for win_res_nms in win_res_nm:
-                if str('\\' + win_res_nm[i] + '\\') in source_path_entered:
-                    valid_var.append(False)
-                elif source_path_entered.endswith(win_res_nm[i]):
-                    valid_var.append(False)
-                elif str(win_res_nm[i] + '.') in source_path_entered:
-                    valid_var.append(False)
-                i += 1
-            if not False in valid_var:
-                valid_non_win_res_nm_bool = True
-
-            # Print Results
-            if debug_enabled is True:
-                print('-- resutls:')
-                print('-- string length:', valid_len_bool)
-                print('-- drive letter:', valid_drive_bool)
-                print('-- valid characters:', valid_char_bool)
-                print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
-
-            # Continue Only If Sanitization Checks All Return True
-            if os.path.exists(source_path_entered) and valid_len_bool is True and valid_drive_bool is True and valid_char_bool is True and valid_non_win_res_nm_bool is True:
-                if debug_enabled is True:
-                    print('-- input source path passed current sanitization checks')
-                path_item = []
-
-                # Open & Read Configuration File
-                with open(cfg_f, 'r') as fo:
-                    for line in fo:
-                        line = line.strip()
-
-                        # Append All Lines But Selected Path To A List
-                        if not line.startswith(config_src_var[source_selected]):
-                            path_item.append(line)
-
-                        # Isolate Selected Source Path And Change Its Value To Source Path Entered Then Append To The Same List
-                        elif line.startswith(config_src_var[source_selected]):
-                            new_line = config_src_var[source_selected]+' '+source_path_entered
-                            path_item.append(new_line)
-
-                # Wipe Configuration File
-                open(cfg_f, 'w').close()
-
-                # Open Configuration File In Append Mode
-                with open(cfg_f, 'a') as fo:
-                    i = 0
-
-                    # Re-Write Configuration File From The New List Of Entries
-                    for path_items in path_item:
-                        fo.writelines(path_item[i]+'\n')
-                        i += 1
-                fo.close()
-
-                # Edit List Value By Index Number & Set Input Response Bool To True
-                path_var[source_selected] = source_path_entered
-                settings_input_response_source_bool = True
-
-                # Set Pertaining QLineEdits ReadOnly On Enter
-                if source_selected is 0:
-                    self.paths_readonly_button_funk_0()
-                elif source_selected is 1:
-                    self.paths_readonly_button_funk_1()
-                elif source_selected is 2:
-                    self.paths_readonly_button_funk_2()
-                elif source_selected is 3:
-                    self.paths_readonly_button_funk_3()
-                elif source_selected is 4:
-                    self.paths_readonly_button_funk_4()
-                elif source_selected is 5:
-                    self.paths_readonly_button_funk_5()
-
-            # Do Not Write Configuration File Because Sanitization Failed  self.btnx_settings_var
-            else:
-                # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
-                print('-- input source path failed current sanitization checks')
-                self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
-                settings_input_response_source_bool = False
-
-        # Handle Exceptions
-        except Exception as e:
-            if debug_enabled is True:
-                print('-- exception:', str(e).strip().encode('utf-8'))
-            settings_input_response_source_bool = False
-
-            # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
-            self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
-
-        # If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
-        if settings_input_response_source_bool is False:
-            self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
-
-        # Start Input Response Thread
-        self.settings_input_response_thread.start()
-
-    # Sector 2 Funtion: Writes Destination Changes To Configuration File
-    def settings_dest_funk(self):
-        global debug_enabled, dest_path_entered, dest_selected, config_dst_var, dest_path_var, path_var, settings_input_response_dest_bool
-
-        settings_input_response_dest_bool = False
-
-        # Destination Mode 0: User Only Enters Drive Letter For Destination
-        if self.mirror_source_bool is True:
-            if debug_enabled is True:
-                print('-- mirror_source_bool', self.mirror_source_bool)
-            try:
-                # Destination Mode 0: Ensure The Drive String Is Only 3 Characters In Length & Assign Chars Index 0-2 To Variables That Can Be Checked
-                str_len = len(dest_path_entered)
-                if str_len is 3:
-                    char_var0 = str(dest_path_entered[0])
-                    char_var1 = str(dest_path_entered[1])
-                    char_var2 = str(dest_path_entered[2])
-                    char_var3 = str(char_var0 + char_var1 + char_var2)
-
-                    # Destination Mode 0: Determine If String Is Valid
-                    if char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\' and os.path.exists(char_var3):
-                        if debug_enabled is True:
-                            print('-- input destination path passed current sanitization checks')
-
-                            # Destination Mode 0: Get Destination Input's Corresponding Source Path Using Destination Index Integer To Access Specific Source Path Item
-                            print('-- source path:', path_var[dest_selected])
-
-                        # Destination Mode 0: Slice Source Path
-                        var = path_var[dest_selected][3:]
-
-                        # Destination Mode 0: Concatinate Sliced Source Path With Destination Path Input Data
-                        dest_var = str(dest_path_entered + var)
-
-                        # Destination Mode 0: Set Destination Path To Dest_Var
-                        dest_path_entered = dest_var
-                        if debug_enabled is True:
-                            print('-- creating destination:', dest_path_entered)
-
-                        # Destination Mode 0: Make Only Directories that Do Not Exist
-                        distutils.dir_util.mkpath(dest_path_entered)
-
-                        # Destination Mode 0: Write Changes To Configuration File
-                        path_item = []
-                        with open(cfg_f, 'r') as fo:
-                            for line in fo:
-                                line = line.strip()
-                                if not line.startswith(config_dst_var[dest_selected]):
-                                    path_item.append(line)
-                                elif line.startswith(config_dst_var[dest_selected]):
-                                    new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
-                                    path_item.append(new_line)
-                        open(cfg_f, 'w').close()
-                        with open(cfg_f, 'a') as fo:
-                            i = 0
-                            for path_items in path_item:
-                                fo.writelines(path_item[i] + '\n')
-                                i += 1
-                        fo.close()
-
-                        # Destination Mode 0: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
-                        dest_path_var[dest_selected] = dest_path_entered
-                        settings_input_response_dest_bool = True
-
-                        # Destination Mode 0: Set Pertaining QLineEdits ReadOnly On Enter
-                        if dest_selected is 0:
-                            self.paths_readonly_button_funk_0()
-                        elif dest_selected is 1:
-                            self.paths_readonly_button_funk_1()
-                        elif dest_selected is 2:
-                            self.paths_readonly_button_funk_2()
-                        elif dest_selected is 3:
-                            self.paths_readonly_button_funk_3()
-                        elif dest_selected is 4:
-                            self.paths_readonly_button_funk_4()
-                        elif dest_selected is 5:
-                            self.paths_readonly_button_funk_5()
-
-            # Destination Mode 0: Handle Exception
-            except Exception as e:
-                    if debug_enabled is True:
-                        print('-- exception:', str(e).strip().encode('utf-8'))
-                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
-                    settings_input_response_dest_bool = False
-
-            # Destination Mode 0: If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
-            if settings_input_response_dest_bool is False:
-                self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
-
-        # Destination Mode 1: Set A Custom Path For Destination
-        elif self.mirror_source_bool is False:
-            if debug_enabled is True:
-                print('-- mirror_source_bool', self.mirror_source_bool)
-            valid_len_bool = False
-            valid_drive_bool = False
-            valid_non_win_res_nm_bool = False
-            valid_char_bool = False
-            try:
-
-                # Destination Mode 1: Ensure Length Of String Is < 255 Characters & >= 3 Characters
-                str_len = len(dest_path_entered)
-                if str_len < 255 and str_len >= 3:
-                    valid_len_bool = True
-                elif str_len >= 255:
-                    valid_len_bool = False
-
-                # Destination Mode 1: Determine Valid Drive Letter
-                if valid_len_bool is True:
-                    char_var0 = dest_path_entered[0]
-                    char_var1 = dest_path_entered[1]
-                    char_var2 = dest_path_entered[2]
-                    char_var3 = str(char_var0 + char_var1 + char_var2)
-                    if os.path.exists(char_var3) and char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\':
-                        valid_drive_bool = True
-                    else:
-                        valid_drive_bool = False
-
-                # Destination Mode 1: Check For Forbidden Chars
-                if valid_len_bool is True:
-                    valid_char = []
-                    invalid_char = ['<', '>', ':', '"', '/', '|', '?', '*', '.']
-                    i = 0
-                    for dest_path_entereds in dest_path_entered:
-                        if not i is 1:
-                            if dest_path_entered[i] in invalid_char:
-                                valid_char.append(False)
-                        i += 1
-                    if not False in valid_char:
-                        valid_char_bool = True
-
-                # Destination Mode 1: Determine If The String Matches Windows Reserved Names
-                valid_var = []
-                win_res_nm = ['CON', 'PRN', 'AUX', 'NUL',
-                            'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
-                            'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
-                i = 0
-                for win_res_nms in win_res_nm:
-                    if str('\\' + win_res_nm[i] + '\\') in dest_path_entered:
-                        valid_var.append(False)
-                    elif dest_path_entered.endswith(win_res_nm[i]):
-                        valid_var.append(False)
-                    elif str(win_res_nm[i] + '.') in dest_path_entered:
-                        valid_var.append(False)
-                    i += 1
-                if not False in valid_var:
-                    valid_non_win_res_nm_bool = True
-
-                # Destination Mode 1: Print Results
-                if debug_enabled is True:
-                    print('-- resutls:')
-                    print('-- string length:', valid_len_bool)
-                    print('-- drive letter:', valid_drive_bool)
-                    print('-- valid characters:', valid_char_bool)
-                    print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
-
-                # Destination Mode 1: Continue Only If Sanitization Checks All Return True
-                if valid_len_bool is True and valid_drive_bool is True and valid_non_win_res_nm_bool is True and valid_char_bool is True:
-                    if debug_enabled is True:
-                        print('-- input destination path passed current sanitization checks')
-                        print('-- creating destination:', dest_path_entered)
-
-                    # Destination Mode 1: Make Only Directories that Do Not Exist
-                    distutils.dir_util.mkpath(dest_path_entered)
-
-                    # Destination Mode 1: Write Changes To Configuration File
-                    path_item = []
-                    with open(cfg_f, 'r') as fo:
-                        for line in fo:
-                            line = line.strip()
-                            if not line.startswith(config_dst_var[dest_selected]):
-                                path_item.append(line)
-                            elif line.startswith(config_dst_var[dest_selected]):
-                                new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
-                                path_item.append(new_line)
-                    open(cfg_f, 'w').close()
-                    with open(cfg_f, 'a') as fo:
-                        i = 0
-                        for path_items in path_item:
-                            fo.writelines(path_item[i] + '\n')
-                            i += 1
-                    fo.close()
-
-                    # Destination Mode 1: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
-                    dest_path_var[dest_selected] = dest_path_entered
-                    settings_input_response_dest_bool = True
-
-                    # Destination Mode 1: Set Pertaining QLineEdits ReadOnly On Enter
-                    if dest_selected is 0:
-                        self.paths_readonly_button_funk_0()
-                    elif dest_selected is 1:
-                        self.paths_readonly_button_funk_1()
-                    elif dest_selected is 2:
-                        self.paths_readonly_button_funk_2()
-                    elif dest_selected is 3:
-                        self.paths_readonly_button_funk_3()
-                    elif dest_selected is 4:
-                        self.paths_readonly_button_funk_4()
-                    elif dest_selected is 5:
-                        self.paths_readonly_button_funk_5()
-
-                else:
-                    if debug_enabled is True:
-                        print('-- input destination path failed current sanitization checks')
-                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
-                    settings_input_response_dest_bool = False
-
-            # Destination Mode 1: Handle Exception 
-            except Exception as e:
-                    if debug_enabled is True:
-                        print('-- exception:', str(e).strip().encode('utf-8'))
-                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
-                    settings_input_response_dest_bool = False
-        
-        # Sector 2: Start Input Response Thread
-        self.settings_input_response_thread.start()
-
 
     # Sector 2 Funtion: Provides settings_source_funk With Information From Source Path Edit 0
     def settings_source_pre_funk0(self):
@@ -2297,6 +1850,338 @@ class App(QMainWindow):
         global debug_enabled
         self.thread_5.stop_thr()
 
+    # Sector 2 Funtion: Writes Source Changes To Configuration File
+    def settings_source_funk(self):
+        global debug_enabled, source_path_entered, source_selected, config_src_var, path_var, settings_input_response_source_bool
+        valid_len_bool = False
+        valid_drive_bool = False
+        valid_char_bool = False
+        valid_non_win_res_nm_bool = False
+
+        try:
+            # Ensure Length Of String Is < 255 Characters & >= 3 Characters
+            str_len = len(source_path_entered)
+            if str_len < 255 and str_len >= 3:
+                valid_len_bool = True
+            elif str_len >= 255:
+                valid_len_bool = False
+
+            # Determine Valid Drive Letter
+            if valid_len_bool is True:
+                char_var0 = source_path_entered[0]
+                char_var1 = source_path_entered[1]
+                char_var2 = source_path_entered[2]
+                char_var3 = str(char_var0 + char_var1 + char_var2)
+                if os.path.exists(char_var3) and char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\':
+                    valid_drive_bool = True
+                else:
+                    valid_drive_bool = False
+
+            # Check For Forbidden Chars
+            if valid_len_bool is True:
+                valid_char = []
+                invalid_char = ['<', '>', ':', '"', '/', '|', '?', '*', '.']
+                i = 0
+                for source_path_entereds in source_path_entered:
+                    if not i is 1:
+                        if source_path_entered[i] in invalid_char:
+                            valid_char.append(False)
+                    i += 1
+                if not False in valid_char:
+                    valid_char_bool = True
+
+            # Determine If The String Matches Windows Reserved Names
+            valid_var = []
+            win_res_nm = ['CON', 'PRN', 'AUX', 'NUL',
+                        'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+                        'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+            i = 0
+            for win_res_nms in win_res_nm:
+                if str('\\' + win_res_nm[i] + '\\') in source_path_entered:
+                    valid_var.append(False)
+                elif source_path_entered.endswith(win_res_nm[i]):
+                    valid_var.append(False)
+                elif str(win_res_nm[i] + '.') in source_path_entered:
+                    valid_var.append(False)
+                i += 1
+            if not False in valid_var:
+                valid_non_win_res_nm_bool = True
+
+            # Print Results
+            if debug_enabled is True:
+                print('-- resutls:')
+                print('-- string length:', valid_len_bool)
+                print('-- drive letter:', valid_drive_bool)
+                print('-- valid characters:', valid_char_bool)
+                print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
+
+            # Continue Only If Sanitization Checks All Return True
+            if os.path.exists(source_path_entered) and valid_len_bool is True and valid_drive_bool is True and valid_char_bool is True and valid_non_win_res_nm_bool is True:
+                if debug_enabled is True:
+                    print('-- input source path passed current sanitization checks')
+                path_item = []
+
+                # Open & Read Configuration File
+                with open(cfg_f, 'r') as fo:
+                    for line in fo:
+                        line = line.strip()
+
+                        # Append All Lines But Selected Path To A List
+                        if not line.startswith(config_src_var[source_selected]):
+                            path_item.append(line)
+
+                        # Isolate Selected Source Path And Change Its Value To Source Path Entered Then Append To The Same List
+                        elif line.startswith(config_src_var[source_selected]):
+                            new_line = config_src_var[source_selected]+' '+source_path_entered
+                            path_item.append(new_line)
+
+                # Wipe Configuration File
+                open(cfg_f, 'w').close()
+
+                # Open Configuration File In Append Mode
+                with open(cfg_f, 'a') as fo:
+                    i = 0
+
+                    # Re-Write Configuration File From The New List Of Entries
+                    for path_items in path_item:
+                        fo.writelines(path_item[i]+'\n')
+                        i += 1
+                fo.close()
+
+                # Edit List Value By Index Number & Set Input Response Bool To True
+                path_var[source_selected] = source_path_entered
+                settings_input_response_source_bool = True
+
+                # Set Pertaining QLineEdits ReadOnly On Enter
+                self.paths_readonly_button_funk()
+                #if source_selected is 0:
+                #    self.paths_readonly_button_funk_0()
+                #elif source_selected is 1:
+                #    self.paths_readonly_button_funk_1()
+                #elif source_selected is 2:
+                #    self.paths_readonly_button_funk_2()
+                #elif source_selected is 3:
+                #    self.paths_readonly_button_funk_3()
+                #elif source_selected is 4:
+                #    self.paths_readonly_button_funk_4()
+                #elif source_selected is 5:
+                #    self.paths_readonly_button_funk_5()
+
+            # Do Not Write Configuration File Because Sanitization Failed  self.btnx_settings_var
+            else:
+                # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
+                print('-- input source path failed current sanitization checks')
+                self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
+                settings_input_response_source_bool = False
+
+        # Handle Exceptions
+        except Exception as e:
+            if debug_enabled is True:
+                print('-- exception:', str(e).strip().encode('utf-8'))
+            settings_input_response_source_bool = False
+
+            # Set QLine Edit Back To Known Good Path To Reflect LAst Know Good Path In Configuration File
+            self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
+
+        # If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
+        if settings_input_response_source_bool is False:
+            self.settings_source_edit_var[source_selected].setText(path_var[source_selected])
+
+        # Start Input Response Thread
+        self.settings_input_response_thread.start()
+
+    # Sector 2 Funtion: Writes Destination Changes To Configuration File
+    def settings_dest_funk(self):
+        global debug_enabled, dest_path_entered, dest_selected, config_dst_var, dest_path_var, path_var, settings_input_response_dest_bool
+        settings_input_response_dest_bool = False
+        # Destination Mode 0: User Only Enters Drive Letter For Destination
+        if self.mirror_source_bool is True:
+            if debug_enabled is True:
+                print('-- mirror_source_bool', self.mirror_source_bool)
+            try:
+                # Destination Mode 0: Ensure The Drive String Is Only 3 Characters In Length & Assign Chars Index 0-2 To Variables That Can Be Checked
+                str_len = len(dest_path_entered)
+                if str_len is 3:
+                    char_var0 = str(dest_path_entered[0])
+                    char_var1 = str(dest_path_entered[1])
+                    char_var2 = str(dest_path_entered[2])
+                    char_var3 = str(char_var0 + char_var1 + char_var2)
+                    # Destination Mode 0: Determine If String Is Valid
+                    if char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\' and os.path.exists(char_var3):
+                        if debug_enabled is True:
+                            print('-- input destination path passed current sanitization checks')
+                            # Destination Mode 0: Get Destination Input's Corresponding Source Path Using Destination Index Integer To Access Specific Source Path Item
+                            print('-- source path:', path_var[dest_selected])
+                        # Destination Mode 0: Slice Source Path
+                        var = path_var[dest_selected][3:]
+                        # Destination Mode 0: Concatinate Sliced Source Path With Destination Path Input Data
+                        dest_var = str(dest_path_entered + var)
+                        # Destination Mode 0: Set Destination Path To Dest_Var
+                        dest_path_entered = dest_var
+                        if debug_enabled is True:
+                            print('-- creating destination:', dest_path_entered)
+                        # Destination Mode 0: Make Only Directories that Do Not Exist
+                        distutils.dir_util.mkpath(dest_path_entered)
+                        # Destination Mode 0: Write Changes To Configuration File
+                        path_item = []
+                        with open(cfg_f, 'r') as fo:
+                            for line in fo:
+                                line = line.strip()
+                                if not line.startswith(config_dst_var[dest_selected]):
+                                    path_item.append(line)
+                                elif line.startswith(config_dst_var[dest_selected]):
+                                    new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
+                                    path_item.append(new_line)
+                        open(cfg_f, 'w').close()
+                        with open(cfg_f, 'a') as fo:
+                            i = 0
+                            for path_items in path_item:
+                                fo.writelines(path_item[i] + '\n')
+                                i += 1
+                        fo.close()
+                        # Destination Mode 0: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
+                        dest_path_var[dest_selected] = dest_path_entered
+                        settings_input_response_dest_bool = True
+                        # Destination Mode 0: Set Pertaining QLineEdits ReadOnly On Enter
+                        self.paths_readonly_button_funk()
+
+                        #if dest_selected is 0:
+                        #    self.paths_readonly_button_funk_0()
+                        #elif dest_selected is 1:
+                        #    self.paths_readonly_button_funk_1()
+                        #elif dest_selected is 2:
+                        #    self.paths_readonly_button_funk_2()
+                        #elif dest_selected is 3:
+                        #    self.paths_readonly_button_funk_3()
+                        #elif dest_selected is 4:
+                        #    self.paths_readonly_button_funk_4()
+                        #elif dest_selected is 5:
+                        #    self.paths_readonly_button_funk_5()
+            # Destination Mode 0: Handle Exception
+            except Exception as e:
+                    if debug_enabled is True:
+                        print('-- exception:', str(e).strip().encode('utf-8'))
+                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+                    settings_input_response_dest_bool = False
+            # Destination Mode 0: If Bool Still False, Remove Input Data From QLineEdit Field & And Display Previous Known Accepted Path
+            if settings_input_response_dest_bool is False:
+                self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+        # Destination Mode 1: Set A Custom Path For Destination
+        elif self.mirror_source_bool is False:
+            if debug_enabled is True:
+                print('-- mirror_source_bool', self.mirror_source_bool)
+            valid_len_bool = False
+            valid_drive_bool = False
+            valid_non_win_res_nm_bool = False
+            valid_char_bool = False
+            try:
+                # Destination Mode 1: Ensure Length Of String Is < 255 Characters & >= 3 Characters
+                str_len = len(dest_path_entered)
+                if str_len < 255 and str_len >= 3:
+                    valid_len_bool = True
+                elif str_len >= 255:
+                    valid_len_bool = False
+                # Destination Mode 1: Determine Valid Drive Letter
+                if valid_len_bool is True:
+                    char_var0 = dest_path_entered[0]
+                    char_var1 = dest_path_entered[1]
+                    char_var2 = dest_path_entered[2]
+                    char_var3 = str(char_var0 + char_var1 + char_var2)
+                    if os.path.exists(char_var3) and char_var0.isalpha() and char_var1 is ':' and char_var2 is '\\':
+                        valid_drive_bool = True
+                    else:
+                        valid_drive_bool = False
+                # Destination Mode 1: Check For Forbidden Chars
+                if valid_len_bool is True:
+                    valid_char = []
+                    invalid_char = ['<', '>', ':', '"', '/', '|', '?', '*', '.']
+                    i = 0
+                    for dest_path_entereds in dest_path_entered:
+                        if not i is 1:
+                            if dest_path_entered[i] in invalid_char:
+                                valid_char.append(False)
+                        i += 1
+                    if not False in valid_char:
+                        valid_char_bool = True
+                # Destination Mode 1: Determine If The String Matches Windows Reserved Names
+                valid_var = []
+                win_res_nm = ['CON', 'PRN', 'AUX', 'NUL',
+                            'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+                            'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+                i = 0
+                for win_res_nms in win_res_nm:
+                    if str('\\' + win_res_nm[i] + '\\') in dest_path_entered:
+                        valid_var.append(False)
+                    elif dest_path_entered.endswith(win_res_nm[i]):
+                        valid_var.append(False)
+                    elif str(win_res_nm[i] + '.') in dest_path_entered:
+                        valid_var.append(False)
+                    i += 1
+                if not False in valid_var:
+                    valid_non_win_res_nm_bool = True
+                # Destination Mode 1: Print Results
+                if debug_enabled is True:
+                    print('-- resutls:')
+                    print('-- string length:', valid_len_bool)
+                    print('-- drive letter:', valid_drive_bool)
+                    print('-- valid characters:', valid_char_bool)
+                    print('-- does not contain system reserved names:', valid_non_win_res_nm_bool)
+                # Destination Mode 1: Continue Only If Sanitization Checks All Return True
+                if valid_len_bool is True and valid_drive_bool is True and valid_non_win_res_nm_bool is True and valid_char_bool is True:
+                    if debug_enabled is True:
+                        print('-- input destination path passed current sanitization checks')
+                        print('-- creating destination:', dest_path_entered)
+                    # Destination Mode 1: Make Only Directories that Do Not Exist
+                    distutils.dir_util.mkpath(dest_path_entered)
+                    # Destination Mode 1: Write Changes To Configuration File
+                    path_item = []
+                    with open(cfg_f, 'r') as fo:
+                        for line in fo:
+                            line = line.strip()
+                            if not line.startswith(config_dst_var[dest_selected]):
+                                path_item.append(line)
+                            elif line.startswith(config_dst_var[dest_selected]):
+                                new_line = config_dst_var[dest_selected] + ' ' + dest_path_entered
+                                path_item.append(new_line)
+                    open(cfg_f, 'w').close()
+                    with open(cfg_f, 'a') as fo:
+                        i = 0
+                        for path_items in path_item:
+                            fo.writelines(path_item[i] + '\n')
+                            i += 1
+                    fo.close()
+                    # Destination Mode 1: Replace Previous Item In Dest_Path_Var with New Path And Set Bool True For Input Response
+                    dest_path_var[dest_selected] = dest_path_entered
+                    settings_input_response_dest_bool = True
+                    # Destination Mode 1: Set Pertaining QLineEdits ReadOnly On Enter
+                    self.paths_readonly_button_funk()
+
+                    #if dest_selected is 0:
+                    #    self.paths_readonly_button_funk_0()
+                    #elif dest_selected is 1:
+                    #    self.paths_readonly_button_funk_1()
+                    #elif dest_selected is 2:
+                    #    self.paths_readonly_button_funk_2()
+                    #elif dest_selected is 3:
+                    #    self.paths_readonly_button_funk_3()
+                    #elif dest_selected is 4:
+                    #    self.paths_readonly_button_funk_4()
+                    #elif dest_selected is 5:
+                    #    self.paths_readonly_button_funk_5()
+                else:
+                    if debug_enabled is True:
+                        print('-- input destination path failed current sanitization checks')
+                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+                    settings_input_response_dest_bool = False
+            # Destination Mode 1: Handle Exception 
+            except Exception as e:
+                    if debug_enabled is True:
+                        print('-- exception:', str(e).strip().encode('utf-8'))
+                    self.settings_dest_edit_var[dest_selected].setText(dest_path_var[dest_selected])
+                    settings_input_response_dest_bool = False
+        
+        # Sector 2: Start Input Response Thread
+        self.settings_input_response_thread.start()
 
 # Scaling Class: Automatically Adjusts Form's Geometry Accounting For Changes In Display Scaling Settings
 class ScalingClass(QThread):
