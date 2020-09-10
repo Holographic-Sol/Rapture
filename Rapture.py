@@ -34,6 +34,7 @@ source_path_entered = ''
 dest_path_entered = ''
 path_var = ['', '', '', '', '', '']
 dest_path_var = ['', '', '', '', '', '']
+name_tile = ['', '', '', '', '', '']
 
 debug_enabled = False
 confirm_op0_wait = True
@@ -59,6 +60,7 @@ dest_selected = ()
 settings_active_int = 0
 settings_active_int_prev = ()
 compare_clicked = ()
+tile_int = ()
 
 config_src_var = ['SOURCE 0:',
                   'SOURCE 1:',
@@ -109,7 +111,7 @@ class App(QMainWindow):
 
     def initUI(self):
         global debug_enabled
-        global path_var, dest_path_var
+        global path_var, dest_path_var, tile_int
         global confirm_op0_bool, confirm_op1_bool, confirm_op2_bool, confirm_op3_bool, confirm_op4_bool, confirm_op5_bool
         global confirm_op0_wait, confirm_op1_wait, confirm_op2_wait, confirm_op3_wait, confirm_op4_wait, confirm_op5_wait
 
@@ -126,6 +128,8 @@ class App(QMainWindow):
         self.back_label_var = []
         self.settings_source_edit_var = []
         self.settings_dest_edit_var = []
+        self.settings_title_var = []
+        self.setting_title_B_var = []
 
         # Set A Fixed Window Size
         self.setWindowTitle(self.title)
@@ -332,9 +336,10 @@ class App(QMainWindow):
         self.setting_title0.resize(87, 14)
         self.setting_title0.move((back_label_ankor_w0 + 5), 105)
         self.setting_title0.setFont(self.font_s6b)
-        self.setting_title0.setText("Archives")
+        self.setting_title0.setText("")
         self.setting_title0.setStyleSheet(self.default_qlbl_style)
         self.setting_title0.setAlignment(Qt.AlignCenter) 
+        self.settings_title_var.append(self.setting_title0)
         self.setting_title0.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 1
@@ -342,9 +347,10 @@ class App(QMainWindow):
         self.setting_title1.resize(87, 14)
         self.setting_title1.move((back_label_ankor_w1 + 5), 105)
         self.setting_title1.setFont(self.font_s6b)
-        self.setting_title1.setText("Documents")
+        self.setting_title1.setText("")
         self.setting_title1.setStyleSheet(self.default_qlbl_style)
         self.setting_title1.setAlignment(Qt.AlignCenter)
+        self.settings_title_var.append(self.setting_title1)
         self.setting_title1.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 2
@@ -352,9 +358,10 @@ class App(QMainWindow):
         self.setting_title2.resize(87, 14)
         self.setting_title2.move((back_label_ankor_w2 + 5), 105)
         self.setting_title2.setFont(self.font_s6b)
-        self.setting_title2.setText("Music")
+        self.setting_title2.setText("")
         self.setting_title2.setStyleSheet(self.default_qlbl_style)
         self.setting_title2.setAlignment(Qt.AlignCenter)
+        self.settings_title_var.append(self.setting_title2)
         self.setting_title2.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 3
@@ -362,9 +369,10 @@ class App(QMainWindow):
         self.setting_title3.resize(87, 14)
         self.setting_title3.move((back_label_ankor_w3 + 5), 105)
         self.setting_title3.setFont(self.font_s6b)
-        self.setting_title3.setText("Pictures")
+        self.setting_title3.setText("")
         self.setting_title3.setStyleSheet(self.default_qlbl_style)
         self.setting_title3.setAlignment(Qt.AlignCenter)
+        self.settings_title_var.append(self.setting_title3)
         self.setting_title3.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 4
@@ -372,9 +380,10 @@ class App(QMainWindow):
         self.setting_title4.resize(87, 14)
         self.setting_title4.move((back_label_ankor_w4 + 5), 105)
         self.setting_title4.setFont(self.font_s6b)
-        self.setting_title4.setText("Videos")
+        self.setting_title4.setText("")
         self.setting_title4.setStyleSheet(self.default_qlbl_style)
         self.setting_title4.setAlignment(Qt.AlignCenter)
+        self.settings_title_var.append(self.setting_title4)
         self.setting_title4.hide()
 
         # Sector 2: Title Lable Signifies Which Path Is Displayed To Be Configured 5
@@ -382,10 +391,83 @@ class App(QMainWindow):
         self.setting_title5.resize(87, 14)
         self.setting_title5.move((back_label_ankor_w5 + 5), 105)
         self.setting_title5.setFont(self.font_s6b)
-        self.setting_title5.setText("Programs")
+        self.setting_title5.setText("")
         self.setting_title5.setStyleSheet(self.default_qlbl_style)
         self.setting_title5.setAlignment(Qt.AlignCenter) 
+        self.settings_title_var.append(self.setting_title5)
         self.setting_title5.hide()
+
+        # Sector 1: Title Label QLine Edits Which Title Is Displayed 0
+        self.setting_title_B_0 = QLineEdit(self)
+        self.setting_title_B_0.resize(87, 14)
+        self.setting_title_B_0.move((back_label_ankor_w0 + 5), 105)
+        self.setting_title_B_0.setFont(self.font_s6b)
+        self.setting_title_B_0.setText('')
+        self.setting_title_B_0.setReadOnly(False)
+        self.setting_title_B_0.returnPressed.connect(self.setting_title_B_funk)
+        self.setting_title_B_0.setStyleSheet(self.default_qle_style)
+        self.setting_title_B_var.append(self.setting_title_B_0)
+        self.setting_title_B_var[0].hide()
+
+        # Sector 1: Title Label QLine Edits Which Title Is Displayed 0
+        self.setting_title_B_1 = QLineEdit(self)
+        self.setting_title_B_1.resize(87, 14)
+        self.setting_title_B_1.move((back_label_ankor_w1 + 5), 105)
+        self.setting_title_B_1.setFont(self.font_s6b)
+        self.setting_title_B_1.setText('')
+        self.setting_title_B_1.setReadOnly(False)
+        self.setting_title_B_1.returnPressed.connect(self.setting_title_B_funk)
+        self.setting_title_B_1.setStyleSheet(self.default_qle_style)
+        self.setting_title_B_var.append(self.setting_title_B_1)
+        self.setting_title_B_var[1].hide()
+
+        # Sector 1: Title Label QLine Edits Which Title Is Displayed 0
+        self.setting_title_B_2 = QLineEdit(self)
+        self.setting_title_B_2.resize(87, 14)
+        self.setting_title_B_2.move((back_label_ankor_w2 + 5), 105)
+        self.setting_title_B_2.setFont(self.font_s6b)
+        self.setting_title_B_2.setText('')
+        self.setting_title_B_2.setReadOnly(False)
+        self.setting_title_B_2.returnPressed.connect(self.setting_title_B_funk)
+        self.setting_title_B_2.setStyleSheet(self.default_qle_style)
+        self.setting_title_B_var.append(self.setting_title_B_2)
+        self.setting_title_B_var[2].hide()
+
+        # Sector 1: Title Label QLine Edits Which Title Is Displayed 0
+        self.setting_title_B_3 = QLineEdit(self)
+        self.setting_title_B_3.resize(87, 14)
+        self.setting_title_B_3.move((back_label_ankor_w3 + 5), 105)
+        self.setting_title_B_3.setFont(self.font_s6b)
+        self.setting_title_B_3.setText('')
+        self.setting_title_B_3.setReadOnly(False)
+        self.setting_title_B_3.returnPressed.connect(self.setting_title_B_funk)
+        self.setting_title_B_3.setStyleSheet(self.default_qle_style)
+        self.setting_title_B_var.append(self.setting_title_B_3)
+        self.setting_title_B_var[3].hide()
+
+        # Sector 1: Title Label QLine Edits Which Title Is Displayed 0
+        self.setting_title_B_4 = QLineEdit(self)
+        self.setting_title_B_4.resize(87, 14)
+        self.setting_title_B_4.move((back_label_ankor_w4 + 5), 105)
+        self.setting_title_B_4.setFont(self.font_s6b)
+        self.setting_title_B_4.setText('')
+        self.setting_title_B_4.setReadOnly(False)
+        self.setting_title_B_4.returnPressed.connect(self.setting_title_B_funk)
+        self.setting_title_B_4.setStyleSheet(self.default_qle_style)
+        self.setting_title_B_var.append(self.setting_title_B_4)
+        self.setting_title_B_var[4].hide()
+
+        # Sector 1: Title Label QLine Edits Which Title Is Displayed 0
+        self.setting_title_B_5 = QLineEdit(self)
+        self.setting_title_B_5.resize(87, 14)
+        self.setting_title_B_5.move((back_label_ankor_w5 + 5), 105)
+        self.setting_title_B_5.setFont(self.font_s6b)
+        self.setting_title_B_5.setText('')
+        self.setting_title_B_5.setReadOnly(False)
+        self.setting_title_B_5.returnPressed.connect(self.setting_title_B_funk)
+        self.setting_title_B_5.setStyleSheet(self.default_qle_style)
+        self.setting_title_B_var.append(self.setting_title_B_5)
+        self.setting_title_B_var[5].hide()
 
         # Sector 2: Source Path Configuration Edit 0
         self.settings_source0 = QLineEdit(self)
@@ -618,7 +700,7 @@ class App(QMainWindow):
         # Sector 3: Output Text Browser Label 0
         self.tb_label_0 = QLabel(self)
         self.tb_label_0.move(5, (self.tb_pos_h - 14))
-        self.tb_label_0.resize(87, 14)
+        self.tb_label_0.resize(124, 14)
         self.tb_label_0.setFont(self.font_s6b)
         self.tb_label_0.setStyleSheet(self.default_qlbl_style)
         self.tb_label_0.setAlignment(Qt.AlignCenter)
@@ -770,7 +852,7 @@ class App(QMainWindow):
         scaling_thread.start()
 
         # Thread: Checks The Validity Of Directory Paths Set In Sector 2 As Source & Destination And Updates GUI Accordingly
-        self.update_settings_window_thread = UpdateSettingsWindow(self.settings_source_edit_var, self.settings_dest_edit_var)
+        self.update_settings_window_thread = UpdateSettingsWindow(self.settings_source_edit_var, self.settings_dest_edit_var, self.settings_title_var, self.tb_label_0)
 
         self.update_settings_window_thread.start()
 
@@ -1088,6 +1170,38 @@ class App(QMainWindow):
         self.img_stop_thread_false = str(self.img_path + self.img_var[17])
         self.img_stop_thread_true = str(self.img_path + self.img_var[18])
 
+
+    def setting_title_B_funk(self):
+        global tile_int
+
+        print('tile_int:', tile_int)
+        name_str = 'NAME ' + str(tile_int) + ': '
+        name_tile[tile_int] = self.setting_title_B_var[tile_int].text()
+
+        self.settings_title_var[tile_int].setText(self.setting_title_B_var[tile_int].text())
+        self.tb_label_0.setText(name_tile[tile_int] + ' Output')
+
+        if os.path.exists(cfg_f):
+            path_item = []
+            with open(cfg_f, 'r') as fo:
+                for line in fo:
+                    line = line.strip()
+                    if not line.startswith(name_str):
+                        path_item.append(line)
+                    elif line.startswith(name_str):
+                        new_line = name_str + ' ' + self.setting_title_B_var[tile_int].text()
+                        path_item.append(new_line)
+            open(cfg_f, 'w').close()
+            with open(cfg_f, 'a') as fo:
+                i = 0
+                for path_items in path_item:
+                    fo.writelines(path_item[i] + '\n')
+                    i += 1
+            fo.close()
+
+        self.setting_title_B_var[tile_int].hide()
+        self.settings_title_var[tile_int].show()
+
     # Section 1 Funtion: Main Function Confirmation 0
     def confirm_op0_funk0(self):
         global confirm_op0_bool, confirm_op0_wait, debug_enabled
@@ -1136,9 +1250,10 @@ class App(QMainWindow):
         confirm_op5_bool = True
         confirm_op5_wait = False
 
-    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 0
+    # Section 2 Funtion: Set Source & Destination ReadOnly Bool 0  # EDIT
     def paths_readonly_button_funk_0(self):
-        global debug_enabled
+        global debug_enabled, tile_int
+        tile_int = 0
         if debug_enabled is True:
             print('-- plugged in: paths_readonly_button_funk_0')
 
@@ -1147,16 +1262,21 @@ class App(QMainWindow):
             self.settings_dest_edit_var[0].setReadOnly(False)
             self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_0.setIconSize(QSize(8, 21))
+            self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[0].isReadOnly() is False:
             self.settings_source_edit_var[0].setReadOnly(True)
             self.settings_dest_edit_var[0].setReadOnly(True)
             self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_btn_0.setIconSize(QSize(8, 8))
+            self.settings_title_var[tile_int].show()
+            self.setting_title_B_var[tile_int].hide()
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 1
     def paths_readonly_button_funk_1(self):
-        global debug_enabled
+        global debug_enabled, tile_int
+        tile_int = 1
         if debug_enabled is True:
             print('-- plugged in: paths_readonly_button_funk_1')
 
@@ -1165,16 +1285,21 @@ class App(QMainWindow):
             self.settings_dest_edit_var[1].setReadOnly(False)
             self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_1.setIconSize(QSize(8, 21))
+            self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[1].isReadOnly() is False:
             self.settings_source_edit_var[1].setReadOnly(True)
             self.settings_dest_edit_var[1].setReadOnly(True)
             self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_btn_1.setIconSize(QSize(8, 8))
+            self.settings_title_var[tile_int].show()
+            self.setting_title_B_var[tile_int].hide()
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 2
     def paths_readonly_button_funk_2(self):
-        global debug_enabled
+        global debug_enabled, tile_int
+        tile_int = 2
         if debug_enabled is True:
             print('-- plugged in: paths_readonly_button_funk_2')
 
@@ -1183,16 +1308,21 @@ class App(QMainWindow):
             self.settings_dest_edit_var[2].setReadOnly(False)
             self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_2.setIconSize(QSize(8, 21))
+            self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[2].isReadOnly() is False:
             self.settings_source_edit_var[2].setReadOnly(True)
             self.settings_dest_edit_var[2].setReadOnly(True)
             self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_btn_2.setIconSize(QSize(8, 8))
+            self.settings_title_var[tile_int].show()
+            self.setting_title_B_var[tile_int].hide()
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 3
     def paths_readonly_button_funk_3(self):
-        global debug_enabled
+        global debug_enabled, tile_int
+        tile_int = 3
         if debug_enabled is True:
             print('-- plugged in: paths_readonly_button_funk_3')
 
@@ -1201,16 +1331,21 @@ class App(QMainWindow):
             self.settings_dest_edit_var[3].setReadOnly(False)
             self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_3.setIconSize(QSize(8, 21))
+            self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[3].isReadOnly() is False:
             self.settings_source_edit_var[3].setReadOnly(True)
             self.settings_dest_edit_var[3].setReadOnly(True)
             self.paths_readonly_btn_3.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_btn_3.setIconSize(QSize(8, 8))
+            self.settings_title_var[tile_int].show()
+            self.setting_title_B_var[tile_int].hide()
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 4
     def paths_readonly_button_funk_4(self):
-        global debug_enabled
+        global debug_enabled, tile_int
+        tile_int = 4
         if debug_enabled is True:
             print('-- plugged in: paths_readonly_button_funk_4')
 
@@ -1219,16 +1354,21 @@ class App(QMainWindow):
             self.settings_dest_edit_var[4].setReadOnly(False)
             self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_4.setIconSize(QSize(8, 21))
+            self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[4].isReadOnly() is False:
             self.settings_source_edit_var[4].setReadOnly(True)
             self.settings_dest_edit_var[4].setReadOnly(True)
             self.paths_readonly_btn_4.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_btn_4.setIconSize(QSize(8, 8))
+            self.settings_title_var[tile_int].show()
+            self.setting_title_B_var[tile_int].hide()
 
     # Section 2 Funtion: Set Source & Destination ReadOnly Bool 5
     def paths_readonly_button_funk_5(self):
-        global debug_enabled
+        global debug_enabled, tile_int
+        tile_int = 5
         if debug_enabled is True:
             print('-- plugged in: paths_readonly_button_funk_5')
 
@@ -1237,12 +1377,16 @@ class App(QMainWindow):
             self.settings_dest_edit_var[5].setReadOnly(False)
             self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_false))
             self.paths_readonly_btn_5.setIconSize(QSize(8, 21))
+            self.settings_title_var[tile_int].hide()
+            self.setting_title_B_var[tile_int].show()
 
         elif self.settings_source_edit_var[5].isReadOnly() is False:
             self.settings_source_edit_var[5].setReadOnly(True)
             self.settings_dest_edit_var[5].setReadOnly(True)
             self.paths_readonly_btn_5.setIcon(QIcon(self.img_read_ony_true))
             self.paths_readonly_btn_5.setIconSize(QSize(8, 8))
+            self.settings_title_var[tile_int].show()
+            self.setting_title_B_var[tile_int].hide()
 
     # Sector 2 Funtion: Moves To Next Settings Page Left
     def scr_left_funk(self):
@@ -1800,7 +1944,7 @@ class App(QMainWindow):
         self.settings_source_edit_var[0].show()
         self.settings_dest_edit_var[0].show()
         self.tb_0.show()
-        self.tb_label_0.setText('Archives Output')
+        self.tb_label_0.setText(name_tile[0] + ' Output')
         self.tb_label_0.show()
         self.settings_source_edit_var[0].setReadOnly(True)
         self.settings_dest_edit_var[0].setReadOnly(True)
@@ -1824,7 +1968,7 @@ class App(QMainWindow):
         self.settings_source_edit_var[1].show()
         self.settings_dest_edit_var[1].show()
         self.tb_1.show()
-        self.tb_label_0.setText('Documents Output')
+        self.tb_label_0.setText(name_tile[1] + ' Output')
         self.tb_label_0.show()
         self.settings_source_edit_var[1].setReadOnly(True)
         self.settings_dest_edit_var[1].setReadOnly(True)
@@ -1848,7 +1992,7 @@ class App(QMainWindow):
         self.settings_source_edit_var[2].show()
         self.settings_dest_edit_var[2].show()
         self.tb_2.show()
-        self.tb_label_0.setText('Music Output')
+        self.tb_label_0.setText(name_tile[2] + ' Output')
         self.tb_label_0.show()
         self.settings_source_edit_var[2].setReadOnly(True)
         self.settings_dest_edit_var[2].setReadOnly(True)
@@ -1872,7 +2016,7 @@ class App(QMainWindow):
         self.settings_source_edit_var[3].show()
         self.settings_dest_edit_var[3].show()
         self.tb_3.show()
-        self.tb_label_0.setText('Pictures Output')
+        self.tb_label_0.setText(name_tile[3] + ' Output')
         self.tb_label_0.show()
         self.settings_source_edit_var[3].setReadOnly(True)
         self.settings_dest_edit_var[3].setReadOnly(True)
@@ -1896,7 +2040,7 @@ class App(QMainWindow):
         self.settings_source_edit_var[4].show()
         self.settings_dest_edit_var[4].show()
         self.tb_4.show()
-        self.tb_label_0.setText('Video Output')
+        self.tb_label_0.setText(name_tile[4] + ' Output')
         self.tb_label_0.show()
         self.settings_source_edit_var[4].setReadOnly(True)
         self.settings_dest_edit_var[4].setReadOnly(True)
@@ -1920,7 +2064,7 @@ class App(QMainWindow):
         self.settings_source_edit_var[5].show()
         self.settings_dest_edit_var[5].show()
         self.tb_5.show()
-        self.tb_label_0.setText('Programs Output')
+        self.tb_label_0.setText(name_tile[5] + ' Output')
         self.tb_label_0.show()
         self.settings_source_edit_var[5].setReadOnly(True)
         self.settings_dest_edit_var[5].setReadOnly(True)
@@ -1932,7 +2076,7 @@ class App(QMainWindow):
 
     # Sector 2 Funtion: Displays Drop Down Settings In Sector 2 For Source & Destination Path Configuration 0
     def settings_funk0(self):
-        global debug_enabled, settings_active_int, settings_active_int_prev
+        global debug_enabled, settings_active_int, settings_active_int_prev, name_tile
         settings_active_int = 0
         self.hide_settings_funk()
         if settings_active_int != settings_active_int_prev:
@@ -1947,7 +2091,7 @@ class App(QMainWindow):
             self.settings_dest_edit_var[0].show()
 
             self.tb_0.show()
-            self.tb_label_0.setText('Archives Output')
+            self.tb_label_0.setText(name_tile[0] + ' Output')
             self.tb_label_0.show()
 
             self.paths_readonly_btn_0.show()
@@ -1975,7 +2119,7 @@ class App(QMainWindow):
             self.settings_dest_edit_var[1].show()
 
             self.tb_1.show()
-            self.tb_label_0.setText('Documents Output')
+            self.tb_label_0.setText(name_tile[1] + ' Output')
             self.tb_label_0.show()
 
             self.paths_readonly_btn_1.show()
@@ -2003,7 +2147,7 @@ class App(QMainWindow):
             self.settings_dest_edit_var[2].show()
 
             self.tb_2.show()
-            self.tb_label_0.setText('Music Output')
+            self.tb_label_0.setText(name_tile[2] + ' Output')
             self.tb_label_0.show()
 
             self.paths_readonly_btn_2.show()
@@ -2031,7 +2175,7 @@ class App(QMainWindow):
             self.settings_dest_edit_var[3].show()
 
             self.tb_3.show()
-            self.tb_label_0.setText('Pictures Output')
+            self.tb_label_0.setText(name_tile[3] + ' Output')
             self.tb_label_0.show()
 
             self.paths_readonly_btn_3.show()
@@ -2059,7 +2203,7 @@ class App(QMainWindow):
             self.settings_dest_edit_var[4].show()
 
             self.tb_4.show()
-            self.tb_label_0.setText('Videos Output')
+            self.tb_label_0.setText(name_tile[4] + ' Output')
             self.tb_label_0.show()
 
             self.paths_readonly_btn_4.show()
@@ -2088,7 +2232,7 @@ class App(QMainWindow):
             self.settings_dest_edit_var[5].show()
 
             self.tb_5.show()
-            self.tb_label_0.setText('Programs Output')
+            self.tb_label_0.setText(name_tile[5] + ' Output')
             self.tb_label_0.show()
 
             self.paths_readonly_btn_5.show()
@@ -2262,10 +2406,12 @@ class SettingsInputResponse(QThread):
 
 # Update Sector 2 Settings Window: Sources & Destination Paths Displayed Only When Last Valid Path Entered Still Actually Exists
 class UpdateSettingsWindow(QThread):
-    def __init__(self, settings_source_edit_var, settings_dest_edit_var):
+    def __init__(self, settings_source_edit_var, settings_dest_edit_var, settings_title_var, tb_label_0):
         QThread.__init__(self)
         self.settings_source_edit_var = settings_source_edit_var
         self.settings_dest_edit_var = settings_dest_edit_var
+        self.settings_title_var = settings_title_var
+        self.tb_label_0 = tb_label_0
 
     # Run This Thread While Program Is Alive And Read Configuration File
     def run(self):
@@ -2276,7 +2422,7 @@ class UpdateSettingsWindow(QThread):
 
     # While Source And Destination Path Configuration Edit ReadOnly, Check Configured Paths Existance And Set Boolean Accordingly
     def get_conf_funk(self):
-        global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
+        global debug_enabled, path_var, dest_path_var, name_tile, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
         configuration_engaged = True
 
         # Only Update Displayed Source & Destination Paths If Source & Destination Paths Not Being Edited
@@ -2291,13 +2437,71 @@ class UpdateSettingsWindow(QThread):
             i += 1
 
         if not False in check_var:
+            name_max_chars = 16
+            name_tile = []
             path_var = []
             dest_path_var = []
+
             if os.path.exists(cfg_f):
                 with open(cfg_f, 'r') as fo:
 
                     for line in fo:
                         line = line.strip()
+
+                        if line.startswith('NAME 0: '):
+                            line = line.replace('NAME 0: ', '')
+                            if len(line) <= name_max_chars and len(name_tile) <= 6:
+                                # print('config name 0 exists:', line)
+                                name_tile.append(line)
+                            elif not len(line) <= name_max_chars or len(name_tile) <= 6:
+                                # print('config name 0 does not exist or exeeds max character length', line)
+                                name_tile.append('Configuration 0')
+
+                        if line.startswith('NAME 1: '):
+                            line = line.replace('NAME 1: ', '')
+                            if len(line) <= name_max_chars and len(name_tile) <= 6:
+                                # print('config name 1 exists:', line)
+                                name_tile.append(line)
+                            elif not len(line) <= name_max_chars or len(name_tile) <= 6:
+                                # print('config name 1 does not exist or exeeds max character length', line)
+                                name_tile.append('Configuration 1')
+
+                        if line.startswith('NAME 2: '):
+                            line = line.replace('NAME 2: ', '')
+                            if len(line) <= name_max_chars and len(name_tile) <= 6:
+                                # print('config name 2 exists:', line)
+                                name_tile.append(line)
+                            elif not len(line) <= name_max_chars or len(name_tile) <= 6:
+                                # print('config name 2 does not exist or exeeds max character length', line)
+                                name_tile.append('Configuration 2')
+                        
+                        if line.startswith('NAME 3: '):
+                            line = line.replace('NAME 3: ', '')
+                            if len(line) <= name_max_chars and len(name_tile) <= 6:
+                                # print('config name 3 exists:', line)
+                                name_tile.append(line)
+                            elif not len(line) <= name_max_chars or len(name_tile) <= 6:
+                                # print('config name 3 does not exist or exeeds max character length', line)
+                                name_tile.append('Configuration 3')
+
+                        if line.startswith('NAME 4: '):
+                            line = line.replace('NAME 4: ', '')
+                            if len(line) <= name_max_chars and len(name_tile) <= 6:
+                                # print('config name 4 exists:', line)
+                                name_tile.append(line)
+                            elif not len(line) <= name_max_chars or len(name_tile) <= 6:
+                                # print('config name 4 does not exist or exeeds max character length', line)
+                                name_tile.append('Configuration 4')
+
+                        if line.startswith('NAME 5: '):
+                            line = line.replace('NAME 5: ', '')
+                            if len(line) <= name_max_chars and len(name_tile) <= 6:
+                                # print('config name 5 exists:', line)
+                                name_tile.append(line)
+                            elif not len(line) <= name_max_chars or len(name_tile) <= 6:
+                                # print('config name 5 does not exist or exeeds max character length', line)
+                                name_tile.append('Configuration 4')
+
 
                         if line.startswith('SOURCE 0: '):
                             line = line.replace('SOURCE 0: ', '')
@@ -2423,12 +2627,25 @@ class UpdateSettingsWindow(QThread):
                         self.settings_dest_edit_var[i].setText(dest_path_var[i])
                     i += 1
 
+                # Set Displayed Name(s)
+                i = 0
+                for self.settings_title_vars in self.settings_title_var:
+                    if name_tile[i] != self.settings_title_var[i]:
+                        self.settings_title_var[i].setText(name_tile[i])
+                    i += 1
+
             # Write A New Configuration File
             elif not os.path.exists(cfg_f):
                 if debug_enabled is True:
                     print('-- creating new configuration file')
                 open(cfg_f, 'w').close()
                 with open(cfg_f, 'a') as fo:
+                    fo.writelines('NAME 0: Configuration 0\n')
+                    fo.writelines('NAME 1: Configuration 1\n')
+                    fo.writelines('NAME 2: Configuration 2\n')
+                    fo.writelines('NAME 3: Configuration 3\n')
+                    fo.writelines('NAME 4: Configuration 4\n')
+                    fo.writelines('NAME 5: Configuration 5\n')
                     i = 0
                     for config_src_vars in config_src_var:
                         fo.writelines(config_src_var[i] + ' x' + '\n')
@@ -3690,9 +3907,6 @@ class ThreadClass5(QThread):
                 if os.path.exists(local_path) and os.path.exists(dest):
                     for dirname, subdirlist, filelist in os.walk(local_path):
                         for fname in filelist:
-
-                            #sb = self.verticalScrollBar()
-                            #sb.setValue(sb.maximum())
 
                             fullpath = os.path.join(dirname, fname)
                             t_path = fullpath.replace(local_path, '')
