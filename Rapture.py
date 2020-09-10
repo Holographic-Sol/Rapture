@@ -1209,18 +1209,6 @@ class App(QMainWindow):
             self.settings_title_var[tile_int].show()
 
             self.paths_readonly_button_funk()
-            #if tile_int is 0:
-            #    self.paths_readonly_button_funk_0()
-            #elif tile_int is 1:
-            #    self.paths_readonly_button_funk_1()
-            #elif tile_int is 2:
-            #    self.paths_readonly_button_funk_2()
-            #elif tile_int is 3:
-            #    self.paths_readonly_button_funk_3()
-            #elif tile_int is 4:
-            #    self.paths_readonly_button_funk_4()
-            #elif tile_int is 5:
-            #    self.paths_readonly_button_funk_5()
 
     # Section 1 Funtion: Main Function Confirmation 0
     def confirm_op0_funk0(self):
@@ -1954,18 +1942,6 @@ class App(QMainWindow):
 
                 # Set Pertaining QLineEdits ReadOnly On Enter
                 self.paths_readonly_button_funk()
-                #if source_selected is 0:
-                #    self.paths_readonly_button_funk_0()
-                #elif source_selected is 1:
-                #    self.paths_readonly_button_funk_1()
-                #elif source_selected is 2:
-                #    self.paths_readonly_button_funk_2()
-                #elif source_selected is 3:
-                #    self.paths_readonly_button_funk_3()
-                #elif source_selected is 4:
-                #    self.paths_readonly_button_funk_4()
-                #elif source_selected is 5:
-                #    self.paths_readonly_button_funk_5()
 
             # Do Not Write Configuration File Because Sanitization Failed  self.btnx_settings_var
             else:
@@ -2045,18 +2021,6 @@ class App(QMainWindow):
                         # Destination Mode 0: Set Pertaining QLineEdits ReadOnly On Enter
                         self.paths_readonly_button_funk()
 
-                        #if dest_selected is 0:
-                        #    self.paths_readonly_button_funk_0()
-                        #elif dest_selected is 1:
-                        #    self.paths_readonly_button_funk_1()
-                        #elif dest_selected is 2:
-                        #    self.paths_readonly_button_funk_2()
-                        #elif dest_selected is 3:
-                        #    self.paths_readonly_button_funk_3()
-                        #elif dest_selected is 4:
-                        #    self.paths_readonly_button_funk_4()
-                        #elif dest_selected is 5:
-                        #    self.paths_readonly_button_funk_5()
             # Destination Mode 0: Handle Exception
             except Exception as e:
                     if debug_enabled is True:
@@ -2156,18 +2120,6 @@ class App(QMainWindow):
                     # Destination Mode 1: Set Pertaining QLineEdits ReadOnly On Enter
                     self.paths_readonly_button_funk()
 
-                    #if dest_selected is 0:
-                    #    self.paths_readonly_button_funk_0()
-                    #elif dest_selected is 1:
-                    #    self.paths_readonly_button_funk_1()
-                    #elif dest_selected is 2:
-                    #    self.paths_readonly_button_funk_2()
-                    #elif dest_selected is 3:
-                    #    self.paths_readonly_button_funk_3()
-                    #elif dest_selected is 4:
-                    #    self.paths_readonly_button_funk_4()
-                    #elif dest_selected is 5:
-                    #    self.paths_readonly_button_funk_5()
                 else:
                     if debug_enabled is True:
                         print('-- input destination path failed current sanitization checks')
