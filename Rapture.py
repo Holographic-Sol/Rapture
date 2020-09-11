@@ -122,7 +122,6 @@ class App(QMainWindow):
 
         # Set TextBoxBrowser Output Verbosity
         self.output_verbosity = 1
-        self.mirror_source_bool = False
 
         # Initiate Lists For Loop Generated Objects
         self.btnx_main_var = []
@@ -1936,7 +1935,7 @@ class UpdateSettingsWindow(QThread):
 
     # While Source And Destination Path Configuration Edit ReadOnly, Check Configured Paths Existance And Set Boolean Accordingly
     def get_conf_funk(self):
-        global debug_enabled, path_var, dest_path_var, name_tile, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
+        global debug_enabled, path_var, dest_path_var, name_tile, configuration_engaged
         configuration_engaged = True
 
         # Only Update Displayed Source & Destination Paths If Source & Destination Paths Not Being Edited
@@ -1965,183 +1964,140 @@ class UpdateSettingsWindow(QThread):
                         if line.startswith('NAME 0: '):
                             line = line.replace('NAME 0: ', '')
                             if len(line) <= name_max_chars and len(name_tile) <= 6:
-                                # print('config name 0 exists:', line)
                                 name_tile.append(line)
-                            elif not len(line) <= name_max_chars or len(name_tile) <= 6:
-                                # print('config name 0 does not exist or exeeds max character length', line)
+                            elif not len(line) <= name_max_chars or len(name_tile) >= 6:
                                 name_tile.append('Configuration 0')
 
                         if line.startswith('NAME 1: '):
                             line = line.replace('NAME 1: ', '')
                             if len(line) <= name_max_chars and len(name_tile) <= 6:
-                                # print('config name 1 exists:', line)
                                 name_tile.append(line)
                             elif not len(line) <= name_max_chars or len(name_tile) <= 6:
-                                # print('config name 1 does not exist or exeeds max character length', line)
                                 name_tile.append('Configuration 1')
 
                         if line.startswith('NAME 2: '):
                             line = line.replace('NAME 2: ', '')
                             if len(line) <= name_max_chars and len(name_tile) <= 6:
-                                # print('config name 2 exists:', line)
                                 name_tile.append(line)
                             elif not len(line) <= name_max_chars or len(name_tile) <= 6:
-                                # print('config name 2 does not exist or exeeds max character length', line)
                                 name_tile.append('Configuration 2')
                         
                         if line.startswith('NAME 3: '):
                             line = line.replace('NAME 3: ', '')
                             if len(line) <= name_max_chars and len(name_tile) <= 6:
-                                # print('config name 3 exists:', line)
                                 name_tile.append(line)
                             elif not len(line) <= name_max_chars or len(name_tile) <= 6:
-                                # print('config name 3 does not exist or exeeds max character length', line)
                                 name_tile.append('Configuration 3')
 
                         if line.startswith('NAME 4: '):
                             line = line.replace('NAME 4: ', '')
                             if len(line) <= name_max_chars and len(name_tile) <= 6:
-                                # print('config name 4 exists:', line)
                                 name_tile.append(line)
                             elif not len(line) <= name_max_chars or len(name_tile) <= 6:
-                                # print('config name 4 does not exist or exeeds max character length', line)
                                 name_tile.append('Configuration 4')
 
                         if line.startswith('NAME 5: '):
                             line = line.replace('NAME 5: ', '')
                             if len(line) <= name_max_chars and len(name_tile) <= 6:
-                                # print('config name 5 exists:', line)
                                 name_tile.append(line)
                             elif not len(line) <= name_max_chars or len(name_tile) <= 6:
-                                # print('config name 5 does not exist or exeeds max character length', line)
                                 name_tile.append('Configuration 5')
 
 
                         if line.startswith('SOURCE 0: '):
                             line = line.replace('SOURCE 0: ', '')
                             if os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path exists:', line)
                                 path_var.append(line)
                             elif not os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path does not exist', line)
                                 path_var.append('')
 
                         if line.startswith('SOURCE 1: '):
                             line = line.replace('SOURCE 1: ', '')
                             if os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path exists:', line)
                                 path_var.append(line)
                             elif not os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path does not exist', line)
                                 path_var.append('')
 
                         if line.startswith('SOURCE 2: '):
                             line = line.replace('SOURCE 2: ', '')
                             if os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path exists:', line)
                                 path_var.append(line)
                             elif not os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path does not exist', line)
                                 path_var.append('')
 
                         if line.startswith('SOURCE 3: '):
                             line = line.replace('SOURCE 3: ', '')
                             if os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path exists:', line)
                                 path_var.append(line)
                             elif not os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path does not exist', line)
                                 path_var.append('')
 
                         if line.startswith('SOURCE 4: '):
                             line = line.replace('SOURCE 4: ', '')
                             if os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path exists:', line)
                                 path_var.append(line)
                             elif not os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path does not exist', line)
                                 path_var.append('')
 
                         if line.startswith('SOURCE 5: '):
                             line = line.replace('SOURCE 5: ', '')
                             if os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path exists:', line)
                                 path_var.append(line)
                             elif not os.path.exists(line) and len(path_var) <= 6:
-                                # print('config source path does not exist', line)
                                 path_var.append('')
 
-                        # Read Destination
                         if line.startswith('DESTINATION 0: '):
                             line = line.replace('DESTINATION 0: ', '')
                             if os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path exists:', line)
                                 dest_path_var.append(line)
                             elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path does not exist', line)
                                 dest_path_var.append('')
 
                         if line.startswith('DESTINATION 1: '):
                             line = line.replace('DESTINATION 1: ', '')
                             if os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path exists:', line)
                                 dest_path_var.append(line)
                             elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path does not exist', line)
                                 dest_path_var.append('')
 
                         if line.startswith('DESTINATION 2: '):
                             line = line.replace('DESTINATION 2: ', '')
                             if os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path exists:', line)
                                 dest_path_var.append(line)
                             elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path does not exist', line)
                                 dest_path_var.append('')
 
                         if line.startswith('DESTINATION 3: '):
                             line = line.replace('DESTINATION 3: ', '')
                             if os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path exists:', line)
                                 dest_path_var.append(line)
                             elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path does not exist', line)
                                 dest_path_var.append('')
 
                         if line.startswith('DESTINATION 4: '):
                             line = line.replace('DESTINATION 4: ', '')
                             if os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path exists:', line)
                                 dest_path_var.append(line)
                             elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path does not exist', line)
                                 dest_path_var.append('')
 
                         if line.startswith('DESTINATION 5: '):
                             line = line.replace('DESTINATION 5: ', '')
                             if os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path exists:', line)
                                 dest_path_var.append(line)
                             elif not os.path.exists(line) and len(dest_path_var) <= 6:
-                                # print('config destination path does not exist', line)
                                 dest_path_var.append('')
                 fo.close()
-
-                # Set Displayed Source Path(s)
                 i = 0
                 for self.settings_source_edit_vars in self.settings_source_edit_var:
                     if path_var[i] != self.settings_source_edit_var[i]:
                         self.settings_source_edit_var[i].setText(path_var[i])
                     i += 1
-
-                # Set Displayed Destination Path(s)
                 i = 0
                 for self.settings_dest_edit_vars in self.settings_dest_edit_var:
                     if dest_path_var[i] != self.settings_dest_edit_var[i]:
                         self.settings_dest_edit_var[i].setText(dest_path_var[i])
                     i += 1
-
-                # Set Displayed Name(s)
                 i = 0
                 for self.settings_title_vars in self.settings_title_var:
                     if name_tile[i] != self.settings_title_var[i]:
@@ -2149,7 +2105,7 @@ class UpdateSettingsWindow(QThread):
                         self.settings_title_var[i].setText(name_tile[i])
                     i += 1
 
-            # Write A New Configuration File
+            # Write A New Configuration File If Missing
             elif not os.path.exists(cfg_f):
                 if debug_enabled is True:
                     print('-- creating new configuration file')
