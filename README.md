@@ -2,7 +2,7 @@
 Extremely fast backup Solution.
 
 Early Developer Releases .exe Available:
-https://drive.google.com/drive/folders/1PvS99HFaGQbEfWiVqVE-dLc29_1BGwI_?usp=sharing
+https://drive.google.com/drive/folders/1xrMknnz6HG6R3g_jfsc9Cac4U23XPkVd?usp=sharing
 
 NOTE:
 Please take the time to understand how each backup mode works before using it to back up.
