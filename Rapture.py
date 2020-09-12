@@ -25,7 +25,7 @@ priority_classes = [win32process.IDLE_PRIORITY_CLASS,
 pid = win32api.GetCurrentProcessId()
 handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
 win32process.SetPriorityClass(handle, priority_classes[4])
-cfg_f = './config.txt'
+cfg_f = 'config_profile_0.txt'
 img_path = './image/default/'
 source_path_entered = ''
 dest_path_entered = ''
@@ -81,7 +81,7 @@ class App(QMainWindow):
         global debug_enabled, img_path
         # Set Program Icon & Program Title
         self.setWindowIcon(QIcon('./icon.png'))
-        self.title = 'Rapture Extreme Backup Solution'
+        self.title = '[SHIFT] Extreme Backup Solution'
         # Set Window Width And Height
         self.width = 605
         self.height = 110
@@ -93,6 +93,8 @@ class App(QMainWindow):
         # Set Window Title Bar Frameless Windows Hint
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
         # Set Font
+        self.font_s4b = QFont("Segoe UI", 4, QFont.Bold)
+        self.font_s5b = QFont("Segoe UI", 5, QFont.Bold)
         self.font_s6b = QFont("Segoe UI", 6, QFont.Bold)
         # Run Set Style Sheet Function & Run Set Images Function
         self.set_style_sheet_funk()
@@ -122,6 +124,121 @@ class App(QMainWindow):
         # Set A Fixed Window Size
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
+
+        cnfg_prof_btn_ph = 5
+        cnfg_prof_btn_pw = 50
+        cnfg_prof_btn_h = 10
+        cnfg_prof_btn_w = 40
+
+        # Tiltle Bar: Configuration Profile 0
+        self.cnfg_prof_btn_0 = QPushButton(self)
+        self.cnfg_prof_btn_0.move(cnfg_prof_btn_pw, cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_0.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_0.setFont(self.font_s5b)
+        self.cnfg_prof_btn_0.setText('SHIFT 0')
+        self.cnfg_prof_btn_0.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_0.clicked.connect(self.cnfg_prof_funk_0)
+        self.cnfg_prof_btn_0.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+
+        # Tiltle Bar: Configuration Profile 1
+        self.cnfg_prof_btn_1 = QPushButton(self)
+        self.cnfg_prof_btn_1.move((cnfg_prof_btn_pw + cnfg_prof_btn_w + 5), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_1.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_1.setFont(self.font_s5b)
+        self.cnfg_prof_btn_1.setText('SHIFT 1')
+        self.cnfg_prof_btn_1.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_1.clicked.connect(self.cnfg_prof_funk_1)
+        self.cnfg_prof_btn_1.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 2
+        self.cnfg_prof_btn_2 = QPushButton(self)
+        self.cnfg_prof_btn_2.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 2) + 10), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_2.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_2.setFont(self.font_s5b)
+        self.cnfg_prof_btn_2.setText('SHIFT 2')
+        self.cnfg_prof_btn_2.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_2.clicked.connect(self.cnfg_prof_funk_2)
+        self.cnfg_prof_btn_2.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 3
+        self.cnfg_prof_btn_3 = QPushButton(self)
+        self.cnfg_prof_btn_3.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 3) + 15), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_3.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_3.setFont(self.font_s5b)
+        self.cnfg_prof_btn_3.setText('SHIFT 3')
+        self.cnfg_prof_btn_3.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_3.clicked.connect(self.cnfg_prof_funk_3)
+        self.cnfg_prof_btn_3.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 4
+        self.cnfg_prof_btn_4 = QPushButton(self)
+        self.cnfg_prof_btn_4.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 4) + 20), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_4.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_4.setFont(self.font_s5b)
+        self.cnfg_prof_btn_4.setText('SHIFT 4')
+        self.cnfg_prof_btn_4.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_4.clicked.connect(self.cnfg_prof_funk_4)
+        self.cnfg_prof_btn_4.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 5
+        self.cnfg_prof_btn_5 = QPushButton(self)
+        self.cnfg_prof_btn_5.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 5) + 25), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_5.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_5.setFont(self.font_s5b)
+        self.cnfg_prof_btn_5.setText('SHIFT 5')
+        self.cnfg_prof_btn_5.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_5.clicked.connect(self.cnfg_prof_funk_5)
+        self.cnfg_prof_btn_5.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 6
+        self.cnfg_prof_btn_6 = QPushButton(self)
+        self.cnfg_prof_btn_6.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 6) + 30), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_6.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_6.setFont(self.font_s5b)
+        self.cnfg_prof_btn_6.setText('SHIFT 6')
+        self.cnfg_prof_btn_6.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_6.clicked.connect(self.cnfg_prof_funk_6)
+        self.cnfg_prof_btn_6.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 7
+        self.cnfg_prof_btn_7 = QPushButton(self)
+        self.cnfg_prof_btn_7.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 7) + 35), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_7.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_7.setFont(self.font_s5b)
+        self.cnfg_prof_btn_7.setText('SHIFT 7')
+        self.cnfg_prof_btn_7.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_7.clicked.connect(self.cnfg_prof_funk_7)
+        self.cnfg_prof_btn_7.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 8
+        self.cnfg_prof_btn_8 = QPushButton(self)
+        self.cnfg_prof_btn_8.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 8) + 40), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_8.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_8.setFont(self.font_s5b)
+        self.cnfg_prof_btn_8.setText('SHIFT 8')
+        self.cnfg_prof_btn_8.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_8.clicked.connect(self.cnfg_prof_funk_8)
+        self.cnfg_prof_btn_8.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Tiltle Bar: Configuration Profile 9
+        self.cnfg_prof_btn_9 = QPushButton(self)
+        self.cnfg_prof_btn_9.move((cnfg_prof_btn_pw + (cnfg_prof_btn_w * 9) + 45), cnfg_prof_btn_ph)
+        self.cnfg_prof_btn_9.resize(cnfg_prof_btn_w, cnfg_prof_btn_h)
+        self.cnfg_prof_btn_9.setFont(self.font_s5b)
+        self.cnfg_prof_btn_9.setText('SHIFT 9')
+        self.cnfg_prof_btn_9.setIconSize(QSize(12, 12))
+        self.cnfg_prof_btn_9.clicked.connect(self.cnfg_prof_funk_9)
+        self.cnfg_prof_btn_9.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+        # Title Bar: Logo
+        self.title_logo_btn = QPushButton(self)
+        self.title_logo_btn.move(0, 0)
+        self.title_logo_btn.resize(20, 20)
+        self.title_logo_btn.setIcon(QIcon("./icon.png"))
+        self.title_logo_btn.setIconSize(QSize(12, 12))
+        self.title_logo_btn.clicked.connect(self.title_logo_btn_funk)
+        self.title_logo_btn.setStyleSheet(self.default_title_qpb_style)
+
         # Title Bar: Close
         self.close_button = QPushButton(self)
         self.close_button.move((self.width - 20), 0)
@@ -991,6 +1108,17 @@ class App(QMainWindow):
         # Default StyleSheet: QPushButtons
         self.default_qpbtn_style = """QPushButton{background-color: rgb(35, 35, 35);
                border:0px solid rgb(0, 0, 0);}"""
+        # Default StyleSheet: Title Configuration Profiles QPushButtons
+        self.default_title_config_prof_qpbtn_style = """QPushButton{background-color: rgb(30, 30, 30);
+               color: grey;
+               border:0px solid rgb(0, 0, 0);
+               border-bottom:0px solid rgb(0, 0, 0)}"""
+        # Default StyleSheet: Title Configuration Profiles QPushButtons
+        self.default_title_config_prof_qpbtn_style_1 = """QPushButton{background-color: rgb(30, 30, 30);
+               color: rgb(0, 255, 0);
+               border:0px solid rgb(0, 0, 0);
+               border-bottom:0px solid rgb(0, 0, 0)}"""
+
         # Default StyleSheet: QPushButtons Pressed
         self.default_qpbtn_prsd_style = """QPushButton{background-color: rgb(0, 0, 0);
                border:0px solid rgb(0, 0, 0);}"""
@@ -1002,10 +1130,10 @@ class App(QMainWindow):
             color: grey;}"""
         # Default StyleSheet: QTextBoxBrowsers
         self.default_qtbb_style = """QTextBrowser {background-color: black;
-            border-top:2px solid rgb(35, 35, 35);
-            border-bottom:2px solid rgb(35, 35, 35);
-            border-left:2px solid rgb(35, 35, 35);
-            border-right:2px solid rgb(35, 35, 35);
+            border-top:2px solid rgb(30, 30, 30);
+            border-bottom:2px solid rgb(30, 30, 30);
+            border-left:2px solid rgb(30, 30, 30);
+            border-right:2px solid rgb(30, 30, 30);
             selection-color: white;
             selection-background-color: rgb(0, 100, 255);
             color: grey;}"""
@@ -1057,6 +1185,83 @@ class App(QMainWindow):
         self.img_show_menu_true = str(self.img_path + self.img_var[16])
         self.img_stop_thread_false = str(self.img_path + self.img_var[17])
         self.img_stop_thread_true = str(self.img_path + self.img_var[18])
+
+    def title_logo_btn_funk(self):
+        print('-- plugged in: title_logo_btn_funk')
+
+    # self.cnfg_prof_btn_2.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+    def cnfg_prof_btn_style_funk_0(self):
+        self.cnfg_prof_btn_0.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_1.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_2.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_3.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_4.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_5.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_6.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_7.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_8.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+        self.cnfg_prof_btn_9.setStyleSheet(self.default_title_config_prof_qpbtn_style)
+
+    def cnfg_prof_funk_0(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_0.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_0.txt'
+
+    def cnfg_prof_funk_1(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_1.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_1.txt'
+
+    def cnfg_prof_funk_2(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_2.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_2.txt'
+
+    def cnfg_prof_funk_3(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_3.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_3.txt'
+
+    def cnfg_prof_funk_4(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_4.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_4.txt'
+
+    def cnfg_prof_funk_5(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_5.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_5.txt'
+
+    def cnfg_prof_funk_6(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_6.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_6.txt'
+
+    def cnfg_prof_funk_7(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_7.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_7.txt'
+
+    def cnfg_prof_funk_8(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_8.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_8.txt'
+
+    def cnfg_prof_funk_9(self):
+        global cfg_f
+        self.cnfg_prof_btn_style_funk_0()
+        self.cnfg_prof_btn_9.setStyleSheet(self.default_title_config_prof_qpbtn_style_1)
+        cfg_f = './config_profile_9.txt'
+
     # Sector 2: Set's Configuration Title(s)
     def setting_title_B_funk(self):
         global tile_int
@@ -1403,19 +1608,7 @@ class App(QMainWindow):
         self.paths_readonly_btn_var[settings_active_int].show()
         self.paths_readonly_btn_var[settings_active_int].setEnabled(False)
 
-    def dest_src_readonly_funk(self):
-        self.settings_source_edit_var[0].setReadOnly(False)
-        self.settings_source_edit_var[1].setReadOnly(False)
-        self.settings_source_edit_var[2].setReadOnly(False)
-        self.settings_source_edit_var[3].setReadOnly(False)
-        self.settings_source_edit_var[4].setReadOnly(False)
-        self.settings_source_edit_var[5].setReadOnly(False)
-        self.settings_dest_edit_var[0].setReadOnly(False)
-        self.settings_dest_edit_var[1].setReadOnly(False)
-        self.settings_dest_edit_var[2].setReadOnly(False)
-        self.settings_dest_edit_var[3].setReadOnly(False)
-        self.settings_dest_edit_var[4].setReadOnly(False)
-        self.settings_dest_edit_var[5].setReadOnly(False)
+    def readonly_funk_0(self):
         self.paths_readonly_btn_0.setIcon(QIcon(self.img_read_ony_false))
         self.paths_readonly_btn_1.setIcon(QIcon(self.img_read_ony_false))
         self.paths_readonly_btn_2.setIcon(QIcon(self.img_read_ony_false))
@@ -1462,7 +1655,7 @@ class App(QMainWindow):
     def settings_drop_down_funk(self):
         global debug_enabled, settings_active_int, settings_active_int_prev, name_tile
         self.hide_settings_funk()
-        self.dest_src_readonly_funk()
+        self.readonly_funk_0()
         self.setFixedSize(self.width, 320)
         if settings_active_int != settings_active_int_prev:
             print('setting:', str(settings_active_int))
@@ -1763,7 +1956,7 @@ class UpdateSettingsWindow(QThread):
 
     # While Source And Destination Path Configuration Edit ReadOnly, Check Configured Paths Existance And Set Boolean Accordingly
     def get_conf_funk(self):
-        global debug_enabled, path_var, dest_path_var, name_tile, configuration_engaged
+        global debug_enabled, path_var, dest_path_var, name_tile, configuration_engaged, cfg_f
         configuration_engaged = True
         # Only Update Displayed Source & Destination Paths If Source & Destination Paths Not Being Edited
         check_var = []
@@ -1908,6 +2101,7 @@ class UpdateSettingsWindow(QThread):
                         self.settings_title_var[i].setAlignment(Qt.AlignCenter)
                         self.settings_title_var[i].setText(name_tile[i])
                     i += 1
+                self.tb_label_0.setText(name_tile[settings_active_int] + ' Output')
             # Write A New Configuration File If Missing
             elif not os.path.exists(cfg_f):
                 if debug_enabled is True:
