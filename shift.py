@@ -2624,7 +2624,7 @@ class ThreadClass0(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                            self.progress_int = (int(self.progress) - 9)
+                            self.progress_int = (int(self.progress) - 13)
                             self.loading_lbl_0.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
@@ -2642,7 +2642,7 @@ class ThreadClass0(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
-                                self.progress_int = (int(self.progress) - 9)
+                                self.progress_int = (int(self.progress) - 13)
                                 self.loading_lbl_0.resize(self.progress_int, 8)
 
                         i += 1
@@ -2918,7 +2918,7 @@ class ThreadClass1(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                            self.progress_int = (int(self.progress) - 9)
+                            self.progress_int = (int(self.progress) - 13)
                             self.loading_lbl_1.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
@@ -2936,7 +2936,7 @@ class ThreadClass1(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
-                                self.progress_int = (int(self.progress) - 9)
+                                self.progress_int = (int(self.progress) - 13)
                                 self.loading_lbl_1.resize(self.progress_int, 8)
 
                         i += 1
@@ -3212,7 +3212,7 @@ class ThreadClass2(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                            self.progress_int = (int(self.progress) - 9)
+                            self.progress_int = (int(self.progress) - 13)
                             self.loading_lbl_2.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
@@ -3230,7 +3230,7 @@ class ThreadClass2(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
-                                self.progress_int = (int(self.progress) - 9)
+                                self.progress_int = (int(self.progress) - 13)
                                 self.loading_lbl_2.resize(self.progress_int, 8)
 
                         i += 1
@@ -3506,7 +3506,7 @@ class ThreadClass3(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                            self.progress_int = (int(self.progress) - 9)
+                            self.progress_int = (int(self.progress) - 13)
                             self.loading_lbl_3.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
@@ -3524,7 +3524,7 @@ class ThreadClass3(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
-                                self.progress_int = (int(self.progress) - 9)
+                                self.progress_int = (int(self.progress) - 13)
                                 self.loading_lbl_3.resize(self.progress_int, 8)
 
                         i += 1
@@ -3800,7 +3800,7 @@ class ThreadClass4(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                            self.progress_int = (int(self.progress) - 9)
+                            self.progress_int = (int(self.progress) - 13)
                             self.loading_lbl_4.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
@@ -3818,7 +3818,7 @@ class ThreadClass4(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
-                                self.progress_int = (int(self.progress) - 9)
+                                self.progress_int = (int(self.progress) - 13)
                                 self.loading_lbl_4.resize(self.progress_int, 8)
 
                         i += 1
@@ -4094,7 +4094,7 @@ class ThreadClass5(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                            self.progress_int = (int(self.progress) - 9)
+                            self.progress_int = (int(self.progress) - 13)
                             self.loading_lbl_5.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
@@ -4112,7 +4112,7 @@ class ThreadClass5(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
-                                self.progress_int = (int(self.progress) - 9)
+                                self.progress_int = (int(self.progress) - 13)
                                 self.loading_lbl_5.resize(self.progress_int, 8)
 
                         i += 1
