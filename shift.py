@@ -7,7 +7,6 @@ import win32con
 import win32api
 import win32process
 import distutils.dir_util
-from pynput.mouse import Listener
 from win32api import GetSystemMetrics
 from win32gui import GetWindowText, GetForegroundWindow
 from PyQt5.QtCore import Qt, QThread, QSize, QTimer, QPoint, QCoreApplication, QObject, pyqtSignal
@@ -401,6 +400,42 @@ class App(QMainWindow):
         self.paths_readonly_btn_3 = self.paths_readonly_btn_var[3]
         self.paths_readonly_btn_4 = self.paths_readonly_btn_var[4]
         self.paths_readonly_btn_5 = self.paths_readonly_btn_var[5]
+        # Sector 1: Loading 0
+        self.loading_lbl_0 = QLabel(self)
+        self.loading_lbl_0.move(back_label_ankor_w0 + back_label_buffer, (back_label_ankor_h0 + back_label_buffer + btnx_h + btnx_buffer_0 + self.title_lable_h_0 + 5))
+        self.loading_lbl_0.resize(87, 8)
+        self.loading_lbl_0.setStyleSheet(self.default_loading)
+        self.loading_lbl_0.hide()
+        # Sector 1: Loading 1
+        self.loading_lbl_1 = QLabel(self)
+        self.loading_lbl_1.move(back_label_ankor_w1 + back_label_buffer, (back_label_ankor_h1 + back_label_buffer + btnx_h + btnx_buffer_0 + self.title_lable_h_0 + 5))
+        self.loading_lbl_1.resize(87, 8)
+        self.loading_lbl_1.setStyleSheet(self.default_loading)
+        self.loading_lbl_1.hide()
+        # Sector 1: Loading 2
+        self.loading_lbl_2 = QLabel(self)
+        self.loading_lbl_2.move(back_label_ankor_w2 + back_label_buffer, (back_label_ankor_h2 + back_label_buffer + btnx_h + btnx_buffer_0 + self.title_lable_h_0 + 5))
+        self.loading_lbl_2.resize(87, 8)
+        self.loading_lbl_2.setStyleSheet(self.default_loading)
+        self.loading_lbl_2.hide()
+        # Sector 1: Loading 3
+        self.loading_lbl_3 = QLabel(self)
+        self.loading_lbl_3.move(back_label_ankor_w3 + back_label_buffer, (back_label_ankor_h3 + back_label_buffer + btnx_h + btnx_buffer_0 + self.title_lable_h_0 + 5))
+        self.loading_lbl_3.resize(87, 8)
+        self.loading_lbl_3.setStyleSheet(self.default_loading)
+        self.loading_lbl_3.hide()
+        # Sector 1: Loading 4
+        self.loading_lbl_4 = QLabel(self)
+        self.loading_lbl_4.move(back_label_ankor_w4 + back_label_buffer, (back_label_ankor_h4 + back_label_buffer + btnx_h + btnx_buffer_0 + self.title_lable_h_0 + 5))
+        self.loading_lbl_4.resize(87, 8)
+        self.loading_lbl_4.setStyleSheet(self.default_loading)
+        self.loading_lbl_4.hide()
+        # Sector 1: Loading 5
+        self.loading_lbl_5 = QLabel(self)
+        self.loading_lbl_5.move(back_label_ankor_w5 + back_label_buffer, (back_label_ankor_h5 + back_label_buffer + btnx_h + btnx_buffer_0 + self.title_lable_h_0 + 5))
+        self.loading_lbl_5.resize(87, 8)
+        self.loading_lbl_5.setStyleSheet(self.default_loading)
+        self.loading_lbl_5.hide()
         # Sector 2: Settings Page Left
         self.scr_left = QPushButton(self)
         self.scr_left.resize(5, 35)
@@ -917,7 +952,8 @@ class App(QMainWindow):
                                      self.stop_thread_btn_0,
                                      self.paths_readonly_btn_0,
                                      self.cnfg_prof_btn_var,
-                                     self.paths_readonly_btn_var)
+                                     self.paths_readonly_btn_var,
+                                     self.loading_lbl_0)
         # Thread: Main Function Thread - Read/Write Thread 1
         self.thread_1 = ThreadClass1(self.tb_1,
                                      self.confirm_op1_tru,
@@ -933,7 +969,8 @@ class App(QMainWindow):
                                      self.stop_thread_btn_1,
                                      self.paths_readonly_btn_1,
                                      self.cnfg_prof_btn_var,
-                                     self.paths_readonly_btn_var)
+                                     self.paths_readonly_btn_var,
+                                     self.loading_lbl_1)
         # Thread: Main Function Thread - Read/Write Thread 2
         self.thread_2 = ThreadClass2(self.tb_2,
                                      self.confirm_op2_tru,
@@ -949,7 +986,8 @@ class App(QMainWindow):
                                      self.stop_thread_btn_2,
                                      self.paths_readonly_btn_2,
                                      self.cnfg_prof_btn_var,
-                                     self.paths_readonly_btn_var)
+                                     self.paths_readonly_btn_var,
+                                     self.loading_lbl_2)
         # Thread: Main Function Thread - Read/Write Thread 3
         self.thread_3 = ThreadClass3(self.tb_3,
                                      self.confirm_op3_tru,
@@ -965,7 +1003,8 @@ class App(QMainWindow):
                                      self.stop_thread_btn_3,
                                      self.paths_readonly_btn_3,
                                      self.cnfg_prof_btn_var,
-                                     self.paths_readonly_btn_var)
+                                     self.paths_readonly_btn_var,
+                                     self.loading_lbl_3)
         # Thread: Main Function Thread - Read/Write Thread 4
         self.thread_4 = ThreadClass4(self.tb_4,
                                      self.confirm_op4_tru,
@@ -981,7 +1020,8 @@ class App(QMainWindow):
                                      self.stop_thread_btn_4,
                                      self.paths_readonly_btn_4,
                                      self.cnfg_prof_btn_var,
-                                     self.paths_readonly_btn_var)
+                                     self.paths_readonly_btn_var,
+                                     self.loading_lbl_4)
         # Thread: Main Function Thread - Read/Write Thread 5
         self.thread_5 = ThreadClass5(self.tb_5,
                                      self.confirm_op5_tru,
@@ -997,7 +1037,8 @@ class App(QMainWindow):
                                      self.stop_thread_btn_5,
                                      self.paths_readonly_btn_5,
                                      self.cnfg_prof_btn_var,
-                                     self.paths_readonly_btn_var)
+                                     self.paths_readonly_btn_var,
+                                     self.loading_lbl_5)
         # Thread: LEDs In Sector 2 Indicate Source & Destination Path Validity
         self.settings_input_response_thread = SettingsInputResponse(self.default_valid_path_led_green,
                                                                self.default_valid_path_led_red,
@@ -1029,11 +1070,16 @@ class App(QMainWindow):
         self.oldPos = event.globalPos()
     # Funtion: Mouse Move Event
     def mouseMoveEvent(self, event):
-        delta = QPoint(event.globalPos() - self.oldPos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.oldPos = event.globalPos()
-        if debug_enabled is True:
-            print(self.oldPos)
+        try:
+            delta = QPoint(event.globalPos() - self.oldPos)
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.oldPos = event.globalPos()
+            if debug_enabled is True:
+                print(self.oldPos)
+        except Exception as e:
+            if debug_enabled is True:
+                print('-- exception:', str(e).strip().encode('utf-8'))
+
     # Function: Sets StyleSheets And Window Pallette
     def set_style_sheet_funk(self):
         global debug_enabled
@@ -1136,7 +1182,14 @@ class App(QMainWindow):
 
         # Default Stylesheet: Valid Path LED
         self.default_valid_path_led = """QLabel {background-color: rgb(15, 15, 15);
-           border:1px solid rgb(15, 15, 15);}"""
+           border:2px solid rgb(15, 15, 15);}"""
+
+        # Default Stylesheet: Loading
+        self.default_loading = """QLabel {background-color: rgb(0, 0, 200);
+           border-top:2px solid rgb(0, 0, 0);
+           border-bottom:2px solid rgb(0, 0, 0);
+           border-left:0px solid rgb(0, 0, 0);
+           border-right:0px solid rgb(0, 0, 0);}"""
 
         # Default Stylesheet: Valid Source Path LED Green
         self.default_valid_path_led_green = """QLabel {background-color: rgb(0, 255, 0);
@@ -1884,12 +1937,17 @@ class App(QMainWindow):
         self.settings_title_var[5].setStyleSheet(self.default_qpbtn_style_txt_0)
 
     def backlabel_resize_0(self):
-        self.back_label_var[0].resize(self.back_label_w_0, self.back_label_h_0)
-        self.back_label_var[1].resize(self.back_label_w_0, self.back_label_h_0)
-        self.back_label_var[2].resize(self.back_label_w_0, self.back_label_h_0)
-        self.back_label_var[3].resize(self.back_label_w_0, self.back_label_h_0)
-        self.back_label_var[4].resize(self.back_label_w_0, self.back_label_h_0)
-        self.back_label_var[5].resize(self.back_label_w_0, self.back_label_h_0)
+        i = 0
+        for thread_engaged_vars in thread_engaged_var:
+            if not thread_engaged_var[i] is True:
+                self.back_label_var[i].resize(self.back_label_w_0, self.back_label_h_0)
+            i += 1
+        #self.back_label_var[0].resize(self.back_label_w_0, self.back_label_h_0)
+        #self.back_label_var[1].resize(self.back_label_w_0, self.back_label_h_0)
+        #self.back_label_var[2].resize(self.back_label_w_0, self.back_label_h_0)
+        #self.back_label_var[3].resize(self.back_label_w_0, self.back_label_h_0)
+        #self.back_label_var[4].resize(self.back_label_w_0, self.back_label_h_0)
+        #self.back_label_var[5].resize(self.back_label_w_0, self.back_label_h_0)
 
     def title_lable_resize(self):
         self.settings_title_var[0].resize(self.title_lable_w_0, self.title_lable_h_0)
@@ -2376,7 +2434,7 @@ class UpdateSettingsWindow(QThread):
 
 class ThreadClass0(QThread):
     def __init__(self, tb_0, confirm_op0_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
-                 output_verbosity, btnx_main_0, stop_thread_btn_0, paths_readonly_btn_0, cnfg_prof_btn_var, paths_readonly_btn_var):
+                 output_verbosity, btnx_main_0, stop_thread_btn_0, paths_readonly_btn_0, cnfg_prof_btn_var, paths_readonly_btn_var, loading_lbl_0):
         QThread.__init__(self)
         self.cnfg_prof_btn_var = cnfg_prof_btn_var
         self.tb_0 = tb_0
@@ -2406,6 +2464,7 @@ class ThreadClass0(QThread):
         self.bytes_count_str = ''
         self.bytes_count_1 = 0
         self.bytes_count_1_str = ''
+        self.progress = ()
         self.progress_str = ''
         self.siz_src = ''
         self.f_count = 0
@@ -2414,6 +2473,7 @@ class ThreadClass0(QThread):
         self.f_count_1_str = 0
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_0 = loading_lbl_0
 
     def write_funk(self):
         global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
@@ -2544,6 +2604,9 @@ class ThreadClass0(QThread):
                                     self.f_count += 1
                                     self.f_count_str = str(self.f_count)
                     self.bytes_count_str = str(self.bytes_count)
+                    self.loading_lbl_0.resize(0, 7)
+                    self.loading_lbl_0.show()
+                    print('progress:', self.progress)
                     i = 0
                     for self.path_0_items in self.path_0_item:
                         self.path_0 = self.path_0_item[i]
@@ -2561,6 +2624,8 @@ class ThreadClass0(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
+                            self.progress_int = (int(self.progress) - 9)
+                            self.loading_lbl_0.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
                             mb = os.path.getmtime(self.path_1)
@@ -2577,9 +2642,14 @@ class ThreadClass0(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
+                                self.progress_int = (int(self.progress) - 9)
+                                self.loading_lbl_0.resize(self.progress_int, 8)
+
                         i += 1
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_0.resize(0, 7)
+        self.loading_lbl_0.hide()
         self.summary()
         self.disengage()
 
@@ -2640,6 +2710,10 @@ class ThreadClass0(QThread):
         thread_engaged_var[0] = False
         confirm_op0_bool = False
         confirm_op0_wait = True
+        self.path_0_item = []
+        self.path_1_item = []
+        self.loading_lbl_0.resize(0, 7)
+        self.loading_lbl_0.hide()
 
     def stop_thr(self):
         global debug_enabled, confirm_op0_bool, confirm_op0_wait
@@ -2656,7 +2730,7 @@ class ThreadClass0(QThread):
 
 class ThreadClass1(QThread):
     def __init__(self, tb_1, confirm_op1_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
-                 output_verbosity, btnx_main_1, stop_thread_btn_1, paths_readonly_btn_1, cnfg_prof_btn_var, paths_readonly_btn_var):
+                 output_verbosity, btnx_main_1, stop_thread_btn_1, paths_readonly_btn_1, cnfg_prof_btn_var, paths_readonly_btn_var, loading_lbl_1):
         QThread.__init__(self)
         self.cnfg_prof_btn_var = cnfg_prof_btn_var
         self.tb_1 = tb_1
@@ -2686,6 +2760,7 @@ class ThreadClass1(QThread):
         self.bytes_count_1 = 0
         self.bytes_count_1_str = ''
         self.progress_str = ''
+        self.progress  = ()
         self.siz_src = ''
         self.f_count = 0
         self.f_count_1 = 0
@@ -2693,6 +2768,7 @@ class ThreadClass1(QThread):
         self.f_count_1_str = 0
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_1 = loading_lbl_1
 
     def write_funk(self):
         global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
@@ -2822,12 +2898,13 @@ class ThreadClass1(QThread):
                                     self.f_count += 1
                                     self.f_count_str = str(self.f_count)
                     self.bytes_count_str = str(self.bytes_count)
-                    # Pass 2: Reads List Compiled By First Pass
+                    self.loading_lbl_1.resize(0, 7)
+                    self.loading_lbl_1.show()
+                    print('progress:', self.progress)
                     i = 0
                     for self.path_0_items in self.path_0_item:
                         self.path_0 = self.path_0_item[i]
                         self.path_1 = self.path_1_item[i]
-                        # Mode 0: Write Missing Files Only
                         if not os.path.exists(self.path_1):
                             self.siz_src = str(os.path.getsize(self.path_0))
                             siz_src_int = int(self.siz_src)
@@ -2841,7 +2918,8 @@ class ThreadClass1(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                        # Mode 1: Write Missing & Update Outdated Files
+                            self.progress_int = (int(self.progress) - 9)
+                            self.loading_lbl_1.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
                             mb = os.path.getmtime(self.path_1)
@@ -2858,9 +2936,14 @@ class ThreadClass1(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
+                                self.progress_int = (int(self.progress) - 9)
+                                self.loading_lbl_1.resize(self.progress_int, 8)
+
                         i += 1
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_1.resize(0, 7)
+        self.loading_lbl_1.hide()
         self.summary()
         self.disengage()
 
@@ -2921,6 +3004,10 @@ class ThreadClass1(QThread):
         thread_engaged_var[1] = False
         confirm_op1_bool = False
         confirm_op1_wait = True
+        self.path_0_item = []
+        self.path_1_item = []
+        self.loading_lbl_1.resize(0, 7)
+        self.loading_lbl_1.hide()
 
     def stop_thr(self):
         global debug_enabled, confirm_op1_bool, confirm_op1_wait
@@ -2937,7 +3024,7 @@ class ThreadClass1(QThread):
 
 class ThreadClass2(QThread):
     def __init__(self, tb_2, confirm_op2_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
-                 output_verbosity, btnx_main_2, stop_thread_btn_2, paths_readonly_btn_2, cnfg_prof_btn_var, paths_readonly_btn_var):
+                 output_verbosity, btnx_main_2, stop_thread_btn_2, paths_readonly_btn_2, cnfg_prof_btn_var, paths_readonly_btn_var, loading_lbl_2):
         QThread.__init__(self)
         self.cnfg_prof_btn_var = cnfg_prof_btn_var
         self.tb_2 = tb_2
@@ -2967,6 +3054,7 @@ class ThreadClass2(QThread):
         self.bytes_count_1 = 0
         self.bytes_count_1_str = ''
         self.progress_str = ''
+        self.progress  = ()
         self.siz_src = ''
         self.f_count = 0
         self.f_count_1 = 0
@@ -2974,6 +3062,7 @@ class ThreadClass2(QThread):
         self.f_count_1_str = 0
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_2 = loading_lbl_2
 
     def write_funk(self):
         global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
@@ -3103,12 +3192,13 @@ class ThreadClass2(QThread):
                                     self.f_count += 1
                                     self.f_count_str = str(self.f_count)
                     self.bytes_count_str = str(self.bytes_count)
-                    # Pass 2: Reads List Compiled By First Pass
+                    self.loading_lbl_2.resize(0, 7)
+                    self.loading_lbl_2.show()
+                    print('progress:', self.progress)
                     i = 0
                     for self.path_0_items in self.path_0_item:
                         self.path_0 = self.path_0_item[i]
                         self.path_1 = self.path_1_item[i]
-                        # Mode 0: Write Missing Files Only
                         if not os.path.exists(self.path_1):
                             self.siz_src = str(os.path.getsize(self.path_0))
                             siz_src_int = int(self.siz_src)
@@ -3122,7 +3212,8 @@ class ThreadClass2(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                        # Mode 1: Write Missing & Update Outdated Files
+                            self.progress_int = (int(self.progress) - 9)
+                            self.loading_lbl_2.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
                             mb = os.path.getmtime(self.path_1)
@@ -3139,9 +3230,14 @@ class ThreadClass2(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
+                                self.progress_int = (int(self.progress) - 9)
+                                self.loading_lbl_2.resize(self.progress_int, 8)
+
                         i += 1
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_2.resize(0, 7)
+        self.loading_lbl_2.hide()
         self.summary()
         self.disengage()
 
@@ -3202,6 +3298,10 @@ class ThreadClass2(QThread):
         thread_engaged_var[2] = False
         confirm_op2_bool = False
         confirm_op2_wait = True
+        self.path_0_item = []
+        self.path_1_item = []
+        self.loading_lbl_2.resize(0, 7)
+        self.loading_lbl_2.hide()
 
     def stop_thr(self):
         global debug_enabled, confirm_op2_bool, confirm_op2_wait
@@ -3218,7 +3318,7 @@ class ThreadClass2(QThread):
 
 class ThreadClass3(QThread):
     def __init__(self, tb_3, confirm_op3_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
-                 output_verbosity, btnx_main_3, stop_thread_btn_3, paths_readonly_btn_3, cnfg_prof_btn_var, paths_readonly_btn_var):
+                 output_verbosity, btnx_main_3, stop_thread_btn_3, paths_readonly_btn_3, cnfg_prof_btn_var, paths_readonly_btn_var, loading_lbl_3):
         QThread.__init__(self)
         self.cnfg_prof_btn_var = cnfg_prof_btn_var
         self.tb_3 = tb_3
@@ -3248,6 +3348,7 @@ class ThreadClass3(QThread):
         self.bytes_count_1 = 0
         self.bytes_count_1_str = ''
         self.progress_str = ''
+        self.progress  = ()
         self.siz_src = ''
         self.f_count = 0
         self.f_count_1 = 0
@@ -3255,6 +3356,7 @@ class ThreadClass3(QThread):
         self.f_count_1_str = 0
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_3 = loading_lbl_3
 
     def write_funk(self):
         global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
@@ -3384,12 +3486,13 @@ class ThreadClass3(QThread):
                                     self.f_count += 1
                                     self.f_count_str = str(self.f_count)
                     self.bytes_count_str = str(self.bytes_count)
-                    # Pass 2: Reads List Compiled By First Pass
+                    self.loading_lbl_3.resize(0, 7)
+                    self.loading_lbl_3.show()
+                    print('progress:', self.progress)
                     i = 0
                     for self.path_0_items in self.path_0_item:
                         self.path_0 = self.path_0_item[i]
                         self.path_1 = self.path_1_item[i]
-                        # Mode 0: Write Missing Files Only
                         if not os.path.exists(self.path_1):
                             self.siz_src = str(os.path.getsize(self.path_0))
                             siz_src_int = int(self.siz_src)
@@ -3403,7 +3506,8 @@ class ThreadClass3(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                        # Mode 1: Write Missing & Update Outdated Files
+                            self.progress_int = (int(self.progress) - 9)
+                            self.loading_lbl_3.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
                             mb = os.path.getmtime(self.path_1)
@@ -3420,9 +3524,14 @@ class ThreadClass3(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
+                                self.progress_int = (int(self.progress) - 9)
+                                self.loading_lbl_3.resize(self.progress_int, 8)
+
                         i += 1
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_3.resize(0, 7)
+        self.loading_lbl_3.hide()
         self.summary()
         self.disengage()
 
@@ -3483,6 +3592,10 @@ class ThreadClass3(QThread):
         thread_engaged_var[3] = False
         confirm_op3_bool = False
         confirm_op3_wait = True
+        self.path_0_item = []
+        self.path_1_item = []
+        self.loading_lbl_3.resize(0, 7)
+        self.loading_lbl_3.hide()
 
     def stop_thr(self):
         global debug_enabled, confirm_op3_bool, confirm_op3_wait
@@ -3499,7 +3612,7 @@ class ThreadClass3(QThread):
 
 class ThreadClass4(QThread):
     def __init__(self, tb_4, confirm_op4_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
-                 output_verbosity, btnx_main_4, stop_thread_btn_4, paths_readonly_btn_4, cnfg_prof_btn_var, paths_readonly_btn_var):
+                 output_verbosity, btnx_main_4, stop_thread_btn_4, paths_readonly_btn_4, cnfg_prof_btn_var, paths_readonly_btn_var, loading_lbl_4):
         QThread.__init__(self)
         self.cnfg_prof_btn_var = cnfg_prof_btn_var
         self.tb_4 = tb_4
@@ -3529,6 +3642,7 @@ class ThreadClass4(QThread):
         self.bytes_count_1 = 0
         self.bytes_count_1_str = ''
         self.progress_str = ''
+        self.progress  = ()
         self.siz_src = ''
         self.f_count = 0
         self.f_count_1 = 0
@@ -3536,6 +3650,7 @@ class ThreadClass4(QThread):
         self.f_count_1_str = 0
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_4 = loading_lbl_4
 
     def write_funk(self):
         global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
@@ -3665,12 +3780,13 @@ class ThreadClass4(QThread):
                                     self.f_count += 1
                                     self.f_count_str = str(self.f_count)
                     self.bytes_count_str = str(self.bytes_count)
-                    # Pass 2: Reads List Compiled By First Pass
+                    self.loading_lbl_4.resize(0, 7)
+                    self.loading_lbl_4.show()
+                    print('progress:', self.progress)
                     i = 0
                     for self.path_0_items in self.path_0_item:
                         self.path_0 = self.path_0_item[i]
                         self.path_1 = self.path_1_item[i]
-                        # Mode 0: Write Missing Files Only
                         if not os.path.exists(self.path_1):
                             self.siz_src = str(os.path.getsize(self.path_0))
                             siz_src_int = int(self.siz_src)
@@ -3684,7 +3800,8 @@ class ThreadClass4(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                        # Mode 1: Write Missing & Update Outdated Files
+                            self.progress_int = (int(self.progress) - 9)
+                            self.loading_lbl_4.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
                             mb = os.path.getmtime(self.path_1)
@@ -3701,9 +3818,14 @@ class ThreadClass4(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
+                                self.progress_int = (int(self.progress) - 9)
+                                self.loading_lbl_4.resize(self.progress_int, 8)
+
                         i += 1
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_4.resize(0, 7)
+        self.loading_lbl_4.hide()
         self.summary()
         self.disengage()
 
@@ -3764,6 +3886,10 @@ class ThreadClass4(QThread):
         thread_engaged_var[4] = False
         confirm_op4_bool = False
         confirm_op4_wait = True
+        self.path_0_item = []
+        self.path_1_item = []
+        self.loading_lbl_4.resize(0, 7)
+        self.loading_lbl_4.hide()
 
     def stop_thr(self):
         global debug_enabled, confirm_op4_bool, confirm_op4_wait
@@ -3780,7 +3906,7 @@ class ThreadClass4(QThread):
 
 class ThreadClass5(QThread):
     def __init__(self, tb_5, confirm_op5_tru, img_btnx_led_0, img_btnx_led_1, img_btnx_led_2, img_execute_false, img_execute_true, img_stop_thread_false, img_stop_thread_true,
-                 output_verbosity, btnx_main_5, stop_thread_btn_5, paths_readonly_btn_5, cnfg_prof_btn_var, paths_readonly_btn_var):
+                 output_verbosity, btnx_main_5, stop_thread_btn_5, paths_readonly_btn_5, cnfg_prof_btn_var, paths_readonly_btn_var, loading_lbl_5):
         QThread.__init__(self)
         self.cnfg_prof_btn_var = cnfg_prof_btn_var
         self.tb_5 = tb_5
@@ -3810,6 +3936,7 @@ class ThreadClass5(QThread):
         self.bytes_count_1 = 0
         self.bytes_count_1_str = ''
         self.progress_str = ''
+        self.progress  = ()
         self.siz_src = ''
         self.f_count = 0
         self.f_count_1 = 0
@@ -3817,6 +3944,7 @@ class ThreadClass5(QThread):
         self.f_count_1_str = 0
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_5 = loading_lbl_5
 
     def write_funk(self):
         global debug_enabled, path_var, dest_path_var, configuration_engaged, confirm_op0_wait, confirm_op0_bool, thread_engaged_var
@@ -3946,12 +4074,13 @@ class ThreadClass5(QThread):
                                     self.f_count += 1
                                     self.f_count_str = str(self.f_count)
                     self.bytes_count_str = str(self.bytes_count)
-                    # Pass 2: Reads List Compiled By First Pass
+                    self.loading_lbl_5.resize(0, 7)
+                    self.loading_lbl_5.show()
+                    print('progress:', self.progress)
                     i = 0
                     for self.path_0_items in self.path_0_item:
                         self.path_0 = self.path_0_item[i]
                         self.path_1 = self.path_1_item[i]
-                        # Mode 0: Write Missing Files Only
                         if not os.path.exists(self.path_1):
                             self.siz_src = str(os.path.getsize(self.path_0))
                             siz_src_int = int(self.siz_src)
@@ -3965,7 +4094,8 @@ class ThreadClass5(QThread):
                             self.write_funk()
                             self.write_call = 0
                             self.check_write()
-                        # Mode 1: Write Missing & Update Outdated Files
+                            self.progress_int = (int(self.progress) - 9)
+                            self.loading_lbl_5.resize(self.progress_int, 8)
                         elif os.path.exists(self.path_1) and os.path.exists(self.path_0) and compare_bool is True:
                             ma = os.path.getmtime(self.path_0)
                             mb = os.path.getmtime(self.path_1)
@@ -3982,9 +4112,14 @@ class ThreadClass5(QThread):
                                 self.write_funk()
                                 self.write_call = 1
                                 self.check_write()
+                                self.progress_int = (int(self.progress) - 9)
+                                self.loading_lbl_5.resize(self.progress_int, 8)
+
                         i += 1
         self.path_0_item = []
         self.path_1_item = []
+        self.loading_lbl_5.resize(0, 7)
+        self.loading_lbl_5.hide()
         self.summary()
         self.disengage()
 
@@ -4045,6 +4180,10 @@ class ThreadClass5(QThread):
         thread_engaged_var[5] = False
         confirm_op5_bool = False
         confirm_op5_wait = True
+        self.path_0_item = []
+        self.path_1_item = []
+        self.loading_lbl_5.resize(0, 7)
+        self.loading_lbl_5.hide()
 
     def stop_thr(self):
         global debug_enabled, confirm_op5_bool, confirm_op5_wait
